@@ -11,11 +11,15 @@ import UIKit
 
 class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var refresh: UIButton!
     let locationManager = CLLocationManager()
     var isLocationInitCentre = false            // have we set the initial centre position of the user?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        refresh.setTitle("Loading...", for: UIControlState.disabled)
+        refresh.setTitle("Refresh", for: UIControlState.normal)
         
         // let latitude = -33.90961750180199
         // let longitude = 151.20722349056894
@@ -64,32 +68,59 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     
     // Invoked on click refresh
     @IBAction func onRefresh(_ sender: UIButton) {
+        refresh.isEnabled = false;
+        
         let latitude = (locationManager.location?.coordinate.latitude)!
         let longitude = (locationManager.location?.coordinate.longitude)!
         
-        var request = URLRequest(url: URL(string: "https://api.transport.nsw.gov.au/v1/tp/coord?outputFormat=rapidJSON&coord=" + String(longitude) + "%3A" + String(latitude) + "%3AEPSG%3A4326&coordOutputFormat=EPSG%3A4326&inclFilter=1&type_1=GIS_POINT&radius_1=1000&type_2=BUS_POINT&radius_2=1000&type_3=POI_POINT&radius_3=1000&version=10.2.2.48")!)
+        // GET request to obtain the closest stops
+        let closestStopsURL = "https://api.transport.nsw.gov.au/v1/tp/coord?outputFormat=rapidJSON&coord=" + String(longitude) + "%3A" + String(latitude) + "%3AEPSG%3A4326&coordOutputFormat=EPSG%3A4326&inclFilter=1&type_1=BUS_POINT&radius_1=1000&radius_2=1000&radius_3=1000&version=10.2.2.48"
+        
+        // used to get which buses pass which stop
+        let departureMonURL = "https://api.transport.nsw.gov.au/v1/tp/departure_mon?TfNSWDM=true&outputFormat=rapidJSON&coordOutputFormat=EPSG%3A4326&mode=direct&type_dm=stop&name_dm=201718&depArrMacro=dep&itdDate=20171121&itdTime=1429&version=10.2.2.48"
+        
+        var request = URLRequest(url: URL(string: closestStopsURL)!)
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
         
+        // get the closest stops
         URLSession.shared.dataTask(with: request){(data: Data?,response: URLResponse?, error: Error?) -> Void in
             do {
                 let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
                 let locations = resultJson?["locations"] as? [[String: Any]]
                 
-                // get the first 5 locations
-                for i in 1...5 {
+                // get the first 10 locations
+                for i in 1...10 {
+                    // need to make a new STOP class
+                    // STOP class should have
+                    // - list of buses
+                    // - latitude
+                    // - longitude
+                    // - stopId
+                    // - name
+                    let name = locations?[i]["name"] as? String
+                    // let type = locations?[i]["type"] as? String
+                    let properties = locations?[i]["properties"] as? [String: AnyObject]
+                    let stopId = properties?["STOPPOINT_GLOBAL_ID"] as? String
                     let coordinates = locations?[i]["coord"] as? NSArray
                     let latCoord = coordinates![0] as? Double
                     let longCoord = coordinates![1] as? Double
-                
+                    
                     let annotation = MKPointAnnotation()
                     annotation.coordinate = CLLocationCoordinate2D(latitude: latCoord!, longitude: longCoord!)
+                    annotation.title = name
+                    annotation.subtitle = "Stop: " + stopId!
+                    
                     self.mapView.addAnnotation(annotation)
                 }
+                
+                self.refresh.isEnabled = true;
             } catch {
                 print("Error -> \(error)")
             }
         }.resume()
+        
+        // get which buses pass the stop
     }
     
     override func didReceiveMemoryWarning() {
