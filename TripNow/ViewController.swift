@@ -10,10 +10,19 @@ import MapKit
 import UIKit
 
 class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
+    // UI elements
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var refresh: UIButton!
+    @IBOutlet weak var radiusSlider: UISlider!
+    
     let locationManager = CLLocationManager()
+
+    // usr related variables
+    var user: User!
+    var userRadiusOverlay: MKCircle!
     var isLocationInitCentre = false            // have we set the initial centre position of the user?
+
+    // list of stops we found
     var stopsFound = [Stop]()
     
     override func viewDidLoad() {
@@ -43,6 +52,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         print(coordinate)
     }*/
     
+    /*
+     * Initialize the user's location
+     * Obtains authorization from the user
+     * And updates their location on the map
+     */
     func initUserLocation() {
         //Check for Location Services
         if (CLLocationManager.locationServicesEnabled()) {
@@ -57,13 +71,45 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         }
     }
     
+    /*
+     * Built in locationManager function which is continuously called
+     * whenever new data is received
+     */
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // this should be invoked on the first time application is opened
         if (!isLocationInitCentre) {
-            let start = CLLocationCoordinate2DMake((manager.location?.coordinate.latitude)!, (manager.location?.coordinate.longitude)!)
+            user = User(coordinate: (manager.location?.coordinate)!, radius: 400)
+            let start = CLLocationCoordinate2DMake(user.getLatitude(), user.getLongitude())
             let adjustedRegion = mapView.regionThatFits(MKCoordinateRegionMakeWithDistance(start, 1000, 1000))
             mapView.setRegion(adjustedRegion, animated: false)
+            
+            // need to remove this overlay later if user's position changes
+            userRadiusOverlay = MKCircle(center: user.getCoordinate(), radius: user.getRadius())
+            mapView.add(userRadiusOverlay)
+            
             isLocationInitCentre = true
+        } else {
+            let newLatitude = (manager.location?.coordinate.latitude)!
+            let newLongitude = (manager.location?.coordinate.longitude)!
+            let epsilon = 0.5
+            
+            if (fabs(newLatitude - user.getLatitude()) <= epsilon && fabs(newLongitude - user.getLongitude()) <= epsilon) {
+                return
+            }
+            
+            user.setCoordinate(coordinate: (manager.location?.coordinate)!)
         }
+    }
+    
+    /*
+     * Callback to render the actual radius overlay
+     */
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let circleRenderer = MKCircleRenderer(overlay: overlay)
+        circleRenderer.fillColor = UIColor.blue.withAlphaComponent(0.1)
+        circleRenderer.strokeColor = UIColor.blue
+        circleRenderer.lineWidth = 1
+        return circleRenderer
     }
     
     // Invoked on click refresh
@@ -71,7 +117,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         let latitude = (locationManager.location?.coordinate.latitude)!
         let longitude = (locationManager.location?.coordinate.longitude)!
         
-        self.getClosestStopRequest(longitude: longitude, latitude: latitude)
+        self.getClosestStopRequest(longitude: longitude, latitude: latitude, radius: user.getRadius())
         self.getDepartureRequest()
         
         for stop in stopsFound {
@@ -93,11 +139,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
      * Makes a GET request to /coord
      * Finds the 5 closest stops to the specified longitude and latitude
      */
-    func getClosestStopRequest(longitude: Double, latitude: Double) {
+    func getClosestStopRequest(longitude: Double, latitude: Double, radius: CLLocationDistance) {
         let sem = DispatchSemaphore(value: 0)
         
         // GET request to obtain the closest stops
-        let closestStopsURL = "https://api.transport.nsw.gov.au/v1/tp/coord?outputFormat=rapidJSON&coord=" + String(longitude) + "%3A" + String(latitude) + "%3AEPSG%3A4326&coordOutputFormat=EPSG%3A4326&inclFilter=1&type_1=BUS_POINT&radius_1=1000&radius_2=1000&radius_3=1000&version=10.2.2.48"
+        let closestStopsURL = "https://api.transport.nsw.gov.au/v1/tp/coord?outputFormat=rapidJSON&coord=" + String(longitude) + "%3A" + String(latitude) + "%3AEPSG%3A4326&coordOutputFormat=EPSG%3A4326&inclFilter=1&type_1=BUS_POINT&radius_1=" + String(user.getRadius()) + "&version=10.2.2.48"
         
         var closestStopsRequest = URLRequest(url: URL(string: closestStopsURL)!)
         closestStopsRequest.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -109,8 +155,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                 let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
                 let locations = resultJson?["locations"] as? [[String: Any]]
                 
-                // get the first 5 locations
-                for i in 0...4 {
+                for i in 0...((locations?.count)! - 1) {
                     if (i >= locations!.count) {
                         break
                     }
@@ -122,6 +167,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                     let coordinates = locations?[i]["coord"] as? NSArray
                     let latCoord = coordinates![0] as? Double
                     let longCoord = coordinates![1] as? Double
+                    
+                    // if the station we get exceeds user radius, we exit
+                    if ((properties?["distance"])! as! Double > self.user.getRadius()) {
+                        break
+                    }
                     
                     let newStop = Stop(id: stopId!, name: name!, latitude: latCoord!, longitude: longCoord!)
                     self.stopsFound.append(newStop)
@@ -153,7 +203,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         print("Today's date: " + todayDate)
         print("Current time: " + currentTime)
         
-        for i in 0...4 {
+        // we will probably need to control the rate limit this fires
+        // if it exceeds 5 per second, we're screwed
+        for i in 0...(stopsFound.count - 1) {
             // used to get which buses pass which stop
             let departureURL = "https://api.transport.nsw.gov.au/v1/tp/departure_mon?TfNSWDM=true&outputFormat=rapidJSON&coordOutputFormat=EPSG%3A4326&mode=direct&type_dm=stop&name_dm=" + stopsFound[i].getID() + "&depArrMacro=dep&itdDate=" + todayDate + "&itdTime=" + currentTime + "&version=10.2.2.48"
         
@@ -186,6 +238,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             
             sem.wait()
         }
+    }
+    
+    @IBAction func radiusSliderOnChange(_ sender: Any) {
+        self.user.setRadius(radius: CLLocationDistance(radiusSlider.value))
+        
+        // change the overlay radius
+        mapView.remove(userRadiusOverlay)
+        userRadiusOverlay = MKCircle(center: user.getCoordinate(), radius: user.getRadius())
+        mapView.add(userRadiusOverlay)
     }
     
     override func didReceiveMemoryWarning() {

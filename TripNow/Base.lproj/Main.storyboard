@@ -35,16 +35,26 @@
                                     <action selector="onRefresh:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ngu-sr-pTt"/>
                                 </connections>
                             </button>
+                            <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="250" minValue="100" maxValue="500" translatesAutoresizingMaskIntoConstraints="NO" id="jTb-It-v0M">
+                                <rect key="frame" x="148" y="638" width="118" height="31"/>
+                                <connections>
+                                    <action selector="radiusSliderOnChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="iqU-gh-Xi2"/>
+                                </connections>
+                            </slider>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="frK-AH-Rx3" firstAttribute="top" secondItem="jTb-It-v0M" secondAttribute="bottom" constant="10" id="G6x-vM-m8V"/>
                             <constraint firstItem="frK-AH-Rx3" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="80" id="LkW-vW-0Ke"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="jTb-It-v0M" secondAttribute="trailing" constant="20" id="QDi-Ww-dgR"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="frK-AH-Rx3" secondAttribute="bottom" constant="20" id="RfU-Yf-OIe"/>
                             <constraint firstAttribute="trailingMargin" secondItem="frK-AH-Rx3" secondAttribute="trailing" constant="80" id="eWB-sK-24j"/>
+                            <constraint firstItem="jTb-It-v0M" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="20" id="gYi-Vg-nac"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="mapView" destination="4BH-8k-mVO" id="c8h-6Y-drM"/>
+                        <outlet property="radiusSlider" destination="jTb-It-v0M" id="yhP-5W-YBr"/>
                         <outlet property="refresh" destination="frK-AH-Rx3" id="Kyo-vg-vkK"/>
                     </connections>
                 </viewController>
