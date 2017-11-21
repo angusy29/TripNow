@@ -13,7 +13,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     @IBOutlet weak var mapView: MKMapView!
     let locationManager = CLLocationManager()
     var isLocationInitCentre = false            // have we set the initial centre position of the user?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -25,18 +25,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         initUserLocation()
         
         // Do any additional setup after loading the view, typically from a nib.
-        /*var request = URLRequest(url: URL(string: "https://api.transport.nsw.gov.au/v1/tp/coord?outputFormat=rapidJSON&coord=" + String(longitude) + "%3A" + String(latitude) + "%3AEPSG%3A4326&coordOutputFormat=EPSG%3A4326&inclFilter=1&type_1=GIS_POINT&radius_1=1000&type_2=BUS_POINT&radius_2=1000&type_3=POI_POINT&radius_3=1000&version=10.2.2.48")!)
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
         
-        URLSession.shared.dataTask(with: request){(data: Data?,response: URLResponse?, error: Error?) -> Void in
-            do {
-                let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
-                print("Result",resultJson!)
-            } catch {
-                print("Error -> \(error)")
-            }
-        }.resume()*/
         
         /*let gestureRecog = UITapGestureRecognizer(target: self, action: #selector(ViewController.handleTap(gestureRecog:)))
         gestureRecog.delegate = self
@@ -71,6 +60,36 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             mapView.setRegion(adjustedRegion, animated: false)
             isLocationInitCentre = true
         }
+    }
+    
+    // Invoked on click refresh
+    @IBAction func onRefresh(_ sender: UIButton) {
+        let latitude = (locationManager.location?.coordinate.latitude)!
+        let longitude = (locationManager.location?.coordinate.longitude)!
+        
+        var request = URLRequest(url: URL(string: "https://api.transport.nsw.gov.au/v1/tp/coord?outputFormat=rapidJSON&coord=" + String(longitude) + "%3A" + String(latitude) + "%3AEPSG%3A4326&coordOutputFormat=EPSG%3A4326&inclFilter=1&type_1=GIS_POINT&radius_1=1000&type_2=BUS_POINT&radius_2=1000&type_3=POI_POINT&radius_3=1000&version=10.2.2.48")!)
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
+        
+        URLSession.shared.dataTask(with: request){(data: Data?,response: URLResponse?, error: Error?) -> Void in
+            do {
+                let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
+                let locations = resultJson?["locations"] as? [[String: Any]]
+                
+                // get the first 5 locations
+                for i in 1...5 {
+                    let coordinates = locations?[i]["coord"] as? NSArray
+                    let latCoord = coordinates![0] as? Double
+                    let longCoord = coordinates![1] as? Double
+                
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = CLLocationCoordinate2D(latitude: latCoord!, longitude: longCoord!)
+                    self.mapView.addAnnotation(annotation)
+                }
+            } catch {
+                print("Error -> \(error)")
+            }
+        }.resume()
     }
     
     override func didReceiveMemoryWarning() {
