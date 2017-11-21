@@ -14,6 +14,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     @IBOutlet weak var refresh: UIButton!
     let locationManager = CLLocationManager()
     var isLocationInitCentre = false            // have we set the initial centre position of the user?
+    var stopsFound = [Stop]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,27 +71,37 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         let latitude = (locationManager.location?.coordinate.latitude)!
         let longitude = (locationManager.location?.coordinate.longitude)!
         
-        let date = Date()
-        let dateformatter = DateFormatter()
-        dateformatter.dateFormat = "yyyyMMdd"
-        let timeformatter = DateFormatter()
-        timeformatter.dateFormat = "hhmm"
-        let todayDate = dateformatter.string(from: date)    // in format yyyyMMdd
-        let currentTime = timeformatter.string(from: date)  // in format hhmm
+        self.getClosestStopRequest(longitude: longitude, latitude: latitude)
+        self.getDepartureRequest()
+        
+        for stop in stopsFound {
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = CLLocationCoordinate2D(latitude: stop.getLatitude(), longitude: stop.getLongitude())
+            annotation.title = stop.getName()
+            // annotation.subtitle = "Stop: " + stop.getID() + " Buses: "
+            annotation.subtitle = "Buses: "
+            
+            for bus in stop.getBuses() {
+                annotation.subtitle = annotation.subtitle! + bus + " "
+            }
+        
+            self.mapView.addAnnotation(annotation)
+        }
+    }
+    
+    /*
+     * Makes a GET request to /coord
+     * Finds the 5 closest stops to the specified longitude and latitude
+     */
+    func getClosestStopRequest(longitude: Double, latitude: Double) {
+        let sem = DispatchSemaphore(value: 0)
         
         // GET request to obtain the closest stops
         let closestStopsURL = "https://api.transport.nsw.gov.au/v1/tp/coord?outputFormat=rapidJSON&coord=" + String(longitude) + "%3A" + String(latitude) + "%3AEPSG%3A4326&coordOutputFormat=EPSG%3A4326&inclFilter=1&type_1=BUS_POINT&radius_1=1000&radius_2=1000&radius_3=1000&version=10.2.2.48"
         
-        // used to get which buses pass which stop
-        let departureURL = "https://api.transport.nsw.gov.au/v1/tp/departure_mon?TfNSWDM=true&outputFormat=rapidJSON&coordOutputFormat=EPSG%3A4326&mode=direct&type_dm=stop&name_dm=201718&depArrMacro=dep&itdDate=" + todayDate + "&itdTime=" + currentTime + "&version=10.2.2.48"
-        
         var closestStopsRequest = URLRequest(url: URL(string: closestStopsURL)!)
         closestStopsRequest.addValue("application/json", forHTTPHeaderField: "Accept")
         closestStopsRequest.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
-        
-        var departureRequest = URLRequest(url: URL(string: departureURL)!)
-        departureRequest.addValue("application/json", forHTTPHeaderField: "Accept")
-        departureRequest.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
         
         // get the closest stops
         URLSession.shared.dataTask(with: closestStopsRequest){(data: Data?,response: URLResponse?, error: Error?) -> Void in
@@ -98,15 +109,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                 let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
                 let locations = resultJson?["locations"] as? [[String: Any]]
                 
-                // get the first 10 locations
-                for i in 1...10 {
-                    // need to make a new STOP class
-                    // STOP class should have
-                    // - list of buses
-                    // - latitude
-                    // - longitude
-                    // - stopId
-                    // - name
+                // get the first 5 locations
+                for i in 0...4 {
+                    if (i >= locations!.count) {
+                        break
+                    }
+                    
                     let name = locations?[i]["name"] as? String
                     // let type = locations?[i]["type"] as? String
                     let properties = locations?[i]["properties"] as? [String: AnyObject]
@@ -115,28 +123,69 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                     let latCoord = coordinates![0] as? Double
                     let longCoord = coordinates![1] as? Double
                     
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = CLLocationCoordinate2D(latitude: latCoord!, longitude: longCoord!)
-                    annotation.title = name
-                    annotation.subtitle = "Stop: " + stopId!
-                    
-                    self.mapView.addAnnotation(annotation)
-                    
+                    let newStop = Stop(id: stopId!, name: name!, latitude: latCoord!, longitude: longCoord!)
+                    self.stopsFound.append(newStop)
                 }
+                
+                sem.signal()
             } catch {
                 print("Error -> \(error)")
             }
         }.resume()
         
-        // get which buses pass the stop
-        URLSession.shared.dataTask(with: departureRequest){(data: Data?, response: URLResponse?, error: Error?) -> Void in
-            do {
-                let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
-                print(resultJson!)
-            } catch {
-                print("Error -> \(error)")
-            }
-        }.resume()
+        sem.wait()
+    }
+    
+    /*
+     * Makes a GET request to /departure_mon 
+     * Obtains the departure details for each of the stops in stopFound
+     */
+    func getDepartureRequest() {
+        let sem = DispatchSemaphore(value: 0)
+        let date = Date()
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "yyyyMMdd"
+        let timeformatter = DateFormatter()
+        timeformatter.dateFormat = "hhmm"
+        let todayDate = dateformatter.string(from: date)    // in format yyyyMMdd
+        let currentTime = timeformatter.string(from: date)  // in format hhmm
+        
+        print("Today's date: " + todayDate)
+        print("Current time: " + currentTime)
+        
+        for i in 0...4 {
+            // used to get which buses pass which stop
+            let departureURL = "https://api.transport.nsw.gov.au/v1/tp/departure_mon?TfNSWDM=true&outputFormat=rapidJSON&coordOutputFormat=EPSG%3A4326&mode=direct&type_dm=stop&name_dm=" + stopsFound[i].getID() + "&depArrMacro=dep&itdDate=" + todayDate + "&itdTime=" + currentTime + "&version=10.2.2.48"
+        
+            var departureRequest = URLRequest(url: URL(string: departureURL)!)
+            departureRequest.addValue("application/json", forHTTPHeaderField: "Accept")
+            departureRequest.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
+        
+            // get which buses pass the stop
+            URLSession.shared.dataTask(with: departureRequest){(data: Data?, response: URLResponse?, error: Error?) -> Void in
+                do {
+                    let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
+                    print(self.stopsFound)
+                    // print(resultJson!)
+                
+                    let stopEvents = resultJson?["stopEvents"] as? [[String: Any]]
+                
+                    for j in 0...(stopEvents!.count - 1) {
+                        let transportation = stopEvents?[j]["transportation"] as? [String: AnyObject]
+                        let busNumber = transportation?["disassembledName"] as? String
+                    
+                        if (!self.stopsFound[i].isBusExist(bus: busNumber!)) {
+                            self.stopsFound[i].addBus(bus: busNumber!)
+                        }
+                    }
+                    sem.signal()
+                } catch {
+                    print("Error -> \(error)")
+                }
+            }.resume()
+            
+            sem.wait()
+        }
     }
     
     override func didReceiveMemoryWarning() {
