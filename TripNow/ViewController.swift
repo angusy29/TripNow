@@ -18,8 +18,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        refresh.setTitle("Loading...", for: UIControlState.disabled)
-        refresh.setTitle("Refresh", for: UIControlState.normal)
+        refresh.setTitle("Find closest stops", for: UIControlState.normal)
         
         // let latitude = -33.90961750180199
         // let longitude = 151.20722349056894
@@ -68,23 +67,33 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     
     // Invoked on click refresh
     @IBAction func onRefresh(_ sender: UIButton) {
-        refresh.isEnabled = false;
-        
         let latitude = (locationManager.location?.coordinate.latitude)!
         let longitude = (locationManager.location?.coordinate.longitude)!
+        
+        let date = Date()
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "yyyyMMdd"
+        let timeformatter = DateFormatter()
+        timeformatter.dateFormat = "hhmm"
+        let todayDate = dateformatter.string(from: date)    // in format yyyyMMdd
+        let currentTime = timeformatter.string(from: date)  // in format hhmm
         
         // GET request to obtain the closest stops
         let closestStopsURL = "https://api.transport.nsw.gov.au/v1/tp/coord?outputFormat=rapidJSON&coord=" + String(longitude) + "%3A" + String(latitude) + "%3AEPSG%3A4326&coordOutputFormat=EPSG%3A4326&inclFilter=1&type_1=BUS_POINT&radius_1=1000&radius_2=1000&radius_3=1000&version=10.2.2.48"
         
         // used to get which buses pass which stop
-        let departureMonURL = "https://api.transport.nsw.gov.au/v1/tp/departure_mon?TfNSWDM=true&outputFormat=rapidJSON&coordOutputFormat=EPSG%3A4326&mode=direct&type_dm=stop&name_dm=201718&depArrMacro=dep&itdDate=20171121&itdTime=1429&version=10.2.2.48"
+        let departureURL = "https://api.transport.nsw.gov.au/v1/tp/departure_mon?TfNSWDM=true&outputFormat=rapidJSON&coordOutputFormat=EPSG%3A4326&mode=direct&type_dm=stop&name_dm=201718&depArrMacro=dep&itdDate=" + todayDate + "&itdTime=" + currentTime + "&version=10.2.2.48"
         
-        var request = URLRequest(url: URL(string: closestStopsURL)!)
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
+        var closestStopsRequest = URLRequest(url: URL(string: closestStopsURL)!)
+        closestStopsRequest.addValue("application/json", forHTTPHeaderField: "Accept")
+        closestStopsRequest.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
+        
+        var departureRequest = URLRequest(url: URL(string: departureURL)!)
+        departureRequest.addValue("application/json", forHTTPHeaderField: "Accept")
+        departureRequest.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
         
         // get the closest stops
-        URLSession.shared.dataTask(with: request){(data: Data?,response: URLResponse?, error: Error?) -> Void in
+        URLSession.shared.dataTask(with: closestStopsRequest){(data: Data?,response: URLResponse?, error: Error?) -> Void in
             do {
                 let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
                 let locations = resultJson?["locations"] as? [[String: Any]]
@@ -112,15 +121,22 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                     annotation.subtitle = "Stop: " + stopId!
                     
                     self.mapView.addAnnotation(annotation)
+                    
                 }
-                
-                self.refresh.isEnabled = true;
             } catch {
                 print("Error -> \(error)")
             }
         }.resume()
         
         // get which buses pass the stop
+        URLSession.shared.dataTask(with: departureRequest){(data: Data?, response: URLResponse?, error: Error?) -> Void in
+            do {
+                let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
+                print(resultJson!)
+            } catch {
+                print("Error -> \(error)")
+            }
+        }.resume()
     }
     
     override func didReceiveMemoryWarning() {
