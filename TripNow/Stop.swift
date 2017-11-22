@@ -11,13 +11,15 @@ import Foundation
 class Stop {
     var id: String
     var name: String
+    var parent: String
     var latitude: Double
     var longitude: Double
     var buses: [String]
     
-    init(id: String, name: String, latitude: Double, longitude: Double) {
+    init(id: String, name: String, parent: String, latitude: Double, longitude: Double) {
         self.id = id
         self.name = name
+        self.parent = parent
         self.latitude = latitude
         self.longitude = longitude
         self.buses = [String]()
@@ -33,6 +35,10 @@ class Stop {
     
     public func getName() -> String {
         return self.name
+    }
+    
+    public func getParent() -> String {
+        return self.parent
     }
     
     public func getLatitude() -> Double {

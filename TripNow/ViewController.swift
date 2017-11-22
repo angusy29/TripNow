@@ -16,6 +16,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     @IBOutlet weak var radiusSlider: UISlider!
     
     let locationManager = CLLocationManager()
+    var allAnnotations = [MKAnnotation]()
 
     // usr related variables
     var user: User!
@@ -28,7 +29,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        refresh.setTitle("Find closest stops", for: UIControlState.normal)
+        refresh.setTitle("Search", for: UIControlState.normal)
         
         // let latitude = -33.90961750180199
         // let longitude = 151.20722349056894
@@ -36,6 +37,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         mapView.showsUserLocation = true
         
         initUserLocation()
+        
+        self.navigationItem.title = "Quick search"
         
         // Do any additional setup after loading the view, typically from a nib.
         
@@ -112,26 +115,65 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         return circleRenderer
     }
     
+    /*
+     * Callback for when an annotation is tapped on
+     * Brings them to the StopInfoViewController
+     */
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "StopInfoViewController") as! StopInfoViewController
+        var arr = view.annotation?.title!?.components(separatedBy: " ")
+        let stopId = (arr?[(arr?.count)! - 1])!
+
+        for stop in stopsFound {
+            if stop.getID() == stopId {
+                vc.stopObj = stop
+                break
+            }
+        }
+        
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    /*
+     * Gets called when a pin gets dropped
+     * This makes the pointAnnotations render with the rightCalloutAccessory
+     */
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?
+    {
+        if (annotation is MKUserLocation) {
+            return nil
+        }
+        let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "annotationView")
+        annotationView.canShowCallout = true
+        annotationView.rightCalloutAccessoryView = UIButton.init(type: UIButtonType.detailDisclosure)
+        return annotationView
+    }
+    
     // Invoked on click refresh
     @IBAction func onRefresh(_ sender: UIButton) {
+        self.stopsFound.removeAll()
+        mapView.removeAnnotations(allAnnotations)
+        allAnnotations.removeAll()
+        
         let latitude = (locationManager.location?.coordinate.latitude)!
         let longitude = (locationManager.location?.coordinate.longitude)!
         
         self.getClosestStopRequest(longitude: longitude, latitude: latitude, radius: user.getRadius())
-        self.getDepartureRequest()
+        // self.getDepartureRequest()
         
         for stop in stopsFound {
             let annotation = MKPointAnnotation()
             annotation.coordinate = CLLocationCoordinate2D(latitude: stop.getLatitude(), longitude: stop.getLongitude())
-            annotation.title = stop.getName()
-            // annotation.subtitle = "Stop: " + stop.getID() + " Buses: "
-            annotation.subtitle = "Buses: "
+            annotation.title = stop.getParent() + " " + stop.getID()
+            annotation.subtitle = stop.getName()
+            // annotation.subtitle = "Buses: "
             
-            for bus in stop.getBuses() {
+            /*for bus in stop.getBuses() {
                 annotation.subtitle = annotation.subtitle! + bus + " "
-            }
-        
+            }*/
+            
             self.mapView.addAnnotation(annotation)
+            allAnnotations.append(annotation)
         }
     }
     
@@ -162,6 +204,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                     
                     let name = locations?[i]["name"] as? String
                     // let type = locations?[i]["type"] as? String
+                    let parent = locations?[i]["parent"] as? [String: AnyObject]
+                    let parentName = parent?["parent"]?["name"] as? String
                     let properties = locations?[i]["properties"] as? [String: AnyObject]
                     let stopId = properties?["STOPPOINT_GLOBAL_ID"] as? String
                     let coordinates = locations?[i]["coord"] as? NSArray
@@ -173,7 +217,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                         break
                     }
                     
-                    let newStop = Stop(id: stopId!, name: name!, latitude: latCoord!, longitude: longCoord!)
+                    let newStop = Stop(id: stopId!, name: name!, parent: parentName!, latitude: latCoord!, longitude: longCoord!)
                     self.stopsFound.append(newStop)
                 }
                 
@@ -189,6 +233,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     /*
      * Makes a GET request to /departure_mon 
      * Obtains the departure details for each of the stops in stopFound
+     *
+     * NOTE: It's quite clear if I ever want more than 1 person using the app
+     * this function isn't scalable at all...
+     * Will easily exceed API rate limit
      */
     func getDepartureRequest() {
         let sem = DispatchSemaphore(value: 0)
