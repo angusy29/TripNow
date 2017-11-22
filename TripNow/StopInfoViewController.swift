@@ -10,14 +10,21 @@ import MapKit
 import UIKit
 import EHHorizontalSelectionView
 
-class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHorizontalSelectionViewProtocol {
+class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHorizontalSelectionViewProtocol, UITableViewDelegate, UITableViewDataSource {
+    
+    @IBOutlet weak var tableView: UITableView!
     
     var stopObj: Stop!
     var selectionList: EHHorizontalSelectionView!
     var busIdToStopEvent = [String: [StopEvent]]()
     
+    var selectedBus: String!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         self.navigationItem.title = stopObj.getName()
         
         self.navigationController?.navigationBar.isTranslucent = false
@@ -75,6 +82,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                 
                 let isoDateFormatter = DateFormatter()
                 isoDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+                isoDateFormatter.timeZone = TimeZone(identifier: "Australia/Sydney")
                 
                 for j in 0...(stopEvents!.count - 1) {
                     let isRealTime = stopEvents?[j]["isRealtimeControlled"] as? Bool
@@ -87,6 +95,11 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                     let destination = transportation?["destination"] as? [String: AnyObject]
                     let originName = origin?["name"] as? String
                     let destinationName = destination?["name"] as? String
+                    
+                    // initialize selected bus if nil
+                    if (self.selectedBus == nil) {
+                        self.selectedBus = busNumber
+                    }
                     
                     /*print(busNumber!)
                     print(originName!)
@@ -140,13 +153,28 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     func horizontalSelection(_ selectionView: EHHorizontalSelectionView, didSelectObjectAt index: UInt) {
         // print(index)
         // print(stopObj.getBuses()[Int(index)])
-        let selectedBus = stopObj.getBuses()[Int(index)]
-        let selectedSchedule = busIdToStopEvent[selectedBus]
+        self.selectedBus = stopObj.getBuses()[Int(index)]
+        self.tableView.reloadData()
+    }
+    
+    /* Functions for UITableView */
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return (self.busIdToStopEvent[self.selectedBus]?.count)!
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("Table View last")
+        print(self.selectedBus)
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let row = indexPath.row
+        let table = self.busIdToStopEvent[self.selectedBus]
+        cell.textLabel?.text = (table?[row].getBusNumber())! + " " + String(describing: (table?[row].departureTimePlanned)!)
         
-        for item in selectedSchedule! {
-            print(item.getBusNumber())
-            print(item.getOrigin())
-            print(item.getDepartureTimePlanned())
-        }
+        return cell
     }
 }
