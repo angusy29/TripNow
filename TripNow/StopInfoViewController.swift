@@ -11,9 +11,10 @@ import UIKit
 import EHHorizontalSelectionView
 
 class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHorizontalSelectionViewProtocol {
+    
     var stopObj: Stop!
     var selectionList: EHHorizontalSelectionView!
-    var items = ["Living Room", "Kitchen", "Bathroom", "Balcony", "More", "And", "Tonnes", "Help", "Yolo"]
+    var busIdToStopEvent = [String: [StopEvent]]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +35,8 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         self.selectionList = selectionList
         
         view.addSubview(selectionList)
+        
+        getDepartureRequest()
         
     }
     
@@ -70,9 +73,38 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                 
                 let stopEvents = resultJson?["stopEvents"] as? [[String: Any]]
                 
+                let isoDateFormatter = DateFormatter()
+                isoDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+                
                 for j in 0...(stopEvents!.count - 1) {
+                    let isRealTime = stopEvents?[j]["isRealtimeControlled"] as? Bool
+                    let departureTimePlanned = isoDateFormatter.date(from: (stopEvents?[j]["departureTimePlanned"] as? String)!)
+                    let departureTimeEstimated = isRealTime == true ? isoDateFormatter.date(from: (stopEvents?[j]["departureTimeEstimated"] as? String)!): nil
                     let transportation = stopEvents?[j]["transportation"] as? [String: AnyObject]
-                    let busNumber = transportation?["disassembledName"] as? String
+                    let busNumber = transportation?["number"] as? String
+                    let description = transportation?["description"] as? String
+                    let origin = transportation?["origin"] as? [String: AnyObject]
+                    let destination = transportation?["destination"] as? [String: AnyObject]
+                    let originName = origin?["name"] as? String
+                    let destinationName = destination?["name"] as? String
+                    
+                    /*print(busNumber!)
+                    print(originName!)
+                    print(destinationName!)
+                    print(description!)
+                    print(departureTimePlanned!)*/
+                    
+                    let newStopEvent = StopEvent(busNumber: busNumber!, origin: originName!, destination: destinationName!, description: description!, departureTimePlanned: departureTimePlanned!, departureTimeEstimated: departureTimeEstimated)
+                    
+                    // if the busId isn't in the map yet, we need to create a new array for it in the dictionary
+                    if (self.busIdToStopEvent[busNumber!] == nil) {
+                        var newBus = [StopEvent]()
+                        newBus.append(newStopEvent)
+                        self.busIdToStopEvent[busNumber!] = newBus
+                    } else {
+                        // otherwise just append to the busNumber's vector
+                        (self.busIdToStopEvent[busNumber!])?.append(newStopEvent)
+                    }
                     
                     if (!self.stopObj.isBusExist(bus: busNumber!)) {
                         self.stopObj.addBus(bus: busNumber!)
@@ -87,18 +119,34 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         sem.wait()
     }
     
-    func numberOfItems(inHorizontalSelection hSelView: EHHorizontalSelectionView) -> UInt {
-        return UInt(items.count)
-    }
-    
-    func titleForItem(at index: UInt, forHorisontalSelection hSelView: EHHorizontalSelectionView) -> String? {
-        return items[Int(index)]
-    }
-    
-    
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    /* Functions to implement for EHHorizontalSelectionViewProtocol */
+    
+    func numberOfItems(inHorizontalSelection hSelView: EHHorizontalSelectionView) -> UInt {
+        return UInt(stopObj.getBuses().count)
+    }
+    
+    func titleForItem(at index: UInt, forHorisontalSelection hSelView: EHHorizontalSelectionView) -> String? {
+        return stopObj.getBuses()[Int(index)]
+    }
+    
+    /*
+     * Callback for the selected item from horizontal view
+     */
+    func horizontalSelection(_ selectionView: EHHorizontalSelectionView, didSelectObjectAt index: UInt) {
+        // print(index)
+        // print(stopObj.getBuses()[Int(index)])
+        let selectedBus = stopObj.getBuses()[Int(index)]
+        let selectedSchedule = busIdToStopEvent[selectedBus]
+        
+        for item in selectedSchedule! {
+            print(item.getBusNumber())
+            print(item.getOrigin())
+            print(item.getDepartureTimePlanned())
+        }
     }
 }

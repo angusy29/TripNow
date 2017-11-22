@@ -1,0 +1,706 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1DE2807AFBA270DE29ADD891FCBDC824 /* EHHorizontalLineViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = E707B7C6C1B3BD7FAF9951E1B2900A38 /* EHHorizontalLineViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E63B0902A7D0C99C299BFF1989AA63B /* EHHorizontalViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = D399FE47951CC825BDC2951002E17B7C /* EHHorizontalViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		36680CC095905C83D76D825C211ABDDA /* EHHorizontalSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 965E85818E80B2535CE87A99F07DED3F /* EHHorizontalSelectionView.m */; };
+		40E2B4B1ADCBF878915711E7EB22ED12 /* EHRoundedHorizontalViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 97E129C95B1BB7DB446E51C328ACBF0C /* EHRoundedHorizontalViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		42D95449DAD60257616BD8B3617F9A47 /* EHHorizontalSelectionView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3158E6F34CD779D43F8451B23FB63496 /* EHHorizontalSelectionView.bundle */; };
+		4755C2687CE2B80A109A0633B52FD425 /* EHHorizontalViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20AD9231343C0E02A9E5895A793452E5 /* EHHorizontalViewCell.xib */; };
+		601EB9F98BB58A7F24038F115D3955EE /* EHHorizontalViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B91FD3A61A0FB8933F9C5C743462E82A /* EHHorizontalViewCell.m */; };
+		6C1CB271E4DBAD7AD1A5BEA513622AC7 /* EHRoundedHorizontalViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 02C9970C9BF4250E7C18FBB5E1BE3A99 /* EHRoundedHorizontalViewCell.m */; };
+		7D781BE96F25E1D5665591BB0C99F686 /* EHHorizontalSelectionView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B245C5F07379B086231149036C6B46E /* EHHorizontalSelectionView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		942ADA579A4EAA99D639A49DC5387F17 /* EHHorizontalLineViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1218ED783EF4E7372A230ACB8A071412 /* EHHorizontalLineViewCell.m */; };
+		97E34BEB4797D4944238B9D3FF886934 /* Pods-TripNow-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B765E97462490C4E987C0234A484EEC6 /* Pods-TripNow-dummy.m */; };
+		A501A50B3C830DCDB636059404097407 /* EHHorizontalSelectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 748E1D79DBB6E918F6DD4464A91E4095 /* EHHorizontalSelectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BA5C8678C0E08F85F763D1ECCF153AF2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
+		BD415BA9DE736D92B7F5FDE7675411F9 /* Pods-TripNow-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C89AF225BCF27AAE7CE3B50A9D49CA85 /* Pods-TripNow-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EE3879731CA9CA736F87CD39DEABC90D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
+		F3B2BC0E7A663CAE45096F9992F9A7F8 /* EHHorizontalSelectionView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5697FC44C7503F67F39B4D1E86F5C61F /* EHHorizontalSelectionView-dummy.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4AA720C1C7165ABD0709943CF838123C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 87462DDDD5702A6A92B933BB05C163E8;
+			remoteInfo = "EHHorizontalSelectionView-EHHorizontalSelectionView";
+		};
+		CBCF66EC469EF640C52D080515510A2F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 20D44BAF665323BF1525226A9ACD5FF2;
+			remoteInfo = EHHorizontalSelectionView;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		02C9970C9BF4250E7C18FBB5E1BE3A99 /* EHRoundedHorizontalViewCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = EHRoundedHorizontalViewCell.m; path = EHHorizontalSelectionView/EHRoundedHorizontalViewCell.m; sourceTree = "<group>"; };
+		1218ED783EF4E7372A230ACB8A071412 /* EHHorizontalLineViewCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = EHHorizontalLineViewCell.m; path = EHHorizontalSelectionView/EHHorizontalLineViewCell.m; sourceTree = "<group>"; };
+		1B245C5F07379B086231149036C6B46E /* EHHorizontalSelectionView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "EHHorizontalSelectionView-umbrella.h"; sourceTree = "<group>"; };
+		20AD9231343C0E02A9E5895A793452E5 /* EHHorizontalViewCell.xib */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.xib; name = EHHorizontalViewCell.xib; path = EHHorizontalSelectionView/xibs/EHHorizontalViewCell.xib; sourceTree = "<group>"; };
+		3158E6F34CD779D43F8451B23FB63496 /* EHHorizontalSelectionView.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = EHHorizontalSelectionView.bundle; path = EHHorizontalSelectionView.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		3AD841E9CA7825E77EA0A5F52F39049B /* ResourceBundle-EHHorizontalSelectionView-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "ResourceBundle-EHHorizontalSelectionView-Info.plist"; sourceTree = "<group>"; };
+		4C4CD7BF922286D454D13F666766DB00 /* EHHorizontalSelectionView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = EHHorizontalSelectionView.modulemap; sourceTree = "<group>"; };
+		5697FC44C7503F67F39B4D1E86F5C61F /* EHHorizontalSelectionView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "EHHorizontalSelectionView-dummy.m"; sourceTree = "<group>"; };
+		597BF51BA5C9AC75F7D79D3A9BCD29DA /* Pods-TripNow.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TripNow.debug.xcconfig"; sourceTree = "<group>"; };
+		5DF07F4C2D5BFC8F859F1934F5B9B6FC /* Pods-TripNow-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TripNow-acknowledgements.plist"; sourceTree = "<group>"; };
+		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		748E1D79DBB6E918F6DD4464A91E4095 /* EHHorizontalSelectionView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = EHHorizontalSelectionView.h; path = EHHorizontalSelectionView/EHHorizontalSelectionView.h; sourceTree = "<group>"; };
+		89B5E96C2BE7BF454D251BCC5C8525B4 /* EHHorizontalSelectionView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "EHHorizontalSelectionView-prefix.pch"; sourceTree = "<group>"; };
+		8DC1767C84FD4964CDCBB18FE48165A3 /* EHHorizontalSelectionView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = EHHorizontalSelectionView.framework; path = EHHorizontalSelectionView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		965E85818E80B2535CE87A99F07DED3F /* EHHorizontalSelectionView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = EHHorizontalSelectionView.m; path = EHHorizontalSelectionView/EHHorizontalSelectionView.m; sourceTree = "<group>"; };
+		97E129C95B1BB7DB446E51C328ACBF0C /* EHRoundedHorizontalViewCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = EHRoundedHorizontalViewCell.h; path = EHHorizontalSelectionView/EHRoundedHorizontalViewCell.h; sourceTree = "<group>"; };
+		A42EBE8D44DE32007F9093CF59875629 /* Pods-TripNow.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-TripNow.modulemap"; sourceTree = "<group>"; };
+		B765E97462490C4E987C0234A484EEC6 /* Pods-TripNow-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TripNow-dummy.m"; sourceTree = "<group>"; };
+		B91FD3A61A0FB8933F9C5C743462E82A /* EHHorizontalViewCell.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = EHHorizontalViewCell.m; path = EHHorizontalSelectionView/EHHorizontalViewCell.m; sourceTree = "<group>"; };
+		BFF08292EEC34EB3ACA3C1D7298C71A2 /* Pods-TripNow-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TripNow-frameworks.sh"; sourceTree = "<group>"; };
+		C54127DBC02391206520B2DDEFD4FBC8 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C791A93A82C382A2EEAC6FAC27DD58CB /* Pods_TripNow.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_TripNow.framework; path = "Pods-TripNow.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C89AF225BCF27AAE7CE3B50A9D49CA85 /* Pods-TripNow-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-TripNow-umbrella.h"; sourceTree = "<group>"; };
+		D399FE47951CC825BDC2951002E17B7C /* EHHorizontalViewCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = EHHorizontalViewCell.h; path = EHHorizontalSelectionView/EHHorizontalViewCell.h; sourceTree = "<group>"; };
+		D3BC93733B54422F1AE7693A3AC329DC /* Pods-TripNow.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TripNow.release.xcconfig"; sourceTree = "<group>"; };
+		DE90A1D221637D640B7FED5EE49C5E03 /* Pods-TripNow-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TripNow-acknowledgements.markdown"; sourceTree = "<group>"; };
+		E08FFF1235877462EB4BC7FDAFF98574 /* EHHorizontalSelectionView.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = EHHorizontalSelectionView.xcconfig; sourceTree = "<group>"; };
+		E707B7C6C1B3BD7FAF9951E1B2900A38 /* EHHorizontalLineViewCell.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = EHHorizontalLineViewCell.h; path = EHHorizontalSelectionView/EHHorizontalLineViewCell.h; sourceTree = "<group>"; };
+		EA08A340D957E133C7E274F45B4C72F7 /* Pods-TripNow-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TripNow-resources.sh"; sourceTree = "<group>"; };
+		F97F1EBBB6F6594171C591348CDD60CC /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1EE013CDBCA6E8A5E482F13D92ECE88F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE3879731CA9CA736F87CD39DEABC90D /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2CC005D61958FC82C16276EEA1634FFD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA5C8678C0E08F85F763D1ECCF153AF2 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C5D5196DD3FA7B475EBD9373B954956E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		230302E30D4C967DEF90A9A74A7B2BE0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3158E6F34CD779D43F8451B23FB63496 /* EHHorizontalSelectionView.bundle */,
+				8DC1767C84FD4964CDCBB18FE48165A3 /* EHHorizontalSelectionView.framework */,
+				C791A93A82C382A2EEAC6FAC27DD58CB /* Pods_TripNow.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2371E770AAB9284A5B262D8F39C7F5B0 /* Pods-TripNow */ = {
+			isa = PBXGroup;
+			children = (
+				C54127DBC02391206520B2DDEFD4FBC8 /* Info.plist */,
+				A42EBE8D44DE32007F9093CF59875629 /* Pods-TripNow.modulemap */,
+				DE90A1D221637D640B7FED5EE49C5E03 /* Pods-TripNow-acknowledgements.markdown */,
+				5DF07F4C2D5BFC8F859F1934F5B9B6FC /* Pods-TripNow-acknowledgements.plist */,
+				B765E97462490C4E987C0234A484EEC6 /* Pods-TripNow-dummy.m */,
+				BFF08292EEC34EB3ACA3C1D7298C71A2 /* Pods-TripNow-frameworks.sh */,
+				EA08A340D957E133C7E274F45B4C72F7 /* Pods-TripNow-resources.sh */,
+				C89AF225BCF27AAE7CE3B50A9D49CA85 /* Pods-TripNow-umbrella.h */,
+				597BF51BA5C9AC75F7D79D3A9BCD29DA /* Pods-TripNow.debug.xcconfig */,
+				D3BC93733B54422F1AE7693A3AC329DC /* Pods-TripNow.release.xcconfig */,
+			);
+			name = "Pods-TripNow";
+			path = "Target Support Files/Pods-TripNow";
+			sourceTree = "<group>";
+		};
+		42FB799B3D737936D90165EB3792E004 /* EHHorizontalSelectionView */ = {
+			isa = PBXGroup;
+			children = (
+				E707B7C6C1B3BD7FAF9951E1B2900A38 /* EHHorizontalLineViewCell.h */,
+				1218ED783EF4E7372A230ACB8A071412 /* EHHorizontalLineViewCell.m */,
+				748E1D79DBB6E918F6DD4464A91E4095 /* EHHorizontalSelectionView.h */,
+				965E85818E80B2535CE87A99F07DED3F /* EHHorizontalSelectionView.m */,
+				D399FE47951CC825BDC2951002E17B7C /* EHHorizontalViewCell.h */,
+				B91FD3A61A0FB8933F9C5C743462E82A /* EHHorizontalViewCell.m */,
+				97E129C95B1BB7DB446E51C328ACBF0C /* EHRoundedHorizontalViewCell.h */,
+				02C9970C9BF4250E7C18FBB5E1BE3A99 /* EHRoundedHorizontalViewCell.m */,
+				FF0B8D0FB5836E1CFF8DDE45FEFC8C63 /* Resources */,
+				A10A702B14417BB6AAF9E1919202D37D /* Support Files */,
+			);
+			name = EHHorizontalSelectionView;
+			path = EHHorizontalSelectionView;
+			sourceTree = "<group>";
+		};
+		7DB346D0F39D3F0E887471402A8071AB = {
+			isa = PBXGroup;
+			children = (
+				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
+				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
+				80260B9C36617B51572E911B8CE49179 /* Pods */,
+				230302E30D4C967DEF90A9A74A7B2BE0 /* Products */,
+				DFB451D58D2DCDD704A4F6C9F39D04EB /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		80260B9C36617B51572E911B8CE49179 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				42FB799B3D737936D90165EB3792E004 /* EHHorizontalSelectionView */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		A10A702B14417BB6AAF9E1919202D37D /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				4C4CD7BF922286D454D13F666766DB00 /* EHHorizontalSelectionView.modulemap */,
+				E08FFF1235877462EB4BC7FDAFF98574 /* EHHorizontalSelectionView.xcconfig */,
+				5697FC44C7503F67F39B4D1E86F5C61F /* EHHorizontalSelectionView-dummy.m */,
+				89B5E96C2BE7BF454D251BCC5C8525B4 /* EHHorizontalSelectionView-prefix.pch */,
+				1B245C5F07379B086231149036C6B46E /* EHHorizontalSelectionView-umbrella.h */,
+				F97F1EBBB6F6594171C591348CDD60CC /* Info.plist */,
+				3AD841E9CA7825E77EA0A5F52F39049B /* ResourceBundle-EHHorizontalSelectionView-Info.plist */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/EHHorizontalSelectionView";
+			sourceTree = "<group>";
+		};
+		BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D35AF013A5F0BAD4F32504907A52519E /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D35AF013A5F0BAD4F32504907A52519E /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		DFB451D58D2DCDD704A4F6C9F39D04EB /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				2371E770AAB9284A5B262D8F39C7F5B0 /* Pods-TripNow */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		FF0B8D0FB5836E1CFF8DDE45FEFC8C63 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				20AD9231343C0E02A9E5895A793452E5 /* EHHorizontalViewCell.xib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		BAC2FF8C407204E4CEE901CF6C9CE826 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD415BA9DE736D92B7F5FDE7675411F9 /* Pods-TripNow-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DC9CE0F5C5A23A07139296117EB74384 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1DE2807AFBA270DE29ADD891FCBDC824 /* EHHorizontalLineViewCell.h in Headers */,
+				7D781BE96F25E1D5665591BB0C99F686 /* EHHorizontalSelectionView-umbrella.h in Headers */,
+				A501A50B3C830DCDB636059404097407 /* EHHorizontalSelectionView.h in Headers */,
+				2E63B0902A7D0C99C299BFF1989AA63B /* EHHorizontalViewCell.h in Headers */,
+				40E2B4B1ADCBF878915711E7EB22ED12 /* EHRoundedHorizontalViewCell.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		116933BB9883B1DBD84F66A447E8867F /* Pods-TripNow */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 486109DF6CFE40F30B8AE8918482C350 /* Build configuration list for PBXNativeTarget "Pods-TripNow" */;
+			buildPhases = (
+				76D4E5E42CC402444DAE724801F4A11A /* Sources */,
+				2CC005D61958FC82C16276EEA1634FFD /* Frameworks */,
+				BAC2FF8C407204E4CEE901CF6C9CE826 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E47C5B9089F6811D546B4E06FD50156E /* PBXTargetDependency */,
+			);
+			name = "Pods-TripNow";
+			productName = "Pods-TripNow";
+			productReference = C791A93A82C382A2EEAC6FAC27DD58CB /* Pods_TripNow.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		20D44BAF665323BF1525226A9ACD5FF2 /* EHHorizontalSelectionView */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D6A77B92DC687F14E397B3A6F058B0B /* Build configuration list for PBXNativeTarget "EHHorizontalSelectionView" */;
+			buildPhases = (
+				1E4293478E4D2398D5AC678AD3726C3A /* Sources */,
+				1EE013CDBCA6E8A5E482F13D92ECE88F /* Frameworks */,
+				4EC42D67C59B2C6360CFD9C2E0563294 /* Resources */,
+				DC9CE0F5C5A23A07139296117EB74384 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A8E21A0492DD198EACE4689D4C4151A6 /* PBXTargetDependency */,
+			);
+			name = EHHorizontalSelectionView;
+			productName = EHHorizontalSelectionView;
+			productReference = 8DC1767C84FD4964CDCBB18FE48165A3 /* EHHorizontalSelectionView.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		87462DDDD5702A6A92B933BB05C163E8 /* EHHorizontalSelectionView-EHHorizontalSelectionView */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 12AA2969066EC6424A0A7E0459BF897B /* Build configuration list for PBXNativeTarget "EHHorizontalSelectionView-EHHorizontalSelectionView" */;
+			buildPhases = (
+				720622682B3E7A610A5E166E6D1A7519 /* Sources */,
+				C5D5196DD3FA7B475EBD9373B954956E /* Frameworks */,
+				E91A79EAA772D1BEC74C0B558574F8E9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "EHHorizontalSelectionView-EHHorizontalSelectionView";
+			productName = "EHHorizontalSelectionView-EHHorizontalSelectionView";
+			productReference = 3158E6F34CD779D43F8451B23FB63496 /* EHHorizontalSelectionView.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D41D8CD98F00B204E9800998ECF8427E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0830;
+				LastUpgradeCheck = 0700;
+			};
+			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
+			productRefGroup = 230302E30D4C967DEF90A9A74A7B2BE0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				20D44BAF665323BF1525226A9ACD5FF2 /* EHHorizontalSelectionView */,
+				87462DDDD5702A6A92B933BB05C163E8 /* EHHorizontalSelectionView-EHHorizontalSelectionView */,
+				116933BB9883B1DBD84F66A447E8867F /* Pods-TripNow */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4EC42D67C59B2C6360CFD9C2E0563294 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42D95449DAD60257616BD8B3617F9A47 /* EHHorizontalSelectionView.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E91A79EAA772D1BEC74C0B558574F8E9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4755C2687CE2B80A109A0633B52FD425 /* EHHorizontalViewCell.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1E4293478E4D2398D5AC678AD3726C3A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				942ADA579A4EAA99D639A49DC5387F17 /* EHHorizontalLineViewCell.m in Sources */,
+				F3B2BC0E7A663CAE45096F9992F9A7F8 /* EHHorizontalSelectionView-dummy.m in Sources */,
+				36680CC095905C83D76D825C211ABDDA /* EHHorizontalSelectionView.m in Sources */,
+				601EB9F98BB58A7F24038F115D3955EE /* EHHorizontalViewCell.m in Sources */,
+				6C1CB271E4DBAD7AD1A5BEA513622AC7 /* EHRoundedHorizontalViewCell.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		720622682B3E7A610A5E166E6D1A7519 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		76D4E5E42CC402444DAE724801F4A11A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				97E34BEB4797D4944238B9D3FF886934 /* Pods-TripNow-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A8E21A0492DD198EACE4689D4C4151A6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "EHHorizontalSelectionView-EHHorizontalSelectionView";
+			target = 87462DDDD5702A6A92B933BB05C163E8 /* EHHorizontalSelectionView-EHHorizontalSelectionView */;
+			targetProxy = 4AA720C1C7165ABD0709943CF838123C /* PBXContainerItemProxy */;
+		};
+		E47C5B9089F6811D546B4E06FD50156E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = EHHorizontalSelectionView;
+			target = 20D44BAF665323BF1525226A9ACD5FF2 /* EHHorizontalSelectionView */;
+			targetProxy = CBCF66EC469EF640C52D080515510A2F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		6B8A4446DEDB28C170F0019AE86F3A13 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 597BF51BA5C9AC75F7D79D3A9BCD29DA /* Pods-TripNow.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-TripNow/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-TripNow/Pods-TripNow.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_TripNow;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		6F9224530522DD3C735EC96CF142642E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		7071D1DEFC88BD68ACEC5F9EA956EBFC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E08FFF1235877462EB4BC7FDAFF98574 /* EHHorizontalSelectionView.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/EHHorizontalSelectionView";
+				INFOPLIST_FILE = "Target Support Files/EHHorizontalSelectionView/ResourceBundle-EHHorizontalSelectionView-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_NAME = EHHorizontalSelectionView;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		783367CD16A7481BEBE273C052A23B61 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E08FFF1235877462EB4BC7FDAFF98574 /* EHHorizontalSelectionView.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/EHHorizontalSelectionView";
+				INFOPLIST_FILE = "Target Support Files/EHHorizontalSelectionView/ResourceBundle-EHHorizontalSelectionView-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_NAME = EHHorizontalSelectionView;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+		9604F779FF230ECA1AA624DF111E3E0A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D3BC93733B54422F1AE7693A3AC329DC /* Pods-TripNow.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-TripNow/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-TripNow/Pods-TripNow.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_TripNow;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		B57951D085A1B98A97F8A1062A5E5C5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		E89876906D66932695B76CEB607DE20A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E08FFF1235877462EB4BC7FDAFF98574 /* EHHorizontalSelectionView.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/EHHorizontalSelectionView/EHHorizontalSelectionView-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/EHHorizontalSelectionView/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/EHHorizontalSelectionView/EHHorizontalSelectionView.modulemap";
+				PRODUCT_NAME = EHHorizontalSelectionView;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		FD8A4D5C4B9B3B22EE1395038E3FAD3F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E08FFF1235877462EB4BC7FDAFF98574 /* EHHorizontalSelectionView.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/EHHorizontalSelectionView/EHHorizontalSelectionView-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/EHHorizontalSelectionView/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/EHHorizontalSelectionView/EHHorizontalSelectionView.modulemap";
+				PRODUCT_NAME = EHHorizontalSelectionView;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0D6A77B92DC687F14E397B3A6F058B0B /* Build configuration list for PBXNativeTarget "EHHorizontalSelectionView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FD8A4D5C4B9B3B22EE1395038E3FAD3F /* Debug */,
+				E89876906D66932695B76CEB607DE20A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		12AA2969066EC6424A0A7E0459BF897B /* Build configuration list for PBXNativeTarget "EHHorizontalSelectionView-EHHorizontalSelectionView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7071D1DEFC88BD68ACEC5F9EA956EBFC /* Debug */,
+				783367CD16A7481BEBE273C052A23B61 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B57951D085A1B98A97F8A1062A5E5C5B /* Debug */,
+				6F9224530522DD3C735EC96CF142642E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		486109DF6CFE40F30B8AE8918482C350 /* Build configuration list for PBXNativeTarget "Pods-TripNow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6B8A4446DEDB28C170F0019AE86F3A13 /* Debug */,
+				9604F779FF230ECA1AA624DF111E3E0A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+}

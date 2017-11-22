@@ -14,7 +14,7 @@ class Stop {
     var parent: String
     var latitude: Double
     var longitude: Double
-    var buses: [String]
+    var buses: [String]     // bus numbers used as identifier
     
     init(id: String, name: String, parent: String, latitude: Double, longitude: Double) {
         self.id = id

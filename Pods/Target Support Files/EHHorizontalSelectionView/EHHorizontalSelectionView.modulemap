@@ -1,0 +1,6 @@
+framework module EHHorizontalSelectionView {
+  umbrella header "EHHorizontalSelectionView-umbrella.h"
+
+  export *
+  module * { export * }
+}
