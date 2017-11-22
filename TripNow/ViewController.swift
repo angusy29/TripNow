@@ -38,7 +38,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         
         initUserLocation()
         
-        self.navigationItem.title = "Quick search"
+        // self.navigationItem.title = "Quick search"
         
         // Do any additional setup after loading the view, typically from a nib.
         
@@ -54,6 +54,22 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         
         print(coordinate)
     }*/
+    
+    /*
+     * Removes the navigation bar when this view appears
+     */
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        super.viewWillAppear(animated)
+    }
+    
+    /*
+     * Shows the navigation bar when this view disappears
+     */
+    override func viewWillDisappear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+        super.viewWillDisappear(animated)
+    }
     
     /*
      * Initialize the user's location
