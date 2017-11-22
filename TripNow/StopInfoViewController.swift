@@ -80,9 +80,9 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                 
                 let stopEvents = resultJson?["stopEvents"] as? [[String: Any]]
                 
-                let isoDateFormatter = DateFormatter()
-                isoDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-                isoDateFormatter.timeZone = TimeZone(identifier: "Australia/Sydney")
+                let isoDateFormatter = ISO8601DateFormatter()
+                //isoDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+                // isoDateFormatter.timeZone = TimeZone(identifier: "Australia/Sydney")
                 
                 for j in 0...(stopEvents!.count - 1) {
                     let isRealTime = stopEvents?[j]["isRealtimeControlled"] as? Bool
@@ -151,8 +151,6 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
      * Callback for the selected item from horizontal view
      */
     func horizontalSelection(_ selectionView: EHHorizontalSelectionView, didSelectObjectAt index: UInt) {
-        // print(index)
-        // print(stopObj.getBuses()[Int(index)])
         self.selectedBus = stopObj.getBuses()[Int(index)]
         self.tableView.reloadData()
     }
@@ -167,13 +165,25 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("Table View last")
-        print(self.selectedBus)
-
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let row = indexPath.row
         let table = self.busIdToStopEvent[self.selectedBus]
-        cell.textLabel?.text = (table?[row].getBusNumber())! + " " + String(describing: (table?[row].departureTimePlanned)!)
+        
+        let sydneyTimeFormatter = DateFormatter()
+        sydneyTimeFormatter.dateFormat = "HH:mm"
+        sydneyTimeFormatter.timeZone = TimeZone(identifier: "Australia/Sydney")
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMM"
+        dateFormatter.timeZone = TimeZone(identifier: "Australia/Sydney")
+        
+        let date = dateFormatter.string(from: (table?[row].getDepartureTimePlanned())!)
+
+        cell.textLabel?.text = String(describing: date) + " " + "Planned: " + String(describing: (sydneyTimeFormatter.string(from: (table?[row].departureTimePlanned)!))) + " "
+        
+        if (table?[row].departureTimeEstimated != nil) {
+            cell.textLabel?.text = (cell.textLabel?.text)! +  "Realtime: " + String(describing: (sydneyTimeFormatter.string(from: (table?[row].departureTimeEstimated)!)))
+        }
         
         return cell
     }
