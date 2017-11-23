@@ -29,14 +29,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        refresh.setTitle("Search", for: UIControlState.normal)
-        
         // let latitude = -33.90961750180199
         // let longitude = 151.20722349056894
         mapView.delegate = self
         mapView.showsUserLocation = true
         
         initUserLocation()
+        
+        refresh.setTitle("Search", for: UIControlState.normal)
         
         // self.navigationItem.title = "Quick search"
         
@@ -244,63 +244,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         }.resume()
         
         sem.wait()
-    }
-    
-    /*
-     * Makes a GET request to /departure_mon 
-     * Obtains the departure details for each of the stops in stopFound
-     *
-     * NOTE: It's quite clear if I ever want more than 1 person using the app
-     * this function isn't scalable at all...
-     * Will easily exceed API rate limit
-     */
-    func getDepartureRequest() {
-        let sem = DispatchSemaphore(value: 0)
-        let date = Date()
-        let dateformatter = DateFormatter()
-        dateformatter.dateFormat = "yyyyMMdd"
-        let timeformatter = DateFormatter()
-        timeformatter.dateFormat = "hhmm"
-        let todayDate = dateformatter.string(from: date)    // in format yyyyMMdd
-        let currentTime = timeformatter.string(from: date)  // in format hhmm
-        
-        // print("Today's date: " + todayDate)
-        // print("Current time: " + currentTime)
-        
-        // we will probably need to control the rate limit this fires
-        // if it exceeds 5 per second, we're screwed
-        for i in 0...(stopsFound.count - 1) {
-            // used to get which buses pass which stop
-            let departureURL = "https://api.transport.nsw.gov.au/v1/tp/departure_mon?TfNSWDM=true&outputFormat=rapidJSON&coordOutputFormat=EPSG%3A4326&mode=direct&type_dm=stop&name_dm=" + stopsFound[i].getID() + "&depArrMacro=dep&itdDate=" + todayDate + "&itdTime=" + currentTime + "&version=10.2.2.48"
-        
-            var departureRequest = URLRequest(url: URL(string: departureURL)!)
-            departureRequest.addValue("application/json", forHTTPHeaderField: "Accept")
-            departureRequest.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
-        
-            // get which buses pass the stop
-            URLSession.shared.dataTask(with: departureRequest){(data: Data?, response: URLResponse?, error: Error?) -> Void in
-                do {
-                    let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
-                    // print(resultJson!)
-                
-                    let stopEvents = resultJson?["stopEvents"] as? [[String: Any]]
-                
-                    for j in 0...(stopEvents!.count - 1) {
-                        let transportation = stopEvents?[j]["transportation"] as? [String: AnyObject]
-                        let busNumber = transportation?["disassembledName"] as? String
-                    
-                        if (!self.stopsFound[i].isBusExist(bus: busNumber!)) {
-                            self.stopsFound[i].addBus(bus: busNumber!)
-                        }
-                    }
-                    sem.signal()
-                } catch {
-                    print("Error -> \(error)")
-                }
-            }.resume()
-            
-            sem.wait()
-        }
     }
     
     @IBAction func radiusSliderOnChange(_ sender: Any) {

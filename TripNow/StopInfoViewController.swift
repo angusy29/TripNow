@@ -22,6 +22,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     
     // the bus we tapped on in the horizontal list
     var selectedBus: String!
+    var currTime: Date!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +68,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         timeformatter.dateFormat = "HHmm"
         let todayDate = dateformatter.string(from: date)    // in format yyyyMMdd
         let currentTime = timeformatter.string(from: date)  // in format hhmm
+        currTime = date
         
         /*print("TODAY")
         print(todayDate)
@@ -186,16 +188,16 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         let table = self.busIdToStopEvent[self.selectedBus]
         
         let sydneyTimeFormatter = DateFormatter()
-        sydneyTimeFormatter.dateFormat = "HH:mm"
+        sydneyTimeFormatter.dateFormat = "h:mm a"
         sydneyTimeFormatter.timeZone = TimeZone(identifier: "Australia/Sydney")
         
-        let dateFormatter = DateFormatter()
+        /*let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMM"
         dateFormatter.timeZone = TimeZone(identifier: "Australia/Sydney")
         
-        let date = dateFormatter.string(from: (table?[row].getDepartureTimePlanned())!)
+        let date = dateFormatter.string(from: (table?[row].getDepartureTimePlanned())!)*/
         
-        cell.dateLabel?.text = String(describing: date)
+        // cell.dateLabel?.text = String(describing: date)
         
         // if estimated time is not nil, it is real time
         if (table?[row].getDepartureTimeEstimated() != nil) {
@@ -220,14 +222,12 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                 }
             }
            
-            if (lateTimeStr != "") {
+            /*if (lateTimeStr != "") {
                 lateTimeStr = lateTimeStr + "."
-            }
+            }*/
             
             cell.timeTopLabel?.text = String(describing: (sydneyTimeFormatter.string(from: (table?[row].getDepartureTimeEstimated())!)))
             cell.timeBottomLabel?.text = String(describing: (sydneyTimeFormatter.string(from: (table?[row].getDepartureTimePlanned())!))) + " " + isEarly + " " + lateTimeStr
-            // cell.busCapLabel?.text = table?[row].getOccupancy() != nil ? table?[row].getOccupancy() : ""
-            cell.busCapLabel?.text = ""
             
             if (table?[row].getOccupancy() == "MANY_SEATS") {
                 cell.busCapImg1?.image = UIImage(named: "customer-40-green")
@@ -242,9 +242,12 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                 cell.busCapImg2?.image = UIImage(named: "customer-40-red")
                 cell.busCapImg3?.image = UIImage(named: "customer-40-red")
             }
+            
+            cell.setWaitTimeLabel(time: (table?[row].getDepartureTimeEstimated())!, currentTime: self.currTime)
         } else {
             // no real time
             cell.setUINoRealTime(time: sydneyTimeFormatter.string(from: (table?[row].getDepartureTimePlanned())!))
+            cell.setWaitTimeLabel(time: (table?[row].getDepartureTimePlanned())!, currentTime: self.currTime)
         }
         
         cell.parentLabel?.text = self.busIdToTripDesc[self.selectedBus]?.getParent()
