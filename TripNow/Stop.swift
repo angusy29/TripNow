@@ -8,6 +8,15 @@
 
 import Foundation
 
+/*
+ * A Stop typically has
+ * id - Unique identifier for the stop, postcode followed by stop number eg. 201718
+ * name - Name of the stop (RoadName1 op RoadName2)
+ * parent - Parent of the stop, eg. Kensington
+ * latitude - Latitude of the stop
+ * longitude - Longitude of the stop
+ * buses - List of buses (strings) as unique identifiers
+ */
 class Stop {
     var id: String
     var name: String

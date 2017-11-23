@@ -17,7 +17,9 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     var stopObj: Stop!
     var selectionList: EHHorizontalSelectionView!
     var busIdToStopEvent = [String: [StopEvent]]()
+    var busIdToTripDesc = [String: TripDescriptor]()
     
+    // the bus we tapped on in the horizontal list
     var selectedBus: String!
     
     override func viewDidLoad() {
@@ -81,11 +83,15 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                 let stopEvents = resultJson?["stopEvents"] as? [[String: Any]]
                 
                 let isoDateFormatter = ISO8601DateFormatter()
-                //isoDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-                // isoDateFormatter.timeZone = TimeZone(identifier: "Australia/Sydney")
                 
                 for j in 0...(stopEvents!.count - 1) {
                     let isRealTime = stopEvents?[j]["isRealtimeControlled"] as? Bool
+                    let location = stopEvents?[j]["location"] as? [String: AnyObject]
+                    let properties = location!["properties"] as? [String: AnyObject]
+                    let occupancy = isRealTime == true ? properties?["occupancy"] as? String : nil
+                    let parent = location?["parent"] as? [String: AnyObject]
+                    let nestedParent = parent?["parent"] as? [String: AnyObject]
+                    let parentName = nestedParent?["name"] as? String
                     let departureTimePlanned = isoDateFormatter.date(from: (stopEvents?[j]["departureTimePlanned"] as? String)!)
                     let departureTimeEstimated = isRealTime == true ? isoDateFormatter.date(from: (stopEvents?[j]["departureTimeEstimated"] as? String)!): nil
                     let transportation = stopEvents?[j]["transportation"] as? [String: AnyObject]
@@ -107,13 +113,14 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                     print(description!)
                     print(departureTimePlanned!)*/
                     
-                    let newStopEvent = StopEvent(busNumber: busNumber!, origin: originName!, destination: destinationName!, description: description!, departureTimePlanned: departureTimePlanned!, departureTimeEstimated: departureTimeEstimated)
+                    let newStopEvent = StopEvent(busNumber: busNumber!, departureTimePlanned: departureTimePlanned!, departureTimeEstimated: departureTimeEstimated, occupancy: occupancy)
                     
                     // if the busId isn't in the map yet, we need to create a new array for it in the dictionary
                     if (self.busIdToStopEvent[busNumber!] == nil) {
                         var newBus = [StopEvent]()
                         newBus.append(newStopEvent)
                         self.busIdToStopEvent[busNumber!] = newBus
+                        self.busIdToTripDesc[busNumber!] = TripDescriptor(origin: originName!, destination: destinationName!, description: description!, parent: parentName!)
                     } else {
                         // otherwise just append to the busNumber's vector
                         (self.busIdToStopEvent[busNumber!])?.append(newStopEvent)
@@ -165,7 +172,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
         let row = indexPath.row
         let table = self.busIdToStopEvent[self.selectedBus]
         
@@ -178,11 +185,19 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         dateFormatter.timeZone = TimeZone(identifier: "Australia/Sydney")
         
         let date = dateFormatter.string(from: (table?[row].getDepartureTimePlanned())!)
-
-        cell.textLabel?.text = String(describing: date) + " " + "Planned: " + String(describing: (sydneyTimeFormatter.string(from: (table?[row].departureTimePlanned)!))) + " "
         
-        if (table?[row].departureTimeEstimated != nil) {
-            cell.textLabel?.text = (cell.textLabel?.text)! +  "Realtime: " + String(describing: (sydneyTimeFormatter.string(from: (table?[row].departureTimeEstimated)!)))
+        cell.dateLabel?.text = String(describing: date)
+        
+        // if estimated time is not nil, it is real time
+        if (table?[row].getDepartureTimeEstimated() != nil) {
+            cell.timeTopLabel?.text = String(describing: (sydneyTimeFormatter.string(from: (table?[row].getDepartureTimeEstimated())!)))
+            cell.timeBottomLabel?.text = String(describing: (sydneyTimeFormatter.string(from: (table?[row].getDepartureTimePlanned())!)))
+            cell.busCapLabel?.text = table?[row].getOccupancy() != nil ? table?[row].getOccupancy() : ""
+        } else {
+            // no real time
+            cell.timeTopLabel?.text = String(describing: (sydneyTimeFormatter.string(from: (table?[row].getDepartureTimePlanned())!)))
+            cell.timeBottomLabel?.text = "Real-time data unavailable"
+            cell.busCapLabel?.text = ""
         }
         
         return cell

@@ -10,38 +10,39 @@ import Foundation
 
 import Foundation
 
+/*
+ * StopEvent
+ * busNumber - Bus stopping for this event
+ * departureTimePlanned - Time the bus was planned to leave
+ * departureTimeEstimated - Real time the bus is planned to leave
+ * occupancy - Real time, how full is the bus?
+ */
 class StopEvent {
     var busNumber: String
-    var origin: String
-    var destination: String
-    var description: String
     var departureTimePlanned: Date
     var departureTimeEstimated: Date?
-    // var occupancy: String
+    var occupancy: String?
     
-    init(busNumber: String, origin: String, destination: String, description: String, departureTimePlanned: Date, departureTimeEstimated: Date?) {
+    init(busNumber: String, departureTimePlanned: Date, departureTimeEstimated: Date?, occupancy: String?) {
         self.busNumber = busNumber
-        self.origin = origin
-        self.destination = destination
-        self.description = description
         self.departureTimePlanned = departureTimePlanned
         self.departureTimeEstimated = departureTimeEstimated
+        self.occupancy = occupancy
     }
     
     public func getBusNumber() -> String {
         return self.busNumber
     }
     
-    public func getOrigin() -> String {
-        return self.origin
-    }
-    
-    public func getDestination() -> String {
-        return self.destination
-    }
-    
     public func getDepartureTimePlanned() -> Date {
         return self.departureTimePlanned
     }
     
+    public func getDepartureTimeEstimated() -> Date? {
+        return self.departureTimeEstimated
+    }
+    
+    public func getOccupancy() -> String? {
+        return self.occupancy
+    }
 }
