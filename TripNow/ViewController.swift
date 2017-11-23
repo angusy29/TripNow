@@ -264,8 +264,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         let todayDate = dateformatter.string(from: date)    // in format yyyyMMdd
         let currentTime = timeformatter.string(from: date)  // in format hhmm
         
-        print("Today's date: " + todayDate)
-        print("Current time: " + currentTime)
+        // print("Today's date: " + todayDate)
+        // print("Current time: " + currentTime)
         
         // we will probably need to control the rate limit this fires
         // if it exceeds 5 per second, we're screwed
@@ -281,7 +281,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             URLSession.shared.dataTask(with: departureRequest){(data: Data?, response: URLResponse?, error: Error?) -> Void in
                 do {
                     let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
-                    print(self.stopsFound)
                     // print(resultJson!)
                 
                     let stopEvents = resultJson?["stopEvents"] as? [[String: Any]]

@@ -12,6 +12,7 @@ import EHHorizontalSelectionView
 
 class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHorizontalSelectionViewProtocol, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var destinationLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
     var stopObj: Stop!
@@ -67,9 +68,9 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         let todayDate = dateformatter.string(from: date)    // in format yyyyMMdd
         let currentTime = timeformatter.string(from: date)  // in format hhmm
         
-        print("TODAY")
+        /*print("TODAY")
         print(todayDate)
-        print(currentTime)
+        print(currentTime)*/
         
         // used to get which buses pass which stop
         let departureURL = "https://api.transport.nsw.gov.au/v1/tp/departure_mon?TfNSWDM=true&outputFormat=rapidJSON&coordOutputFormat=EPSG%3A4326&mode=direct&type_dm=stop&name_dm=" + stopObj.getID() + "&depArrMacro=dep&itdDate=" + todayDate + "&itdTime=" + currentTime + "&version=10.2.2.48"
@@ -82,7 +83,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         URLSession.shared.dataTask(with: departureRequest){(data: Data?, response: URLResponse?, error: Error?) -> Void in
             do {
                 let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
-                print(resultJson!)
+                // print(resultJson!)
                 
                 let stopEvents = resultJson?["stopEvents"] as? [[String: Any]]
                 
@@ -109,6 +110,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                     // initialize selected bus if nil
                     if (self.selectedBus == nil) {
                         self.selectedBus = busNumber
+                        
                     }
                     
                     /*print(busNumber!)
@@ -141,6 +143,8 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
             }.resume()
         
         sem.wait()
+        
+        self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[self.selectedBus]?.destination)!
     }
     
     override func didReceiveMemoryWarning() {
@@ -163,6 +167,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
      */
     func horizontalSelection(_ selectionView: EHHorizontalSelectionView, didSelectObjectAt index: UInt) {
         self.selectedBus = stopObj.getBuses()[Int(index)]
+        self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[self.selectedBus]?.destination)!
         self.tableView.reloadData()
     }
     
