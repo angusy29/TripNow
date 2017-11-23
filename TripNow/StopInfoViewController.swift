@@ -226,7 +226,8 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
             
             cell.timeTopLabel?.text = String(describing: (sydneyTimeFormatter.string(from: (table?[row].getDepartureTimeEstimated())!)))
             cell.timeBottomLabel?.text = String(describing: (sydneyTimeFormatter.string(from: (table?[row].getDepartureTimePlanned())!))) + " " + isEarly + " " + lateTimeStr
-            cell.busCapLabel?.text = table?[row].getOccupancy() != nil ? table?[row].getOccupancy() : ""
+            // cell.busCapLabel?.text = table?[row].getOccupancy() != nil ? table?[row].getOccupancy() : ""
+            cell.busCapLabel?.text = ""
             
             if (table?[row].getOccupancy() == "MANY_SEATS") {
                 cell.busCapImg1?.image = UIImage(named: "customer-40-green")

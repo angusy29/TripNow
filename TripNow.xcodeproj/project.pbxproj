@@ -13,6 +13,8 @@
 		8A40C66B1FC4EFA50089D491 /* StopInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A40C66A1FC4EFA50089D491 /* StopInfoViewController.swift */; };
 		8A40C66D1FC4F1CB0089D491 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A40C66C1FC4F1CB0089D491 /* Main.storyboard */; };
 		8A716BDE1FC3EA5C00727A66 /* Stop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A716BDD1FC3EA5C00727A66 /* Stop.swift */; };
+		8AC91CEA1FC6417F001064F2 /* TripDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC91CE91FC6417F001064F2 /* TripDescriptor.swift */; };
+		8AC91CEC1FC64664001064F2 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC91CEB1FC64664001064F2 /* CustomTableViewCell.swift */; };
 		8AF218201F1C3B290008E0A0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF2181F1F1C3B290008E0A0 /* AppDelegate.swift */; };
 		8AF218221F1C3B290008E0A0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF218211F1C3B290008E0A0 /* ViewController.swift */; };
 		8AF218271F1C3B2A0008E0A0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AF218261F1C3B2A0008E0A0 /* Assets.xcassets */; };
@@ -31,6 +33,8 @@
 		8A483BAF1FC537700018C213 /* HTHorizontalSelectionList.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HTHorizontalSelectionList.framework; path = "Pods/../build/Debug-iphoneos/HTHorizontalSelectionList/HTHorizontalSelectionList.framework"; sourceTree = "<group>"; };
 		8A6ABAAA1FC531E600D3B83D /* EHHorizontalSelectionView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EHHorizontalSelectionView.framework; path = "Pods/../build/Debug-iphoneos/EHHorizontalSelectionView/EHHorizontalSelectionView.framework"; sourceTree = "<group>"; };
 		8A716BDD1FC3EA5C00727A66 /* Stop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stop.swift; sourceTree = "<group>"; };
+		8AC91CE91FC6417F001064F2 /* TripDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDescriptor.swift; sourceTree = "<group>"; };
+		8AC91CEB1FC64664001064F2 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		8AE583281FC52C3E0037CEE3 /* SJSegmentedScrollView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SJSegmentedScrollView.framework; path = "../../../Library/Developer/Xcode/DerivedData/TripNow-bizzapqvtzwsbqdxcrqfoahmmxwf/Build/Products/Debug-iphonesimulator/SJSegmentedScrollView/SJSegmentedScrollView.framework"; sourceTree = "<group>"; };
 		8AF2181C1F1C3B290008E0A0 /* TripNow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TripNow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AF2181F1F1C3B290008E0A0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -106,6 +110,8 @@
 				8A3F3ABD1FC42BD100118874 /* User.swift */,
 				8A40C66A1FC4EFA50089D491 /* StopInfoViewController.swift */,
 				8A2EDE421FC57BCA00935B05 /* StopEvent.swift */,
+				8AC91CE91FC6417F001064F2 /* TripDescriptor.swift */,
+				8AC91CEB1FC64664001064F2 /* CustomTableViewCell.swift */,
 			);
 			path = TripNow;
 			sourceTree = "<group>";
@@ -243,9 +249,11 @@
 			files = (
 				8A2EDE431FC57BCA00935B05 /* StopEvent.swift in Sources */,
 				8AF218221F1C3B290008E0A0 /* ViewController.swift in Sources */,
+				8AC91CEC1FC64664001064F2 /* CustomTableViewCell.swift in Sources */,
 				8AF218201F1C3B290008E0A0 /* AppDelegate.swift in Sources */,
 				8A3F3ABE1FC42BD100118874 /* User.swift in Sources */,
 				8A716BDE1FC3EA5C00727A66 /* Stop.swift in Sources */,
+				8AC91CEA1FC6417F001064F2 /* TripDescriptor.swift in Sources */,
 				8A40C66B1FC4EFA50089D491 /* StopInfoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
