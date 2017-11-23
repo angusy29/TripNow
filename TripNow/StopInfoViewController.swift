@@ -89,6 +89,10 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                 
                 let stopEvents = resultJson?["stopEvents"] as? [[String: Any]]
                 
+                if (stopEvents == nil) {
+                    return
+                }
+                
                 let isoDateFormatter = ISO8601DateFormatter()
                 
                 for j in 0...(stopEvents!.count - 1) {

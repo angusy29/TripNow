@@ -20,7 +20,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
 
     // usr related variables
     var user: User!
-    var userRadiusOverlay: MKCircle!
+    var radiusOverlay: MKCircle!
+    var userAnnotation: MKPointAnnotation!           // annotation the user can drag
     var isLocationInitCentre = false            // have we set the initial centre position of the user?
 
     // list of stops we found
@@ -96,28 +97,34 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
      */
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         // this should be invoked on the first time application is opened
-        if (!isLocationInitCentre) {
+        if (!isLocationInitCentre && CLLocationManager.locationServicesEnabled()) {
             user = User(coordinate: (manager.location?.coordinate)!, radius: 400)
             let start = CLLocationCoordinate2DMake(user.getLatitude(), user.getLongitude())
             let adjustedRegion = mapView.regionThatFits(MKCoordinateRegionMakeWithDistance(start, 1000, 1000))
             mapView.setRegion(adjustedRegion, animated: false)
-            
+                
             // need to remove this overlay later if user's position changes
-            userRadiusOverlay = MKCircle(center: user.getCoordinate(), radius: user.getRadius())
-            mapView.add(userRadiusOverlay)
+            radiusOverlay = MKCircle(center: user.getCoordinate(), radius: user.getRadius())
+            mapView.add(radiusOverlay)
+                
+            /*userAnnotation = createAnnotation(latitude: (locationManager.location?.coordinate.latitude)!,
+                                                longitude: (locationManager.location?.coordinate.longitude)!, title: "Search radius: " + String(user.getRadius()) + "m", subtitle: "")*/
+            userAnnotation = MKPointAnnotation()
+            userAnnotation.coordinate = CLLocationCoordinate2D(latitude: user.getLatitude(), longitude: user.getLongitude())
+            userAnnotation.title = "Search radius: " + String(Int(user.getRadius())) + "m "
+            self.mapView.addAnnotation(userAnnotation)
             
             isLocationInitCentre = true
-        } else {
-            let newLatitude = (manager.location?.coordinate.latitude)!
-            let newLongitude = (manager.location?.coordinate.longitude)!
-            let epsilon = 0.5
+        } else if (!isLocationInitCentre && !CLLocationManager.locationServicesEnabled()) {
+            userAnnotation = MKPointAnnotation()
+            userAnnotation.coordinate = CLLocationCoordinate2D(latitude: -33.865143, longitude: 151.2099)
+            userAnnotation.title = "Search radius: 400m "
+            self.mapView.addAnnotation(userAnnotation)
             
-            if (fabs(newLatitude - user.getLatitude()) <= epsilon && fabs(newLongitude - user.getLongitude()) <= epsilon) {
-                return
-            }
-            
-            user.setCoordinate(coordinate: (manager.location?.coordinate)!)
+            isLocationInitCentre = true
         }
+        
+        user.setCoordinate(coordinate: (manager.location?.coordinate)!)
     }
     
     /*
@@ -159,10 +166,28 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         if (annotation is MKUserLocation) {
             return nil
         }
+        
         let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "annotationView")
         annotationView.canShowCallout = true
         annotationView.rightCalloutAccessoryView = UIButton.init(type: UIButtonType.detailDisclosure)
+        
+        if (annotation.isEqual(userAnnotation)) {
+            annotationView.pinTintColor = UIColor.green
+            annotationView.isDraggable = true
+        }
+        
+        annotationView.animatesDrop = true
+        
         return annotationView
+    }
+    
+    /*
+     * Gets called when a pin is dragged
+     * Seems to get called 2-3 times in the whole process
+     */
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+        mapView.remove(radiusOverlay)
+        createRadiusOverlay()
     }
     
     // Invoked on click refresh
@@ -171,17 +196,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         mapView.removeAnnotations(allAnnotations)
         allAnnotations.removeAll()
         
-        let latitude = (locationManager.location?.coordinate.latitude)!
-        let longitude = (locationManager.location?.coordinate.longitude)!
+        // let latitude = (locationManager.location?.coordinate.latitude)!
+        // let longitude = (locationManager.location?.coordinate.longitude)!
+        
+        let latitude = userAnnotation.coordinate.latitude
+        let longitude = userAnnotation.coordinate.longitude
         
         self.getClosestStopRequest(longitude: longitude, latitude: latitude, radius: user.getRadius())
         // self.getDepartureRequest()
         
         for stop in stopsFound {
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = CLLocationCoordinate2D(latitude: stop.getLatitude(), longitude: stop.getLongitude())
-            annotation.title = stop.getParent() + " " + stop.getID()
-            annotation.subtitle = stop.getName()
+            let annotation = self.createAnnotation(latitude: stop.getLatitude(), longitude: stop.getLongitude(), title: stop.getParent() + " " + stop.getID(), subtitle: stop.getName())
             // annotation.subtitle = "Buses: "
             
             /*for bus in stop.getBuses() {
@@ -211,7 +236,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         URLSession.shared.dataTask(with: closestStopsRequest){(data: Data?,response: URLResponse?, error: Error?) -> Void in
             do {
                 let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
+                
                 let locations = resultJson?["locations"] as? [[String: Any]]
+                
+                if (locations?.count == 0) {
+                    return
+                }
                 
                 for i in 0...((locations?.count)! - 1) {
                     if (i >= locations!.count) {
@@ -246,13 +276,47 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         sem.wait()
     }
     
+    /*
+     * Callback for when radius slider changes
+     */
     @IBAction func radiusSliderOnChange(_ sender: Any) {
         self.user.setRadius(radius: CLLocationDistance(radiusSlider.value))
-        
+        userAnnotation.title = "Search radius: " + String(Int(user.getRadius())) + "m "
+        mapView.selectAnnotation(userAnnotation, animated: true)
+
         // change the overlay radius
-        mapView.remove(userRadiusOverlay)
-        userRadiusOverlay = MKCircle(center: user.getCoordinate(), radius: user.getRadius())
-        mapView.add(userRadiusOverlay)
+        if (radiusOverlay != nil) {
+            mapView.remove(radiusOverlay)
+        }
+        
+        createRadiusOverlay()
+    }
+    
+    @IBAction func onReleaseSliderInside(_ sender: Any) {
+        mapView.deselectAnnotation(userAnnotation, animated: false)
+    }
+    
+    @IBAction func onReleaseSliderOutside(_ sender: Any) {
+        mapView.deselectAnnotation(userAnnotation, animated: false)
+    }
+    
+    /*
+     * Creates a red annotation point for the bus stops
+     */
+    func createAnnotation(latitude: CLLocationDegrees, longitude: CLLocationDegrees, title: String, subtitle: String) -> MKAnnotation {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        annotation.title = title
+        annotation.subtitle = subtitle
+        return annotation
+    }
+    
+    /*
+     * Creates blue radius overlay around the user annotation
+     */
+    func createRadiusOverlay() {
+        radiusOverlay = MKCircle(center: userAnnotation.coordinate, radius: user.getRadius())
+        mapView.add(radiusOverlay)
     }
     
     override func didReceiveMemoryWarning() {
