@@ -86,48 +86,76 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="89.666666666666671"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bus capacity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cfb-5L-KJb">
+                                                    <rect key="frame" x="260.33333333333331" y="3" width="87.666666666666686" height="18"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="customer-40-grey" translatesAutoresizingMaskIntoConstraints="NO" id="mR9-iD-Vn1">
+                                                    <rect key="frame" x="230" y="21" width="40" height="40"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="customer-40-grey" translatesAutoresizingMaskIntoConstraints="NO" id="rKE-XC-MvF">
+                                                    <rect key="frame" x="275" y="21" width="40" height="40"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="customer-40-grey" translatesAutoresizingMaskIntoConstraints="NO" id="ftq-mt-my8">
+                                                    <rect key="frame" x="320" y="21" width="40" height="40"/>
+                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7gC-nN-t3A">
-                                                    <rect key="frame" x="39" y="35" width="36" height="20"/>
+                                                    <rect key="frame" x="30" y="35" width="36" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SDo-8X-bZN">
-                                                    <rect key="frame" x="100" y="21" width="45.333333333333343" height="20.333333333333329"/>
+                                                    <rect key="frame" x="91" y="26" width="45.333333333333343" height="20.333333333333329"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Cd-8F-pZM">
-                                                    <rect key="frame" x="100" y="63" width="40.333333333333343" height="17"/>
+                                                    <rect key="frame" x="91" y="63" width="40.333333333333343" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" red="0.52883090101522845" green="0.52883090101522845" blue="0.52883090101522845" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bus capacity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cfb-5L-KJb">
-                                                    <rect key="frame" x="247.33333333333334" y="21" width="87.666666666666657" height="18"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                    <nil key="textColor"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Parent" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wre-Tm-pHZ">
+                                                    <rect key="frame" x="318" y="64" width="42" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" red="0.52883090101522845" green="0.52883090101522845" blue="0.52883090101522845" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="7gC-nN-t3A" firstAttribute="top" secondItem="lXb-CA-VqD" secondAttribute="topMargin" constant="24" id="0TP-mi-oCp"/>
                                                 <constraint firstItem="0Cd-8F-pZM" firstAttribute="leading" secondItem="7gC-nN-t3A" secondAttribute="trailing" constant="25" id="3DE-2V-pbQ"/>
-                                                <constraint firstItem="7gC-nN-t3A" firstAttribute="leading" secondItem="lXb-CA-VqD" secondAttribute="leadingMargin" constant="24" id="8ff-jI-Ho7"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="cfb-5L-KJb" secondAttribute="trailing" constant="25" id="A89-IV-VUp"/>
-                                                <constraint firstItem="SDo-8X-bZN" firstAttribute="top" secondItem="lXb-CA-VqD" secondAttribute="topMargin" constant="10" id="Bv3-jh-ntV"/>
-                                                <constraint firstItem="cfb-5L-KJb" firstAttribute="top" secondItem="lXb-CA-VqD" secondAttribute="topMargin" constant="10" id="ECo-uD-Gry"/>
-                                                <constraint firstAttribute="bottom" secondItem="0Cd-8F-pZM" secondAttribute="bottom" constant="9.6699999999999999" id="GPm-RQ-YtC"/>
+                                                <constraint firstItem="7gC-nN-t3A" firstAttribute="leading" secondItem="lXb-CA-VqD" secondAttribute="leadingMargin" constant="15" id="8ff-jI-Ho7"/>
+                                                <constraint firstItem="SDo-8X-bZN" firstAttribute="top" secondItem="lXb-CA-VqD" secondAttribute="topMargin" constant="15" id="Bv3-jh-ntV"/>
+                                                <constraint firstItem="cfb-5L-KJb" firstAttribute="top" secondItem="lXb-CA-VqD" secondAttribute="top" constant="3" id="EI4-V6-N7q"/>
+                                                <constraint firstAttribute="bottom" secondItem="0Cd-8F-pZM" secondAttribute="bottom" constant="10" id="GPm-RQ-YtC"/>
+                                                <constraint firstItem="rKE-XC-MvF" firstAttribute="top" secondItem="lXb-CA-VqD" secondAttribute="topMargin" constant="10" id="GdY-xa-CQZ"/>
+                                                <constraint firstItem="mR9-iD-Vn1" firstAttribute="top" secondItem="lXb-CA-VqD" secondAttribute="topMargin" constant="10" id="Mvx-ZW-GKB"/>
                                                 <constraint firstItem="SDo-8X-bZN" firstAttribute="leading" secondItem="7gC-nN-t3A" secondAttribute="trailing" constant="25" id="O1Z-FS-zuX"/>
+                                                <constraint firstAttribute="trailing" secondItem="ftq-mt-my8" secondAttribute="trailing" constant="15" id="OAN-AW-831"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="7gC-nN-t3A" secondAttribute="bottom" constant="24" id="TZa-bm-trd"/>
+                                                <constraint firstItem="rKE-XC-MvF" firstAttribute="leading" secondItem="mR9-iD-Vn1" secondAttribute="trailing" constant="5" id="U6T-Q2-bNf"/>
+                                                <constraint firstAttribute="trailing" secondItem="wre-Tm-pHZ" secondAttribute="trailing" constant="15" id="WdE-6q-iod"/>
+                                                <constraint firstItem="wre-Tm-pHZ" firstAttribute="top" secondItem="ftq-mt-my8" secondAttribute="bottom" constant="3" id="Z8h-0c-UNT"/>
+                                                <constraint firstItem="ftq-mt-my8" firstAttribute="leading" secondItem="rKE-XC-MvF" secondAttribute="trailing" constant="5" id="aRH-rr-V0i"/>
+                                                <constraint firstAttribute="trailing" secondItem="cfb-5L-KJb" secondAttribute="trailing" constant="27" id="aZj-1L-fFu"/>
                                                 <constraint firstItem="7gC-nN-t3A" firstAttribute="top" secondItem="lXb-CA-VqD" secondAttribute="topMargin" constant="24" id="hmR-GZ-Hgb"/>
+                                                <constraint firstAttribute="bottom" secondItem="wre-Tm-pHZ" secondAttribute="bottom" constant="10" id="pDP-9o-xaT"/>
+                                                <constraint firstItem="ftq-mt-my8" firstAttribute="top" secondItem="lXb-CA-VqD" secondAttribute="topMargin" constant="10" id="plr-Pj-GlS"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="7gC-nN-t3A" secondAttribute="bottom" constant="24" id="zBt-v9-RQg"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="busCapImg1" destination="mR9-iD-Vn1" id="Xhi-U1-6H7"/>
+                                            <outlet property="busCapImg2" destination="rKE-XC-MvF" id="a6z-V5-Ts2"/>
+                                            <outlet property="busCapImg3" destination="ftq-mt-my8" id="3R5-q1-ifr"/>
                                             <outlet property="busCapLabel" destination="cfb-5L-KJb" id="KmV-yt-YIV"/>
                                             <outlet property="dateLabel" destination="7gC-nN-t3A" id="Tcm-ID-Sop"/>
+                                            <outlet property="parentLabel" destination="wre-Tm-pHZ" id="zWI-yY-Q6q"/>
                                             <outlet property="timeBottomLabel" destination="0Cd-8F-pZM" id="Rr5-Jk-jLI"/>
                                             <outlet property="timeTopLabel" destination="SDo-8X-bZN" id="C32-YN-ww6"/>
                                         </connections>
@@ -170,4 +198,7 @@
             <point key="canvasLocation" x="-72.65625" y="13.4765625"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="customer-40-grey" width="40" height="40"/>
+    </resources>
 </document>

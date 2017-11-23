@@ -63,9 +63,13 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = "yyyyMMdd"
         let timeformatter = DateFormatter()
-        timeformatter.dateFormat = "hhmm"
+        timeformatter.dateFormat = "HHmm"
         let todayDate = dateformatter.string(from: date)    // in format yyyyMMdd
         let currentTime = timeformatter.string(from: date)  // in format hhmm
+        
+        print("TODAY")
+        print(todayDate)
+        print(currentTime)
         
         // used to get which buses pass which stop
         let departureURL = "https://api.transport.nsw.gov.au/v1/tp/departure_mon?TfNSWDM=true&outputFormat=rapidJSON&coordOutputFormat=EPSG%3A4326&mode=direct&type_dm=stop&name_dm=" + stopObj.getID() + "&depArrMacro=dep&itdDate=" + todayDate + "&itdTime=" + currentTime + "&version=10.2.2.48"
@@ -78,7 +82,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         URLSession.shared.dataTask(with: departureRequest){(data: Data?, response: URLResponse?, error: Error?) -> Void in
             do {
                 let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
-                // print(resultJson!)
+                print(resultJson!)
                 
                 let stopEvents = resultJson?["stopEvents"] as? [[String: Any]]
                 
@@ -190,15 +194,54 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         
         // if estimated time is not nil, it is real time
         if (table?[row].getDepartureTimeEstimated() != nil) {
+            let timeDifference = table?[row].getDepartureTimePlanned().timeIntervalSince((table?[row].getDepartureTimeEstimated())!)
+            // if timeDifference is negative, bus must be late, otherwise early
+            var isEarly = Int(timeDifference!) < 0 ? "Late by" : "Early by"
+            if (Int(timeDifference!) == 0) {
+                isEarly = "On time"
+            }
+            
+            let hours = Int(abs(timeDifference!)) / 3600
+            let minutes = (Int(abs(timeDifference!)) / 60) % 60
+            var lateTimeStr = ""
+            if (hours != 0) {
+                lateTimeStr = lateTimeStr + String(hours) + " hours"
+            }
+            
+            if (minutes != 0) {
+                lateTimeStr = lateTimeStr + String(minutes) + " minute"
+                if (minutes > 1) {
+                    lateTimeStr = lateTimeStr + "s"
+                }
+            }
+           
+            if (lateTimeStr != "") {
+                lateTimeStr = lateTimeStr + "."
+            }
+            
             cell.timeTopLabel?.text = String(describing: (sydneyTimeFormatter.string(from: (table?[row].getDepartureTimeEstimated())!)))
-            cell.timeBottomLabel?.text = String(describing: (sydneyTimeFormatter.string(from: (table?[row].getDepartureTimePlanned())!)))
+            cell.timeBottomLabel?.text = String(describing: (sydneyTimeFormatter.string(from: (table?[row].getDepartureTimePlanned())!))) + " " + isEarly + " " + lateTimeStr
             cell.busCapLabel?.text = table?[row].getOccupancy() != nil ? table?[row].getOccupancy() : ""
+            
+            if (table?[row].getOccupancy() == "MANY_SEATS") {
+                cell.busCapImg1?.image = UIImage(named: "customer-40-green")
+                cell.busCapImg2?.image = UIImage(named: "customer-40-grey")
+                cell.busCapImg3?.image = UIImage(named: "customer-40-grey")
+            } else if (table?[row].getOccupancy() == "FEW_SEATS") {
+                cell.busCapImg1?.image = UIImage(named: "customer-40-yellow")
+                cell.busCapImg2?.image = UIImage(named: "customer-40-yellow")
+                cell.busCapImg3?.image = UIImage(named: "customer-40-grey")
+            } else {
+                cell.busCapImg1?.image = UIImage(named: "customer-40-red")
+                cell.busCapImg2?.image = UIImage(named: "customer-40-red")
+                cell.busCapImg3?.image = UIImage(named: "customer-40-red")
+            }
         } else {
             // no real time
-            cell.timeTopLabel?.text = String(describing: (sydneyTimeFormatter.string(from: (table?[row].getDepartureTimePlanned())!)))
-            cell.timeBottomLabel?.text = "Real-time data unavailable"
-            cell.busCapLabel?.text = ""
+            cell.setUINoRealTime(time: sydneyTimeFormatter.string(from: (table?[row].getDepartureTimePlanned())!))
         }
+        
+        cell.parentLabel?.text = self.busIdToTripDesc[self.selectedBus]?.getParent()
         
         return cell
     }
