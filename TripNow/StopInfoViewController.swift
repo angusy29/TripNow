@@ -26,8 +26,6 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         self.navigationItem.title = stopObj.getName()
         
@@ -35,7 +33,6 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         // self.edgesForExtendedLayout = []
  
         let selectionList = EHHorizontalSelectionView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 40))
-        selectionList.delegate = self
         selectionList.registerCell(with: EHHorizontalLineViewCell.self)
         selectionList.textColor = UIColor.blue
         selectionList.altTextColor = UIColor.black
@@ -89,57 +86,55 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                 
                 let stopEvents = resultJson?["stopEvents"] as? [[String: Any]]
                 
-                if (stopEvents == nil) {
-                    return
-                }
-                
                 let isoDateFormatter = ISO8601DateFormatter()
                 
-                for j in 0...(stopEvents!.count - 1) {
-                    let isRealTime = stopEvents?[j]["isRealtimeControlled"] as? Bool
-                    let location = stopEvents?[j]["location"] as? [String: AnyObject]
-                    let properties = location!["properties"] as? [String: AnyObject]
-                    let occupancy = isRealTime == true ? properties?["occupancy"] as? String : nil
-                    let parent = location?["parent"] as? [String: AnyObject]
-                    let nestedParent = parent?["parent"] as? [String: AnyObject]
-                    let parentName = nestedParent?["name"] as? String
-                    let departureTimePlanned = isoDateFormatter.date(from: (stopEvents?[j]["departureTimePlanned"] as? String)!)
-                    let departureTimeEstimated = isRealTime == true ? isoDateFormatter.date(from: (stopEvents?[j]["departureTimeEstimated"] as? String)!): nil
-                    let transportation = stopEvents?[j]["transportation"] as? [String: AnyObject]
-                    let busNumber = transportation?["number"] as? String
-                    let description = transportation?["description"] as? String
-                    let origin = transportation?["origin"] as? [String: AnyObject]
-                    let destination = transportation?["destination"] as? [String: AnyObject]
-                    let originName = origin?["name"] as? String
-                    let destinationName = destination?["name"] as? String
-                    
-                    // initialize selected bus if nil
-                    if (self.selectedBus == nil) {
-                        self.selectedBus = busNumber
+                if (stopEvents != nil) {
+                    for j in 0...(stopEvents!.count - 1) {
+                        let isRealTime = stopEvents?[j]["isRealtimeControlled"] as? Bool
+                        let location = stopEvents?[j]["location"] as? [String: AnyObject]
+                        let properties = location!["properties"] as? [String: AnyObject]
+                        let occupancy = isRealTime == true ? properties?["occupancy"] as? String : nil
+                        let parent = location?["parent"] as? [String: AnyObject]
+                        let nestedParent = parent?["parent"] as? [String: AnyObject]
+                        let parentName = nestedParent?["name"] as? String
+                        let departureTimePlanned = isoDateFormatter.date(from: (stopEvents?[j]["departureTimePlanned"] as? String)!)
+                        let departureTimeEstimated = isRealTime == true ? isoDateFormatter.date(from: (stopEvents?[j]["departureTimeEstimated"] as? String)!): nil
+                        let transportation = stopEvents?[j]["transportation"] as? [String: AnyObject]
+                        let busNumber = transportation?["number"] as? String
+                        let description = transportation?["description"] as? String
+                        let origin = transportation?["origin"] as? [String: AnyObject]
+                        let destination = transportation?["destination"] as? [String: AnyObject]
+                        let originName = origin?["name"] as? String
+                        let destinationName = destination?["name"] as? String
                         
-                    }
-                    
-                    /*print(busNumber!)
-                    print(originName!)
-                    print(destinationName!)
-                    print(description!)
-                    print(departureTimePlanned!)*/
-                    
-                    let newStopEvent = StopEvent(busNumber: busNumber!, departureTimePlanned: departureTimePlanned!, departureTimeEstimated: departureTimeEstimated, occupancy: occupancy)
-                    
-                    // if the busId isn't in the map yet, we need to create a new array for it in the dictionary
-                    if (self.busIdToStopEvent[busNumber!] == nil) {
-                        var newBus = [StopEvent]()
-                        newBus.append(newStopEvent)
-                        self.busIdToStopEvent[busNumber!] = newBus
-                        self.busIdToTripDesc[busNumber!] = TripDescriptor(origin: originName!, destination: destinationName!, description: description!, parent: parentName!)
-                    } else {
-                        // otherwise just append to the busNumber's vector
-                        (self.busIdToStopEvent[busNumber!])?.append(newStopEvent)
-                    }
-                    
-                    if (!self.stopObj.isBusExist(bus: busNumber!)) {
-                        self.stopObj.addBus(bus: busNumber!)
+                        // initialize selected bus if nil
+                        if (self.selectedBus == nil) {
+                            self.selectedBus = busNumber
+                            
+                        }
+                        
+                        /*print(busNumber!)
+                        print(originName!)
+                        print(destinationName!)
+                        print(description!)
+                        print(departureTimePlanned!)*/
+                        
+                        let newStopEvent = StopEvent(busNumber: busNumber!, departureTimePlanned: departureTimePlanned!, departureTimeEstimated: departureTimeEstimated, occupancy: occupancy)
+                        
+                        // if the busId isn't in the map yet, we need to create a new array for it in the dictionary
+                        if (self.busIdToStopEvent[busNumber!] == nil) {
+                            var newBus = [StopEvent]()
+                            newBus.append(newStopEvent)
+                            self.busIdToStopEvent[busNumber!] = newBus
+                            self.busIdToTripDesc[busNumber!] = TripDescriptor(origin: originName!, destination: destinationName!, description: description!, parent: parentName!)
+                        } else {
+                            // otherwise just append to the busNumber's vector
+                            (self.busIdToStopEvent[busNumber!])?.append(newStopEvent)
+                        }
+                        
+                        if (!self.stopObj.isBusExist(bus: busNumber!)) {
+                            self.stopObj.addBus(bus: busNumber!)
+                        }
                     }
                 }
                 sem.signal()
@@ -150,7 +145,12 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         
         sem.wait()
         
-        self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[self.selectedBus]?.destination)!
+        if (self.selectedBus != nil) {
+            selectionList.delegate = self
+            self.tableView.delegate = self
+            self.tableView.dataSource = self
+            self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[self.selectedBus]?.destination)!
+        }
     }
     
     override func didReceiveMemoryWarning() {

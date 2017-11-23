@@ -169,11 +169,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         
         let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "annotationView")
         annotationView.canShowCallout = true
-        annotationView.rightCalloutAccessoryView = UIButton.init(type: UIButtonType.detailDisclosure)
         
         if (annotation.isEqual(userAnnotation)) {
             annotationView.pinTintColor = UIColor.green
             annotationView.isDraggable = true
+        } else {
+            // stations and stops should have a right callout accessory
+            annotationView.rightCalloutAccessoryView = UIButton.init(type: UIButtonType.detailDisclosure)
         }
         
         annotationView.animatesDrop = true

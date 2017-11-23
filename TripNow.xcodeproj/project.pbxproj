@@ -383,12 +383,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 4GLUXJ545N;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/ScrollableSegmentedControl",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/EHHorizontalSelectionView",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/HTHorizontalSelectionList",
-				);
 				INFOPLIST_FILE = TripNow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = au.edu.unsw.5020953.TripNow;
@@ -404,12 +398,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 4GLUXJ545N;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/ScrollableSegmentedControl",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/EHHorizontalSelectionView",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/HTHorizontalSelectionList",
-				);
 				INFOPLIST_FILE = TripNow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = au.edu.unsw.5020953.TripNow;
