@@ -24,14 +24,18 @@ class Stop {
     var latitude: Double
     var longitude: Double
     var buses: [String]     // bus numbers used as identifier
+    var distance: Double
+    var type: String
     
-    init(id: String, name: String, parent: String, latitude: Double, longitude: Double) {
+    init(id: String, name: String, parent: String, latitude: Double, longitude: Double, distance: Double, type: String) {
         self.id = id
         self.name = name
         self.parent = parent
         self.latitude = latitude
         self.longitude = longitude
         self.buses = [String]()
+        self.distance = distance
+        self.type = type
     }
     
     public func addBus(bus: String) {
@@ -56,6 +60,14 @@ class Stop {
     
     public func getLongitude() -> Double {
         return longitude
+    }
+    
+    public func getDistance() -> Double {
+        return distance
+    }
+    
+    public func getType() -> String {
+        return type
     }
     
     public func getBuses() -> [String] {

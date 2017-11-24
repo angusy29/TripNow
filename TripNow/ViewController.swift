@@ -16,15 +16,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     @IBOutlet weak var refresh: UIButton!
     @IBOutlet weak var radiusSlider: UISlider!
     
+    // @IBOutlet weak var stopNameLabel: UILabel!
+    
     let locationManager = CLLocationManager()
     var allAnnotations = [MKAnnotation]()
+    var selectedAnnotation: MKAnnotation?
 
     // usr related variables
     var user: User!
     var radiusOverlay: MKCircle!
     var userAnnotation: MKPointAnnotation!           // annotation the user can drag
     var isLocationInitCentre = false            // have we set the initial centre position of the user?
-
+    var defaultMarkerColor: UIColor?
+    
     // list of stops we found
     var stopsFound = [Stop]()
     
@@ -63,6 +67,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
      */
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        if let drawer = self.parent?.parent as? PulleyViewController {
+            drawer.setDrawerPosition(position: .collapsed)
+        }
         super.viewWillAppear(animated)
     }
     
@@ -139,8 +146,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     }
     
     /*
-     * Callback for when an annotation is tapped on
+     * Callback for when an annotation callout is tapped on
      * Brings them to the StopInfoViewController
+     * DEPRECATED
      */
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "StopInfoViewController") as! StopInfoViewController
@@ -153,8 +161,63 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                 break
             }
         }
-        
+
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    /*
+     * Callback for when an annotation custom view is clicked on
+     */
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        var arr = view.annotation?.title!?.components(separatedBy: " ")
+        let stopId = (arr?[(arr?.count)! - 1])!
+        
+        // let old one be old colour
+        if #available(iOS 11.0, *) {
+            let marker = self.mapView.view(for: selectedAnnotation!) as? MKMarkerAnnotationView
+            marker?.markerTintColor = defaultMarkerColor
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        for stop in stopsFound {
+            if stop.getID() == stopId {
+                if let drawer = self.parent?.parent as? PulleyViewController {
+                    drawer.setDrawerPosition(position: .partiallyRevealed)
+                    let dvc = drawer.drawerContentViewController as? DrawerContentViewController
+                    dvc?.setSelectedStop(stop: stop)
+                }
+                
+                // let selected one be blue
+                if #available(iOS 11.0, *) {
+                    let marker = view as? MKMarkerAnnotationView
+                    marker?.markerTintColor = UIColor.blue
+                } else {
+                    // Fallback on earlier versions
+                }
+                
+                setDrawerClickedItem(stop: stop)
+                break
+            }
+        }
+        
+        selectedAnnotation = view.annotation
+    }
+    
+    /*
+     * Callback for when marker is deselected
+     */
+    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+        if let drawer = self.parent?.parent as? PulleyViewController {
+            drawer.setDrawerPosition(position: .collapsed)
+        }
+        
+        if #available(iOS 11.0, *) {
+            let marker = view as? MKMarkerAnnotationView
+            marker?.markerTintColor = defaultMarkerColor
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     /*
@@ -176,15 +239,33 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             userAnnotationView.animatesDrop = true
             return userAnnotationView
         } else {
-            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "CustomAnnotation")
-            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "CustomAnnotation")
+            let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "CustomAnnotation")
+            // annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "CustomAnnotation")
             annotationView?.canShowCallout = true
             
             // stations and stops should have a right callout accessory
             annotationView?.rightCalloutAccessoryView = UIButton.init(type: UIButtonType.detailDisclosure)
             
-            annotationView?.image = UIImage(named: "marker-40")
+            // annotationView?.image = UIImage(named: "marker-40")
             return annotationView
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
+        if (allAnnotations.count == 0) {
+            return
+        }
+        
+        if #available(iOS 11.0, *) {
+            if (allAnnotations[0].title??.isEqual((selectedAnnotation?.title)!))! {
+                let marker = self.mapView.view(for: allAnnotations[0]) as? MKMarkerAnnotationView
+                if (defaultMarkerColor == nil) {
+                    defaultMarkerColor = marker?.markerTintColor
+                }
+                marker?.markerTintColor = UIColor.blue
+            }
+        } else {
+            // Fallback on earlier versions
         }
     }
     
@@ -202,6 +283,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         self.stopsFound.removeAll()
         mapView.removeAnnotations(allAnnotations)
         allAnnotations.removeAll()
+        selectedAnnotation = nil
         
         // let latitude = (locationManager.location?.coordinate.latitude)!
         // let longitude = (locationManager.location?.coordinate.longitude)!
@@ -222,6 +304,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             
             self.mapView.addAnnotation(annotation)
             allAnnotations.append(annotation)
+        }
+        if let drawer = self.parent?.parent as? PulleyViewController {
+            drawer.setDrawerPosition(position: .partiallyRevealed)
+        
+            if (stopsFound.count != 0) {
+                let dvc = drawer.drawerContentViewController as? DrawerContentViewController
+                dvc?.setSelectedStop(stop: stopsFound[0])
+                setDrawerClickedItem(stop: stopsFound[0])
+                selectedAnnotation = allAnnotations[0]
+            }
         }
     }
     
@@ -256,7 +348,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                     }
                     
                     let name = locations?[i]["name"] as? String
-                    // let type = locations?[i]["type"] as? String
+                    let type = locations?[i]["type"] as? String
                     let parent = locations?[i]["parent"] as? [String: AnyObject]
                     let parentName = parent?["parent"]?["name"] as? String
                     let properties = locations?[i]["properties"] as? [String: AnyObject]
@@ -264,13 +356,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                     let coordinates = locations?[i]["coord"] as? NSArray
                     let latCoord = coordinates![0] as? Double
                     let longCoord = coordinates![1] as? Double
+                    let distance = properties?["distance"] as? Double
                     
                     // if the station we get exceeds user radius, we exit
-                    if ((properties?["distance"])! as! Double > self.user.getRadius()) {
+                    if (distance! > self.user.getRadius()) {
                         break
                     }
                     
-                    let newStop = Stop(id: stopId!, name: name!, parent: parentName!, latitude: latCoord!, longitude: longCoord!)
+                    let newStop = Stop(id: stopId!, name: name!, parent: parentName!, latitude: latCoord!, longitude: longCoord!, distance: distance!, type: type!)
                     self.stopsFound.append(newStop)
                 }
                 
@@ -281,6 +374,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         }.resume()
         
         sem.wait()
+    }
+    
+    func setDrawerClickedItem(stop: Stop) {
+        if let drawer = self.parent?.parent as? PulleyViewController {
+            let drawerContent = drawer.drawerContentViewController as? DrawerContentViewController
+            drawerContent?.setLabels(name: stop.getName(), id: stop.getParent() + " " + stop.getID(), distance: String(stop.getDistance()) + "m", type: stop.getType())
+        }
     }
     
     /*
