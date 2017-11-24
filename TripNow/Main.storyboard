@@ -27,7 +27,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </mapView>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="250" minValue="100" maxValue="500" translatesAutoresizingMaskIntoConstraints="NO" id="jTb-It-v0M">
-                                <rect key="frame" x="34" y="680" width="307" height="31"/>
+                                <rect key="frame" x="34" y="690" width="307" height="31"/>
                                 <connections>
                                     <action selector="onEditSliderBegin:" destination="BYZ-38-t0r" eventType="editingDidBegin" id="UnP-F6-JOj"/>
                                     <action selector="onReleaseSliderInside:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nHF-hc-CGc"/>
@@ -35,17 +35,8 @@
                                     <action selector="radiusSliderOnChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="iqU-gh-Xi2"/>
                                 </connections>
                             </slider>
-                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="frK-AH-Rx3">
-                                <rect key="frame" x="96" y="720" width="183" height="38"/>
-                                <color key="backgroundColor" white="1" alpha="0.69780072773972601" colorSpace="calibratedWhite"/>
-                                <inset key="contentEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
-                                <state key="normal" title="Refresh"/>
-                                <connections>
-                                    <action selector="onRefresh:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ngu-sr-pTt"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1kS-sr-5BR">
-                                <rect key="frame" x="5" y="96" width="40" height="40"/>
+                                <rect key="frame" x="327" y="96" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="9gZ-5w-KFY"/>
                                     <constraint firstAttribute="height" constant="40" id="lin-ik-eaC"/>
@@ -55,17 +46,26 @@
                                     <action selector="onClickNearMe:" destination="BYZ-38-t0r" eventType="touchDown" id="e87-kQ-BTv"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="frK-AH-Rx3">
+                                <rect key="frame" x="96" y="730" width="183" height="38"/>
+                                <color key="backgroundColor" white="1" alpha="0.69780072773972601" colorSpace="calibratedWhite"/>
+                                <inset key="contentEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
+                                <state key="normal" title="Refresh"/>
+                                <connections>
+                                    <action selector="onRefresh:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ngu-sr-pTt"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="frK-AH-Rx3" firstAttribute="top" secondItem="jTb-It-v0M" secondAttribute="bottom" constant="10" id="G6x-vM-m8V"/>
-                            <constraint firstItem="1kS-sr-5BR" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="5" id="JCw-wP-dN5"/>
                             <constraint firstItem="frK-AH-Rx3" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="80" id="LkW-vW-0Ke"/>
                             <constraint firstAttribute="trailingMargin" secondItem="jTb-It-v0M" secondAttribute="trailing" constant="20" id="QDi-Ww-dgR"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="frK-AH-Rx3" secondAttribute="bottom" constant="20" id="RfU-Yf-OIe"/>
                             <constraint firstAttribute="trailingMargin" secondItem="frK-AH-Rx3" secondAttribute="trailing" constant="80" id="eWB-sK-24j"/>
+                            <constraint firstAttribute="trailing" secondItem="1kS-sr-5BR" secondAttribute="trailing" constant="8" id="etq-KM-COu"/>
                             <constraint firstItem="jTb-It-v0M" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="20" id="gYi-Vg-nac"/>
-                            <constraint firstItem="1kS-sr-5BR" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="ksS-Nn-QCk"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="frK-AH-Rx3" secondAttribute="bottom" constant="10" id="h0w-FV-gHC"/>
+                            <constraint firstItem="1kS-sr-5BR" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="r1u-la-7w6"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="vbZ-Wx-RI2"/>
@@ -73,9 +73,18 @@
                         <outlet property="mapView" destination="4BH-8k-mVO" id="c8h-6Y-drM"/>
                         <outlet property="radiusSlider" destination="jTb-It-v0M" id="yhP-5W-YBr"/>
                         <outlet property="refresh" destination="frK-AH-Rx3" id="Kyo-vg-vkK"/>
+                        <outlet property="searchDisplayController" destination="rLa-Jq-hIv" id="6NB-On-ims"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="rLa-Jq-hIv">
+                    <connections>
+                        <outlet property="delegate" destination="BYZ-38-t0r" id="1gI-8y-T7T"/>
+                        <outlet property="searchContentsController" destination="BYZ-38-t0r" id="4cU-Gr-ug3"/>
+                        <outlet property="searchResultsDataSource" destination="BYZ-38-t0r" id="ij6-Sa-ceR"/>
+                        <outlet property="searchResultsDelegate" destination="BYZ-38-t0r" id="1Ly-Ep-YGl"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="692" y="13.300492610837439"/>
         </scene>

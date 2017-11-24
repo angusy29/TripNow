@@ -34,6 +34,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         // let longitude = 151.20722349056894
         mapView.delegate = self
         mapView.showsUserLocation = true
+        mapView.showsCompass = false
         
         initUserLocation()
         
@@ -107,8 +108,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             radiusOverlay = MKCircle(center: user.getCoordinate(), radius: user.getRadius())
             mapView.add(radiusOverlay)
                 
-            /*userAnnotation = createAnnotation(latitude: (locationManager.location?.coordinate.latitude)!,
-                                                longitude: (locationManager.location?.coordinate.longitude)!, title: "Search radius: " + String(user.getRadius()) + "m", subtitle: "")*/
             userAnnotation = MKPointAnnotation()
             userAnnotation.coordinate = CLLocationCoordinate2D(latitude: user.getLatitude(), longitude: user.getLongitude())
             userAnnotation.title = "Search radius: " + String(Int(user.getRadius())) + "m "
