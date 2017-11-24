@@ -37,7 +37,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         
         initUserLocation()
         
-        refresh.setTitle("Search", for: UIControlState.normal)
+        refresh.setTitle("Find stops", for: UIControlState.normal)
         
         // self.navigationItem.title = "Quick search"
         
@@ -167,20 +167,25 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             return nil
         }
         
-        let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "annotationView")
-        annotationView.canShowCallout = true
-        
+        //let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "CustomAnnotation")
         if (annotation.isEqual(userAnnotation)) {
-            annotationView.pinTintColor = UIColor.green
-            annotationView.isDraggable = true
+            let userAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "annotationView")
+            userAnnotationView.pinTintColor = UIColor.green
+            userAnnotationView.canShowCallout = true
+            userAnnotationView.isDraggable = true
+            userAnnotationView.animatesDrop = true
+            return userAnnotationView
         } else {
+            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "CustomAnnotation")
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "CustomAnnotation")
+            annotationView?.canShowCallout = true
+            
             // stations and stops should have a right callout accessory
-            annotationView.rightCalloutAccessoryView = UIButton.init(type: UIButtonType.detailDisclosure)
+            annotationView?.rightCalloutAccessoryView = UIButton.init(type: UIButtonType.detailDisclosure)
+            
+            annotationView?.image = UIImage(named: "marker-40")
+            return annotationView
         }
-        
-        annotationView.animatesDrop = true
-        
-        return annotationView
     }
     
     /*
@@ -300,6 +305,22 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     
     @IBAction func onReleaseSliderOutside(_ sender: Any) {
         mapView.deselectAnnotation(userAnnotation, animated: false)
+    }
+    
+    /*
+     * Centre on the user's location, as well as the user annotation
+     */
+    @IBAction func onClickNearMe(_ sender: Any) {
+        if (CLLocationManager.locationServicesEnabled()) {
+            mapView.setCenter(user.coordinate, animated: true)
+            mapView.removeAnnotation(userAnnotation)
+            userAnnotation.coordinate = user.coordinate
+            mapView.remove(radiusOverlay)
+            createRadiusOverlay()
+            mapView.addAnnotation(userAnnotation)
+        } else {
+            mapView.setCenter(userAnnotation.coordinate, animated: true)
+        }
     }
     
     /*

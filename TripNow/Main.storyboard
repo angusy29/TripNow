@@ -32,7 +32,6 @@
                                     <action selector="onEditSliderBegin:" destination="BYZ-38-t0r" eventType="editingDidBegin" id="UnP-F6-JOj"/>
                                     <action selector="onReleaseSliderInside:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nHF-hc-CGc"/>
                                     <action selector="onReleaseSliderOutside:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="9PC-1u-I2a"/>
-                                    <action selector="onTouchSliderEnter:" destination="BYZ-38-t0r" eventType="touchDragEnter" id="5qH-R0-Pr5"/>
                                     <action selector="radiusSliderOnChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="iqU-gh-Xi2"/>
                                 </connections>
                             </slider>
@@ -45,15 +44,28 @@
                                     <action selector="onRefresh:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ngu-sr-pTt"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1kS-sr-5BR">
+                                <rect key="frame" x="5" y="96" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="9gZ-5w-KFY"/>
+                                    <constraint firstAttribute="height" constant="40" id="lin-ik-eaC"/>
+                                </constraints>
+                                <state key="normal" image="nearme-80"/>
+                                <connections>
+                                    <action selector="onClickNearMe:" destination="BYZ-38-t0r" eventType="touchDown" id="e87-kQ-BTv"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="frK-AH-Rx3" firstAttribute="top" secondItem="jTb-It-v0M" secondAttribute="bottom" constant="10" id="G6x-vM-m8V"/>
+                            <constraint firstItem="1kS-sr-5BR" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="5" id="JCw-wP-dN5"/>
                             <constraint firstItem="frK-AH-Rx3" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="80" id="LkW-vW-0Ke"/>
                             <constraint firstAttribute="trailingMargin" secondItem="jTb-It-v0M" secondAttribute="trailing" constant="20" id="QDi-Ww-dgR"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="frK-AH-Rx3" secondAttribute="bottom" constant="20" id="RfU-Yf-OIe"/>
                             <constraint firstAttribute="trailingMargin" secondItem="frK-AH-Rx3" secondAttribute="trailing" constant="80" id="eWB-sK-24j"/>
                             <constraint firstItem="jTb-It-v0M" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="20" id="gYi-Vg-nac"/>
+                            <constraint firstItem="1kS-sr-5BR" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="ksS-Nn-QCk"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="vbZ-Wx-RI2"/>
@@ -65,7 +77,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="692.96875" y="13.4765625"/>
+            <point key="canvasLocation" x="692" y="13.300492610837439"/>
         </scene>
         <!--Stop Info View Controller-->
         <scene sceneID="jQ3-fi-cJr">
@@ -213,5 +225,6 @@
     </scenes>
     <resources>
         <image name="customer-40-grey" width="40" height="40"/>
+        <image name="nearme-80" width="80" height="80"/>
     </resources>
 </document>
