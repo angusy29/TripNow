@@ -175,12 +175,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         }
         
         // let old one be old colour
-        if #available(iOS 11.0, *) {
+        /*if #available(iOS 11.0, *) {
             let marker = self.mapView.view(for: selectedAnnotation!) as? MKMarkerAnnotationView
             marker?.markerTintColor = defaultMarkerColor
         } else {
             // Fallback on earlier versions
-        }
+        }*/
         
         for stop in stopsFound {
             if stop.getID() == stopId {
@@ -192,12 +192,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                 }
                 
                 // let selected one be blue
-                if #available(iOS 11.0, *) {
+                /*if #available(iOS 11.0, *) {
                     let marker = view as? MKMarkerAnnotationView
                     marker?.markerTintColor = UIColor.blue
                 } else {
                     // Fallback on earlier versions
-                }
+                }*/
                 
                 setDrawerClickedItem(stop: stop)
                 break
@@ -237,17 +237,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         } else {
             //let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "CustomAnnotation")
             // annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "CustomAnnotation")
-            if #available(iOS 11.0, *) {
+            /*if #available(iOS 11.0, *) {
                 let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "marker")
                 return annotationView as MKAnnotationView
-            } else {
+            } else {*/
                 // Fallback on earlier versions
                 let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "marker")
                 annotationView.canShowCallout = true
                 annotationView.animatesDrop = true
                 return annotationView
 
-            }
+            //}
             // annotationView?.canShowCallout = true
             
             // stations and stops should have a right callout accessory
@@ -257,12 +257,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         }
     }
     
+    // Called when an annotation view is added
     func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
         if (allAnnotations.count == 0) {
             return
         }
         
-        if #available(iOS 11.0, *) {
+       /* if #available(iOS 11.0, *) {
             if (allAnnotations[0].title??.isEqual((selectedAnnotation?.title)!))! {
                 let marker = self.mapView.view(for: allAnnotations[0]) as? MKMarkerAnnotationView
                 if (defaultMarkerColor == nil) {
@@ -272,7 +273,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             }
         } else {
             // Fallback on earlier versions
-        }
+        }*/
     }
     
     /*
@@ -302,11 +303,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         
         for stop in stopsFound {
             let annotation = self.createAnnotation(latitude: stop.getLatitude(), longitude: stop.getLongitude(), title: stop.getParent() + " " + stop.getID(), subtitle: stop.getName())
-            // annotation.subtitle = "Buses: "
-            
-            /*for bus in stop.getBuses() {
-                annotation.subtitle = annotation.subtitle! + bus + " "
-            }*/
             
             self.mapView.addAnnotation(annotation)
             allAnnotations.append(annotation)
@@ -316,6 +312,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         
             if (stopsFound.count != 0) {
                 let dvc = drawer.drawerContentViewController as? DrawerContentViewController
+
                 dvc?.setSelectedStop(stop: stopsFound[0])
                 dvc?.setLabels(name: stopsFound[0].getName(), parent: stopsFound[0].getParent(), id: stopsFound[0].getID(), distance: stopsFound[0].getDistance(), type: stopsFound[0].getType())
                 setDrawerClickedItem(stop: stopsFound[0])
