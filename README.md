@@ -22,11 +22,13 @@ And also real-time data:
 * Bus estimated departure time
 * Bus capacity
 
-##Screenshots
-https://github.com/Screenshots/radius.png
-https://github.com/Screenshots/pullup.png
-https://github.com/Screenshots/open.png
-https://github.com/Screenshots/stop.png
+## Screenshots
+<p align="center">
+  <img src="Screenshots/radius.png" width="50%"/>
+  <img src="Screenshots/pullup.png" width="50%"/>
+  <img src="Screenshots/open.png" width="50%"/>
+  <img src="Screenshots/stop.png" width="50%"/>
+</p>
 
 ## Libraries
 Pulley for iOS 10 Maps style pull up modal.
