@@ -10,14 +10,14 @@ import Foundation
 import UIKit
 import Pulley
 
-class DrawerContentViewController: UIViewController, UISearchBarDelegate, PulleyDrawerViewControllerDelegate {
-    @IBOutlet weak var searchBar: UISearchBar!
-    // @IBOutlet weak var tableView: UITableView!
+class DrawerContentViewController: UIViewController, UISearchBarDelegate, PulleyDrawerViewControllerDelegate, UITableViewDelegate, UITableViewDataSource {
+     @IBOutlet weak var searchBar: UISearchBar!
     
-    @IBOutlet weak var stopName: UILabel!
-    @IBOutlet weak var stopId: UILabel!
-    @IBOutlet weak var distanceLabel: UILabel!
-    @IBOutlet weak var typeLabel: UILabel!
+    @IBOutlet weak var tableView: UITableView!
+    
+    @IBOutlet weak var selectedStopName: UILabel!
+    @IBOutlet weak var selectedStopParent: UILabel!
+    @IBOutlet weak var selectedStopType: UILabel!
     @IBOutlet weak var goButton: UIButton!
     @IBOutlet weak var helpLabel: UILabel!
     
@@ -27,55 +27,79 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
         super.viewDidLoad()
         
         searchBar.delegate = self
-        stopName?.text = ""
-        stopId?.text = ""
-        distanceLabel?.text = ""
-        typeLabel?.text = ""
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        selectedStopName.isHidden = true
+        selectedStopParent.isHidden = true
+        selectedStopType.isHidden = true
         goButton.isHidden = true
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(_:)))
+        tapGesture.cancelsTouchesInView = false
         self.view.addGestureRecognizer(tapGesture)
     }
+    
+    // Table View delegates
+    /* Functions for UITableView */
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let pulley = self.parent as? PulleyViewController {
+            let contentDrawer = pulley.primaryContentViewController as? UINavigationController
+            let vc = contentDrawer?.viewControllers[0] as? ViewController
+            return (vc?.getStopsFound().count)!
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DrawerTableCell", for: indexPath) as! DrawerTableCell
+        let row = indexPath.row
+        var table: [Stop] = []
+        
+        if let pulley = self.parent as? PulleyViewController {
+            let contentDrawer = pulley.primaryContentViewController as? UINavigationController
+            let vc = contentDrawer?.viewControllers[0] as? ViewController
+            table = (vc?.getStopsFound())!
+        }
+        
+        cell.stopName?.text = table[row].getName()
+        cell.stopParent?.text = (table[row].getParent()) + " " + (table[row].getID())
+        cell.stopType?.text = String(describing: table[row].getDistance()) + "m" + "\u{00B7}" + (table[row].getType())
+        cell.isUserInteractionEnabled = true
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "StopInfoViewController") as! StopInfoViewController
 
-    // UI setters
-    func setLabels(name: String, id: String, distance: String, type: String) {
-        helpLabel?.isHidden = true
-        setStopName(name: name)
-        setStopID(id: id)
-        setDistanceLabel(distance: distance)
-        setTypeLabel(type: type)
-        goButton.isHidden = false
+        if let drawer = self.parent as? PulleyViewController {
+            let contentDrawer = drawer.primaryContentViewController as? UINavigationController
+            let tempVC = contentDrawer?.viewControllers[0] as? ViewController
+            let indexPath = tableView.indexPathForSelectedRow
+            vc.stopObj = tempVC?.getStopsFound()[(indexPath?.row)!]
+            contentDrawer?.pushViewController(vc, animated: true)
+            drawer.setDrawerPosition(position: .closed)
+            tableView.deselectRow(at: indexPath!, animated: true)
+        }
     }
     
-    func setStopName(name: String) {
-        stopName?.text = name
-    }
-    
-    func setStopID(id: String) {
-        stopId?.text = id
-    }
-    
-    func setDistanceLabel(distance: String) {
-        distanceLabel?.text = distance
-    }
-    
-    func setTypeLabel(type: String) {
-        let first = String(type.prefix(1)).capitalized
-        let other = String(type.dropFirst())
-        typeLabel?.text = first + other
-    }
-    
-    func setSelectedStop(stop: Stop?) {
-        selectedStop = stop
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let drawerVC = self.parent as? PulleyViewController {
+            drawerVC.setDrawerPosition(position: .open, animated: true)
+        }
     }
         
     // PulleyDrawer delegates
     func collapsedDrawerHeight(bottomSafeArea: CGFloat) -> CGFloat {
-        return 52.0 + bottomSafeArea
+        return 68 + bottomSafeArea
     }
     
     func partialRevealDrawerHeight(bottomSafeArea: CGFloat) -> CGFloat {
-        return 164.0 + bottomSafeArea
+        return 264 + bottomSafeArea
     }
     
     func supportedDrawerPositions() -> [PulleyPosition] {
@@ -117,7 +141,28 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
         searchBar.resignFirstResponder()
     }
     
-    @IBAction func goButtonClicked(_ sender: Any) {
+    func getTableView() -> UITableView {
+        return tableView
+    }
+    
+    // UI setters
+    func setLabels(name: String, parent: String, id: String, distance: Double, type: String) {
+        helpLabel?.isHidden = true
+        selectedStopName.isHidden = false
+        selectedStopParent.isHidden = false
+        selectedStopType.isHidden = false
+        goButton.isHidden = false
+
+        selectedStopName?.text = name
+        selectedStopParent?.text = parent + " " + id
+        selectedStopType?.text = String(describing: distance) + "m" + "\u{00B7}" + type
+    }
+    
+    func setSelectedStop(stop: Stop?) {
+        selectedStop = stop
+    }
+    
+    @IBAction func goButtonOnClick(_ sender: Any) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "StopInfoViewController") as! StopInfoViewController
         vc.stopObj = selectedStop
         
