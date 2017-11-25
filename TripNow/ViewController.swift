@@ -214,13 +214,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         if let drawer = self.parent?.parent as? PulleyViewController {
             drawer.setDrawerPosition(position: .collapsed)
         }
-        
-        if #available(iOS 11.0, *) {
-            let marker = view as? MKMarkerAnnotationView
-            marker?.markerTintColor = defaultMarkerColor
-        } else {
-            // Fallback on earlier versions
-        }
     }
     
     /*
