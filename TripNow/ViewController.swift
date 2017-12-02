@@ -146,7 +146,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     /*
      * Callback for when an annotation callout is tapped on
      * Brings them to the StopInfoViewController
-     * DEPRECATED
      */
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "StopInfoViewController") as! StopInfoViewController
@@ -158,6 +157,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                 vc.stopObj = stop
                 break
             }
+        }
+        
+        if let drawer = self.parent?.parent as? PulleyViewController {
+            drawer.setDrawerPosition(position: .closed)
         }
 
         self.navigationController?.pushViewController(vc, animated: true)
@@ -245,6 +248,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                 let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "marker")
                 annotationView.canShowCallout = true
                 annotationView.animatesDrop = true
+                annotationView.rightCalloutAccessoryView = UIButton.init(type: UIButtonType.detailDisclosure)
                 return annotationView
 
             //}
