@@ -25,7 +25,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     var radiusOverlay: MKCircle!                // blue circle overlay around the userAnnotation
     var userAnnotation: MKPointAnnotation!      // annotation the user can drag
     var isLocationInitCentre = false            // have we set the initial centre position of the user?
-    var defaultMarkerColor: UIColor?
     
     // list of stops we found
     var stopsFound = [Stop]()
@@ -89,7 +88,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         if (CLLocationManager.locationServicesEnabled()) {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            // locationManager.requestAlwaysAuthorization()
             locationManager.requestWhenInUseAuthorization()
             
             DispatchQueue.main.async {
@@ -193,16 +191,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                     dvc?.setSelectedStop(stop: stop)
                     dvc?.setLabels(name: stop.getName(), parent: stop.getParent(), id: stop.getID(), distance: stop.getDistance(), type: stop.getType())
                 }
-                
-                // let selected one be blue
-                /*if #available(iOS 11.0, *) {
-                    let marker = view as? MKMarkerAnnotationView
-                    marker?.markerTintColor = UIColor.blue
-                } else {
-                    // Fallback on earlier versions
-                }*/
-                
-                setDrawerClickedItem(stop: stop)
                 break
             }
         }
@@ -238,46 +226,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             userAnnotationView.animatesDrop = true
             return userAnnotationView
         } else {
-            //let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "CustomAnnotation")
-            // annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "CustomAnnotation")
-            /*if #available(iOS 11.0, *) {
-                let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "marker")
-                return annotationView as MKAnnotationView
-            } else {*/
-                // Fallback on earlier versions
-                let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "marker")
-                annotationView.canShowCallout = true
-                annotationView.animatesDrop = true
-                annotationView.rightCalloutAccessoryView = UIButton.init(type: UIButtonType.detailDisclosure)
-                return annotationView
-
-            //}
-            // annotationView?.canShowCallout = true
-            
-            // stations and stops should have a right callout accessory
-            // annotationView?.rightCalloutAccessoryView = UIButton.init(type: UIButtonType.detailDisclosure)
-            
-            // annotationView?.image = UIImage(named: "marker-40")
+            let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "marker")
+            annotationView.canShowCallout = true
+            annotationView.animatesDrop = true
+            annotationView.rightCalloutAccessoryView = UIButton.init(type: UIButtonType.detailDisclosure)
+            return annotationView
         }
-    }
-    
-    // Called when an annotation view is added
-    func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
-        if (allAnnotations.count == 0) {
-            return
-        }
-        
-       /* if #available(iOS 11.0, *) {
-            if (allAnnotations[0].title??.isEqual((selectedAnnotation?.title)!))! {
-                let marker = self.mapView.view(for: allAnnotations[0]) as? MKMarkerAnnotationView
-                if (defaultMarkerColor == nil) {
-                    defaultMarkerColor = marker?.markerTintColor
-                }
-                marker?.markerTintColor = UIColor.blue
-            }
-        } else {
-            // Fallback on earlier versions
-        }*/
     }
     
     /*
@@ -319,7 +273,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
 
                 dvc?.setSelectedStop(stop: stopsFound[0])
                 dvc?.setLabels(name: stopsFound[0].getName(), parent: stopsFound[0].getParent(), id: stopsFound[0].getID(), distance: stopsFound[0].getDistance(), type: stopsFound[0].getType())
-                setDrawerClickedItem(stop: stopsFound[0])
                 selectedAnnotation = allAnnotations[0]
                 dvc?.getTableView().reloadData()
             }
@@ -382,13 +335,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         }.resume()
         
         sem.wait()
-    }
-    
-    func setDrawerClickedItem(stop: Stop) {
-        if let drawer = self.parent?.parent as? PulleyViewController {
-            let drawerContent = drawer.drawerContentViewController as? DrawerContentViewController
-            // drawerContent?.setLabels(name: stop.getName(), id: stop.getParent() + " " + stop.getID(), distance: String(stop.getDistance()) + "m", type: stop.getType())
-        }
     }
     
     /*

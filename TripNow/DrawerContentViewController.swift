@@ -74,7 +74,7 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = self.storyboard?.instantiateViewController(withIdentifier: "StopInfoViewController") as! StopInfoViewController
+        /*let vc = self.storyboard?.instantiateViewController(withIdentifier: "StopInfoViewController") as! StopInfoViewController
 
         if let drawer = self.parent as? PulleyViewController {
             let contentDrawer = drawer.primaryContentViewController as? UINavigationController
@@ -83,6 +83,22 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
             vc.stopObj = tempVC?.getStopsFound()[(indexPath?.row)!]
             contentDrawer?.pushViewController(vc, animated: true)
             drawer.setDrawerPosition(position: .closed)
+            tableView.deselectRow(at: indexPath!, animated: true)
+        }*/
+        
+        if let drawer = self.parent as? PulleyViewController {
+            let contentDrawer = drawer.primaryContentViewController as? UINavigationController
+            let vc = contentDrawer?.viewControllers[0] as? ViewController
+            let indexPath = tableView.indexPathForSelectedRow
+            
+            let tempStop = vc?.getStopsFound()[(indexPath?.row)!]
+            setSelectedStop(stop: tempStop)
+            setLabels(name: (tempStop?.getName())!, parent: (tempStop?.getParent())!, id: (tempStop?.getID())!, distance: (tempStop?.getDistance())!, type: (tempStop?.getType())!)
+            
+            vc?.mapView.selectedAnnotations.removeAll()
+            vc?.mapView.selectAnnotation((vc?.allAnnotations[(indexPath?.row)!])!, animated: true)
+            
+            drawer.setDrawerPosition(position: .partiallyRevealed)
             tableView.deselectRow(at: indexPath!, animated: true)
         }
     }
