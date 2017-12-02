@@ -35,9 +35,9 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
         selectedStopType.isHidden = true
         goButton.isHidden = true
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(_:)))
+        /*let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(_:)))
         tapGesture.cancelsTouchesInView = false
-        self.view.addGestureRecognizer(tapGesture)
+        self.view.addGestureRecognizer(tapGesture)*/
     }
     
     // Table View delegates
@@ -85,7 +85,7 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
             drawer.setDrawerPosition(position: .closed)
             tableView.deselectRow(at: indexPath!, animated: true)
         }*/
-        
+        searchBar.resignFirstResponder()
         if let drawer = self.parent as? PulleyViewController {
             let contentDrawer = drawer.primaryContentViewController as? UINavigationController
             let vc = contentDrawer?.viewControllers[0] as? ViewController
@@ -107,6 +107,7 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
         if let drawerVC = self.parent as? PulleyViewController {
             drawerVC.setDrawerPosition(position: .open, animated: true)
         }
+        searchBar.resignFirstResponder()
     }
         
     // PulleyDrawer delegates
