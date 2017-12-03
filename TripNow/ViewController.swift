@@ -18,12 +18,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     
     let locationManager = CLLocationManager()
     var allAnnotations = [MKAnnotation]()       // all annotations on the map
-    var selectedAnnotation: MKAnnotation?       // the annotation the user has tapped on
 
     // user related variables
-    var user: User!
-    var radiusOverlay: MKCircle!                // blue circle overlay around the userAnnotation
-    var userAnnotation: MKPointAnnotation!      // annotation the user can drag
+    var user: User?
+    var radiusOverlay: MKCircle?                // blue circle overlay around the userAnnotation
+    var userAnnotation: MKPointAnnotation?      // annotation the user can drag
     var isLocationInitCentre = false            // have we set the initial centre position of the user?
     
     // list of stops we found
@@ -103,31 +102,48 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         // this should be invoked on the first time application is opened
         if (!isLocationInitCentre && CLLocationManager.locationServicesEnabled()) {
-            user = User(coordinate: (manager.location?.coordinate)!, radius: 400)
-            let start = CLLocationCoordinate2DMake(user.getLatitude(), user.getLongitude())
+            // if coordinate is nil, default to centre of sydney
+            let coordinate = manager.location?.coordinate ?? CLLocationCoordinate2D(latitude: -33.865143, longitude: 151.2099)
+            user = User(coordinate: coordinate, radius: 400)
+            
+            guard let latitude = user?.getLatitude() else { return }
+            guard let longitude = user?.getLongitude() else { return }
+            guard let radius = user?.getRadius() else { return }
+            
+            let start = CLLocationCoordinate2DMake(latitude, longitude)
             let adjustedRegion = mapView.regionThatFits(MKCoordinateRegionMakeWithDistance(start, 1000, 1000))
             mapView.setRegion(adjustedRegion, animated: false)
                 
             // need to remove this overlay later if user's position changes
-            radiusOverlay = MKCircle(center: user.getCoordinate(), radius: user.getRadius())
-            mapView.add(radiusOverlay)
+            radiusOverlay = MKCircle(center: coordinate, radius: radius)
+            mapView.add(radiusOverlay!)
                 
             userAnnotation = MKPointAnnotation()
-            userAnnotation.coordinate = CLLocationCoordinate2D(latitude: user.getLatitude(), longitude: user.getLongitude())
-            userAnnotation.title = "Search radius: " + String(Int(user.getRadius())) + "m "
-            self.mapView.addAnnotation(userAnnotation)
+            userAnnotation?.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            userAnnotation?.title = "Search radius: " + String(Int(radius)) + "m "
+
+            if let userAnnotation = userAnnotation {
+                self.mapView.addAnnotation(userAnnotation)
+            }
             
             isLocationInitCentre = true
-        } else if (!isLocationInitCentre && !CLLocationManager.locationServicesEnabled()) {
+        } else if (!isLocationInitCentre) {
+            // this is invoked on each subsequent time
+            guard let latitude = user?.getLatitude() else { return }
+            guard let longitude = user?.getLongitude() else { return }
+            
             userAnnotation = MKPointAnnotation()
-            userAnnotation.coordinate = CLLocationCoordinate2D(latitude: -33.865143, longitude: 151.2099)
-            userAnnotation.title = "Search radius: 400m "
+            userAnnotation?.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            userAnnotation?.title = "Search radius: 400m "
+            
+            guard let userAnnotation = userAnnotation else { return }
             self.mapView.addAnnotation(userAnnotation)
             
             isLocationInitCentre = true
         }
         
-        user.setCoordinate(coordinate: (manager.location?.coordinate)!)
+        guard let coordinate = user?.getCoordinate() else { return }
+        user?.setCoordinate(coordinate: coordinate)
     }
     
     /*
@@ -171,18 +187,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         var arr = view.annotation?.title!?.components(separatedBy: " ")
         let stopId = (arr?[(arr?.count)! - 1])!
         
-        if (selectedAnnotation == nil) {
-            return
-        }
-        
-        // let old one be old colour
-        /*if #available(iOS 11.0, *) {
-            let marker = self.mapView.view(for: selectedAnnotation!) as? MKMarkerAnnotationView
-            marker?.markerTintColor = defaultMarkerColor
-        } else {
-            // Fallback on earlier versions
-        }*/
-        
         for stop in stopsFound {
             if stop.getID() == stopId {
                 if let drawer = self.parent?.parent as? PulleyViewController {
@@ -194,8 +198,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                 break
             }
         }
-        
-        selectedAnnotation = view.annotation
     }
     
     /*
@@ -239,6 +241,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
      * Seems to get called 2-3 times in the whole process
      */
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+        guard let radiusOverlay = radiusOverlay else { return }
         mapView.remove(radiusOverlay)
         createRadiusOverlay()
     }
@@ -248,15 +251,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         self.stopsFound.removeAll()
         mapView.removeAnnotations(allAnnotations)
         allAnnotations.removeAll()
-        selectedAnnotation = nil
         
         // let latitude = (locationManager.location?.coordinate.latitude)!
         // let longitude = (locationManager.location?.coordinate.longitude)!
         
-        let latitude = userAnnotation.coordinate.latitude
-        let longitude = userAnnotation.coordinate.longitude
+        guard let latitude = userAnnotation?.coordinate.latitude else { return }
+        guard let longitude = userAnnotation?.coordinate.longitude else { return }
+        guard let radius = user?.getRadius() else { return }
         
-        self.getClosestStopRequest(longitude: longitude, latitude: latitude, radius: user.getRadius())
+        self.getClosestStopRequest(longitude: longitude, latitude: latitude, radius: radius)
         // self.getDepartureRequest()
         
         for stop in stopsFound {
@@ -273,7 +276,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
 
                 dvc?.setSelectedStop(stop: stopsFound[0])
                 dvc?.setLabels(name: stopsFound[0].getName(), parent: stopsFound[0].getParent(), id: stopsFound[0].getID(), distance: stopsFound[0].getDistance(), type: stopsFound[0].getType())
-                selectedAnnotation = allAnnotations[0]
                 dvc?.getTableView().reloadData()
             }
         }
@@ -286,8 +288,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     func getClosestStopRequest(longitude: Double, latitude: Double, radius: CLLocationDistance) {
         let sem = DispatchSemaphore(value: 0)
         
+        guard let radius = user?.getRadius() else { return }
+        
         // GET request to obtain the closest stops
-        let closestStopsURL = "https://api.transport.nsw.gov.au/v1/tp/coord?outputFormat=rapidJSON&coord=" + String(longitude) + "%3A" + String(latitude) + "%3AEPSG%3A4326&coordOutputFormat=EPSG%3A4326&inclFilter=1&type_1=BUS_POINT&radius_1=" + String(user.getRadius()) + "&version=10.2.2.48"
+        let closestStopsURL = "https://api.transport.nsw.gov.au/v1/tp/coord?outputFormat=rapidJSON&coord=" + String(longitude) + "%3A" + String(latitude) + "%3AEPSG%3A4326&coordOutputFormat=EPSG%3A4326&inclFilter=1&type_1=BUS_POINT&radius_1=" + String(radius) + "&version=10.2.2.48"
         
         var closestStopsRequest = URLRequest(url: URL(string: closestStopsURL)!)
         closestStopsRequest.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -297,34 +301,37 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         URLSession.shared.dataTask(with: closestStopsRequest){(data: Data?,response: URLResponse?, error: Error?) -> Void in
             do {
                 let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
-                let locations = resultJson?["locations"] as? [[String: Any]]
+                guard let locations = resultJson?["locations"] as? [[String: Any]] else { return }
                 
-                if (locations?.count == 0) {
+                if locations.count == 0 {
+                    sem.signal()
                     return
                 }
                 
-                for i in 0...((locations?.count)! - 1) {
-                    if (i >= locations!.count) {
+                for i in 0...(locations.count - 1) {
+                    if (i >= locations.count) {
                         break
                     }
                     
-                    let name = locations?[i]["name"] as? String
-                    let parent = locations?[i]["parent"] as? [String: AnyObject]
-                    let parentName = parent?["parent"]?["name"] as? String
-                    let type = parent?["type"] as? String
-                    let properties = locations?[i]["properties"] as? [String: AnyObject]
-                    let stopId = properties?["STOPPOINT_GLOBAL_ID"] as? String
-                    let coordinates = locations?[i]["coord"] as? NSArray
-                    let latCoord = coordinates![0] as? Double
-                    let longCoord = coordinates![1] as? Double
-                    let distance = properties?["distance"] as? Double
+                    // these guards don't actually do anything, if it doesn't exist, it won't be nil because
+                    // if the key doesn't exist in the JSON it's just []
+                    guard let name = locations[i]["name"] as? String else { break }
+                    guard let parent = locations[i]["parent"] as? [String: AnyObject] else { break }
+                    guard let parentName = parent["parent"]?["name"] as? String else { break }
+                    guard let type = parent["type"] as? String else { break }
+                    guard let properties = locations[i]["properties"] as? [String: AnyObject] else { break }
+                    guard let stopId = properties["STOPPOINT_GLOBAL_ID"] as? String else { return }
+                    guard let coordinates = locations[i]["coord"] as? NSArray else { break }
+                    guard let latCoord = coordinates[0] as? Double else { break }
+                    guard let longCoord = coordinates[1] as? Double else { break }
+                    guard let distance = properties["distance"] as? Double else { break }
                     
                     // if the station we get exceeds user radius, we exit
-                    if (distance! > self.user.getRadius()) {
+                    if (distance > radius) {
                         break
                     }
                     
-                    let newStop = Stop(id: stopId!, name: name!, parent: parentName!, latitude: latCoord!, longitude: longCoord!, distance: distance!, type: type!)
+                    let newStop = Stop(id: stopId, name: name, parent: parentName, latitude: latCoord, longitude: longCoord, distance: distance, type: type)
                     self.stopsFound.append(newStop)
                 }
                 
@@ -341,22 +348,32 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
      * Callback for when radius slider changes
      */
     @IBAction func radiusSliderOnChange(_ sender: Any) {
-        self.user.setRadius(radius: CLLocationDistance(radiusSlider.value))
-        userAnnotation.title = "Search radius: " + String(Int(user.getRadius())) + "m "
-        mapView.selectAnnotation(userAnnotation, animated: true)
-
+        self.user?.setRadius(radius: CLLocationDistance(radiusSlider.value))
+        guard let radius = user?.getRadius() else { return }
+        
+        userAnnotation?.title = "Search radius: " + String(Int(radius)) + "m "
+        if let userAnnotation = userAnnotation {
+            mapView.selectAnnotation(userAnnotation, animated: true)
+        }
+        
         // change the overlay radius
-        if (radiusOverlay != nil) {
+        if let radiusOverlay = radiusOverlay {
             mapView.remove(radiusOverlay)
         }
         
         createRadiusOverlay()
     }
     
+    /*
+     * User annotation should stop showing callout if slider released
+     */
     @IBAction func onReleaseSliderInside(_ sender: Any) {
         mapView.deselectAnnotation(userAnnotation, animated: false)
     }
-    
+
+    /*
+     * User annotation should stop showing callout if slider released
+     */
     @IBAction func onReleaseSliderOutside(_ sender: Any) {
         mapView.deselectAnnotation(userAnnotation, animated: false)
     }
@@ -365,12 +382,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
      * Centre on the user's location, as well as the user annotation
      */
     @IBAction func onClickNearMe(_ sender: Any) {
+        guard let userAnnotation = userAnnotation else { return }
+
         if (CLLocationManager.locationServicesEnabled()) {
-            mapView.setCenter(user.coordinate, animated: true)
+            guard let coordinate = user?.getCoordinate() else { return }
+            guard let radiusOverlay = radiusOverlay else { return }
+            
+            mapView.setCenter(coordinate, animated: true)
             mapView.removeAnnotation(userAnnotation)
-            userAnnotation.coordinate = user.coordinate
+            userAnnotation.coordinate = coordinate
+            
             mapView.remove(radiusOverlay)
             createRadiusOverlay()
+            
             mapView.addAnnotation(userAnnotation)
         } else {
             mapView.setCenter(userAnnotation.coordinate, animated: true)
@@ -392,7 +416,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
      * Creates blue radius overlay around the user annotation
      */
     func createRadiusOverlay() {
-        radiusOverlay = MKCircle(center: userAnnotation.coordinate, radius: user.getRadius())
+        guard let radius = user?.getRadius() else { return }
+        guard let userAnnotation = userAnnotation else { return }
+        
+        radiusOverlay = MKCircle(center: userAnnotation.coordinate, radius: radius)
+
+        guard let radiusOverlay = radiusOverlay else { return }
         mapView.add(radiusOverlay)
     }
     
