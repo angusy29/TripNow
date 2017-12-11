@@ -286,8 +286,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
      * Finds the 5 closest stops to the specified longitude and latitude
      */
     func getClosestStopRequest(longitude: Double, latitude: Double, radius: CLLocationDistance) {
-        let sem = DispatchSemaphore(value: 0)
-        
         guard let radius = user?.getRadius() else { return }
         
         // GET request to obtain the closest stops
@@ -297,6 +295,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         closestStopsRequest.addValue("application/json", forHTTPHeaderField: "Accept")
         closestStopsRequest.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
         
+        let sem = DispatchSemaphore(value: 0)
+
         // get the closest stops
         URLSession.shared.dataTask(with: closestStopsRequest){(data: Data?,response: URLResponse?, error: Error?) -> Void in
             do {

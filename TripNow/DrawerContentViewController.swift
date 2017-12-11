@@ -141,8 +141,38 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
         }
     }
     
+    /*
+     * Makes GET request to TFNSW
+     * Using /stop_finder API endpoint
+     */
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let guardSearchBarText = searchBar.text else { return }
+        guard let searchBarText = guardSearchBarText.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return }
+        
+        let url = "https://api.transport.nsw.gov.au/v1/tp/stop_finder?TfNSWSF=true&outputFormat=rapidJSON&type_sf=any&name_sf=" + searchBarText + "&coordOutputFormat=EPSG%3A4326&anyMaxSizeHitList=10&version=10.2.2.48"
+        
+        var stopFinderRequest = URLRequest(url: URL(string: url)!)
+        stopFinderRequest.addValue("application/json", forHTTPHeaderField: "Accept")
+        stopFinderRequest.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
+        
+        let sem = DispatchSemaphore(value: 0)
+
+        // get the closest stops
+        URLSession.shared.dataTask(with: stopFinderRequest){(data: Data?,response: URLResponse?, error: Error?) -> Void in
+            do {
+                let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
+                print(resultJson!)
+                
+                sem.signal()
+            } catch {
+                print("Error -> \(error)")
+            }
+        }.resume()
+        
+        sem.wait()
+        
         collapseVC()
+
     }
     
     @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {

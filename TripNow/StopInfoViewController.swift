@@ -15,7 +15,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     @IBOutlet weak var destinationLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
-    var stopObj: Stop!
+    var stopObj: Stop?
     var selectionList: EHHorizontalSelectionView!
     var busIdToStopEvent = [String: [StopEvent]]()
     var busIdToTripDesc = [String: TripDescriptor]()
@@ -27,7 +27,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        self.navigationItem.title = stopObj.getName()
+        self.navigationItem.title = stopObj?.getName()
         
         self.navigationController?.navigationBar.isTranslucent = false
         // self.edgesForExtendedLayout = []
@@ -57,7 +57,6 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
      * Will easily exceed API rate limit
      */
     func getDepartureRequest() {
-        let sem = DispatchSemaphore(value: 0)
         let date = Date()
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = "yyyyMMdd"
@@ -71,12 +70,16 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         print(todayDate)
         print(currentTime)*/
         
+        guard let id = stopObj?.getID() else { return }
+        
         // used to get which buses pass which stop
-        let departureURL = "https://api.transport.nsw.gov.au/v1/tp/departure_mon?TfNSWDM=true&outputFormat=rapidJSON&coordOutputFormat=EPSG%3A4326&mode=direct&type_dm=stop&name_dm=" + stopObj.getID() + "&depArrMacro=dep&itdDate=" + todayDate + "&itdTime=" + currentTime + "&version=10.2.2.48"
+        let departureURL = "https://api.transport.nsw.gov.au/v1/tp/departure_mon?TfNSWDM=true&outputFormat=rapidJSON&coordOutputFormat=EPSG%3A4326&mode=direct&type_dm=stop&name_dm=" + id + "&depArrMacro=dep&itdDate=" + todayDate + "&itdTime=" + currentTime + "&version=10.2.2.48"
         
         var departureRequest = URLRequest(url: URL(string: departureURL)!)
         departureRequest.addValue("application/json", forHTTPHeaderField: "Accept")
         departureRequest.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
+        
+        let sem = DispatchSemaphore(value: 0)
         
         // get which buses pass the stop
         URLSession.shared.dataTask(with: departureRequest){(data: Data?, response: URLResponse?, error: Error?) -> Void in
@@ -132,8 +135,8 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                             (self.busIdToStopEvent[busNumber!])?.append(newStopEvent)
                         }
                         
-                        if (!self.stopObj.isBusExist(bus: busNumber!)) {
-                            self.stopObj.addBus(bus: busNumber!)
+                        if (!(self.stopObj?.isBusExist(bus: busNumber!))!) {
+                            self.stopObj?.addBus(bus: busNumber!)
                         }
                     }
                 }
@@ -161,18 +164,19 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     /* Functions to implement for EHHorizontalSelectionViewProtocol */
     
     func numberOfItems(inHorizontalSelection hSelView: EHHorizontalSelectionView) -> UInt {
-        return UInt(stopObj.getBuses().count)
+        guard let count = stopObj?.getBuses().count else { return 0 }
+        return UInt(count)
     }
     
     func titleForItem(at index: UInt, forHorisontalSelection hSelView: EHHorizontalSelectionView) -> String? {
-        return stopObj.getBuses()[Int(index)]
+        return stopObj?.getBuses()[Int(index)]
     }
     
     /*
      * Callback for the selected item from horizontal view
      */
     func horizontalSelection(_ selectionView: EHHorizontalSelectionView, didSelectObjectAt index: UInt) {
-        self.selectedBus = stopObj.getBuses()[Int(index)]
+        self.selectedBus = stopObj?.getBuses()[Int(index)]
         self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[self.selectedBus]?.destination)!
         self.tableView.reloadData()
     }
