@@ -324,8 +324,13 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DAX-Wf-NXp">
-                                                <rect key="frame" x="325" y="45" width="30" height="38"/>
+                                                <rect key="frame" x="305" y="54" width="50" height="38"/>
+                                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="50" id="jHz-9L-faR"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" title="Go"/>
                                                 <connections>
                                                     <action selector="goButtonOnClick:" destination="lQ1-AC-Uyz" eventType="touchDown" id="qQe-yT-SBd"/>
@@ -336,6 +341,7 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="105" id="1hI-ly-kzv"/>
                                             <constraint firstItem="8WY-6C-Gcr" firstAttribute="top" secondItem="JrL-OM-uTP" secondAttribute="bottom" constant="6" id="5OX-xn-HLF"/>
+                                            <constraint firstItem="5JX-7c-TOO" firstAttribute="top" secondItem="DAX-Wf-NXp" secondAttribute="bottom" constant="13" id="8OP-rl-dVj"/>
                                             <constraint firstItem="5JX-7c-TOO" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" id="8am-IQ-b2X"/>
                                             <constraint firstItem="AAy-pc-d32" firstAttribute="top" secondItem="IcI-lZ-1xl" secondAttribute="top" constant="20" id="EDB-Gk-YwD"/>
                                             <constraint firstItem="5JX-7c-TOO" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" id="Nui-IE-ZCT"/>
@@ -347,7 +353,6 @@
                                             <constraint firstItem="AAy-pc-d32" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" constant="15" id="bVB-kl-UbQ"/>
                                             <constraint firstAttribute="trailing" secondItem="5JX-7c-TOO" secondAttribute="trailing" id="eHS-dv-i84"/>
                                             <constraint firstAttribute="trailing" secondItem="5JX-7c-TOO" secondAttribute="trailing" id="nY9-Hb-Q85"/>
-                                            <constraint firstItem="DAX-Wf-NXp" firstAttribute="top" secondItem="IcI-lZ-1xl" secondAttribute="top" constant="45" id="p5U-e9-z3n"/>
                                             <constraint firstAttribute="trailing" secondItem="DAX-Wf-NXp" secondAttribute="trailing" constant="20" id="p8s-lg-E1n"/>
                                             <constraint firstItem="8WY-6C-Gcr" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" constant="15" id="w6W-7d-DEP"/>
                                             <constraint firstItem="JrL-OM-uTP" firstAttribute="top" secondItem="AAy-pc-d32" secondAttribute="bottom" constant="6" id="zeN-uD-SiD"/>

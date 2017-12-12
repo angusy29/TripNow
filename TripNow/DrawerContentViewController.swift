@@ -34,6 +34,7 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
         selectedStopParent.isHidden = true
         selectedStopType.isHidden = true
         goButton.isHidden = true
+        goButton.layer.cornerRadius = 8
         
         /*let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard(_:)))
         tapGesture.cancelsTouchesInView = false
@@ -68,7 +69,7 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
         
         cell.stopName?.text = table[row].getName()
         cell.stopParent?.text = (table[row].getParent()) + " " + (table[row].getID())
-        cell.stopType?.text = String(describing: table[row].getDistance()) + "m" + "\u{00B7}" + (table[row].getType())
+        cell.stopType?.text = String(describing: table[row].getDistance()) + "m" + " \u{00B7} " + capitalizeFirstLetter(string: table[row].getType())
         cell.isUserInteractionEnabled = true
         return cell
     }
@@ -202,7 +203,9 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
 
         selectedStopName?.text = name
         selectedStopParent?.text = parent + " " + id
-        selectedStopType?.text = String(describing: distance) + "m" + "\u{00B7}" + type
+        
+        
+        selectedStopType?.text = String(describing: distance) + "m" + " \u{00B7} " + capitalizeFirstLetter(string: type)
     }
     
     func setSelectedStop(stop: Stop?) {
@@ -218,6 +221,10 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
             contentDrawer?.pushViewController(vc, animated: true)
             drawer.setDrawerPosition(position: .closed)
         }
+    }
+    
+    private func capitalizeFirstLetter(string: String) -> String {
+        return string.prefix(1).uppercased() + string.dropFirst()
     }
     
     override func didReceiveMemoryWarning() {
