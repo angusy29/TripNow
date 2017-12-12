@@ -9,6 +9,7 @@ Queries TFNSW endpoint /coord to obtain stops around some coordinate, and /depar
 * Tweak search radius
 * User location
 * Centre in on user annotation
+* Search for a place
 
 The app presents data such as:
 * Closest stops
@@ -39,5 +40,7 @@ EHHorizontalSelectionView for horizontal list of buses at a stop.
 Currently only supports iOS 11 due to the use of MKMarkerAnnotationView
 
 ## To do
-* Search a region
+* Search a region DONE
+* Long press to set position of user's search coordinate
+* Find out a sequence of transport to take to get to a specified searched region
 * Fix StopInfoViewController to update waiting time
