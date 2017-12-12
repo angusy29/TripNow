@@ -341,7 +341,6 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="105" id="1hI-ly-kzv"/>
                                             <constraint firstItem="8WY-6C-Gcr" firstAttribute="top" secondItem="JrL-OM-uTP" secondAttribute="bottom" constant="6" id="5OX-xn-HLF"/>
-                                            <constraint firstItem="5JX-7c-TOO" firstAttribute="top" secondItem="DAX-Wf-NXp" secondAttribute="bottom" constant="13" id="8OP-rl-dVj"/>
                                             <constraint firstItem="5JX-7c-TOO" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" id="8am-IQ-b2X"/>
                                             <constraint firstItem="AAy-pc-d32" firstAttribute="top" secondItem="IcI-lZ-1xl" secondAttribute="top" constant="20" id="EDB-Gk-YwD"/>
                                             <constraint firstItem="5JX-7c-TOO" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" id="Nui-IE-ZCT"/>
@@ -351,6 +350,7 @@
                                             <constraint firstItem="5JX-7c-TOO" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" id="Ydb-zO-rWY"/>
                                             <constraint firstItem="JrL-OM-uTP" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" constant="15" id="b0p-GE-p9I"/>
                                             <constraint firstItem="AAy-pc-d32" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" constant="15" id="bVB-kl-UbQ"/>
+                                            <constraint firstItem="DAX-Wf-NXp" firstAttribute="top" secondItem="IcI-lZ-1xl" secondAttribute="top" constant="54" id="e4K-xC-NHP"/>
                                             <constraint firstAttribute="trailing" secondItem="5JX-7c-TOO" secondAttribute="trailing" id="eHS-dv-i84"/>
                                             <constraint firstAttribute="trailing" secondItem="5JX-7c-TOO" secondAttribute="trailing" id="nY9-Hb-Q85"/>
                                             <constraint firstAttribute="trailing" secondItem="DAX-Wf-NXp" secondAttribute="trailing" constant="20" id="p8s-lg-E1n"/>
@@ -416,7 +416,7 @@
                                             <constraint firstAttribute="height" constant="0.5" id="w6o-GW-iav"/>
                                         </constraints>
                                     </view>
-                                    <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Where do you want to go?" translatesAutoresizingMaskIntoConstraints="NO" id="w2h-pc-n7k">
+                                    <searchBar contentMode="redraw" searchBarStyle="minimal" text="" placeholder="Search for a place" translatesAutoresizingMaskIntoConstraints="NO" id="w2h-pc-n7k">
                                         <rect key="frame" x="0.0" y="105" width="375" height="56"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </searchBar>

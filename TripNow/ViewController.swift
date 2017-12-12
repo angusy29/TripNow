@@ -27,6 +27,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     
     // list of stops we found
     var stopsFound = [Stop]()
+    var searchResults = [MKAnnotation]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,7 +124,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             userAnnotation?.title = "Search radius: " + String(Int(radius)) + "m "
 
             if let userAnnotation = userAnnotation {
-                self.mapView.addAnnotation(userAnnotation)
+                DispatchQueue.main.async() {
+                    self.mapView.addAnnotation(userAnnotation)
+                }
             }
             
             isLocationInitCentre = true
@@ -137,7 +140,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             userAnnotation?.title = "Search radius: 400m "
             
             guard let userAnnotation = userAnnotation else { return }
-            self.mapView.addAnnotation(userAnnotation)
+            
+            DispatchQueue.main.async {
+                self.mapView.addAnnotation(userAnnotation)
+            }
             
             isLocationInitCentre = true
         }
@@ -215,6 +221,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
      */
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?
     {
+        print("DROP")
         if (annotation is MKUserLocation) {
             return nil
         }
@@ -228,9 +235,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             userAnnotationView.animatesDrop = true
             return userAnnotationView
         } else {
+            for annot in searchResults {
+                if annot.isEqual(annotation) {
+                    let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "searchMarker")
+                    annotationView.animatesDrop = true
+                    annotationView.canShowCallout = true
+                    annotationView.pinTintColor = UIColor.cyan
+                    return annotationView
+                }
+            }
+
             let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "marker")
-            annotationView.canShowCallout = true
             annotationView.animatesDrop = true
+            annotationView.canShowCallout = true
             annotationView.rightCalloutAccessoryView = UIButton.init(type: UIButtonType.detailDisclosure)
             return annotationView
         }
@@ -247,6 +264,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     }
     
     // Invoked on click refresh
+    // Calls the getClosestStopRequest which invokes API endpoint
     @IBAction func onRefresh(_ sender: UIButton) {
         self.stopsFound.removeAll()
         mapView.removeAnnotations(allAnnotations)
@@ -265,7 +283,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         for stop in stopsFound {
             let annotation = self.createAnnotation(latitude: stop.getLatitude(), longitude: stop.getLongitude(), title: stop.getParent() + " " + stop.getID(), subtitle: stop.getName())
             
-            self.mapView.addAnnotation(annotation)
+            DispatchQueue.main.async {
+                self.mapView.addAnnotation(annotation)
+            }
+            
             allAnnotations.append(annotation)
         }
         if let drawer = self.parent?.parent as? PulleyViewController {
@@ -301,7 +322,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         URLSession.shared.dataTask(with: closestStopsRequest){(data: Data?,response: URLResponse?, error: Error?) -> Void in
             do {
                 let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
-                guard let locations = resultJson?["locations"] as? [[String: Any]] else { return }
+                guard let locations = resultJson?["locations"] as? [[String: Any]] else { sem.signal(); return }
                 
                 if locations.count == 0 {
                     sem.signal()
@@ -395,7 +416,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             mapView.remove(radiusOverlay)
             createRadiusOverlay()
             
-            mapView.addAnnotation(userAnnotation)
+            DispatchQueue.main.async {
+                self.mapView.addAnnotation(userAnnotation)
+            }
         } else {
             mapView.setCenter(userAnnotation.coordinate, animated: true)
         }
@@ -427,6 +450,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     
     func getStopsFound() -> [Stop] {
         return self.stopsFound
+    }
+    
+    func appendSearchResult(annotation: MKAnnotation) {
+        searchResults.append(annotation)
     }
     
     override func didReceiveMemoryWarning() {

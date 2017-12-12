@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MapKit
 import UIKit
 import Pulley
 
@@ -150,6 +151,8 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
         guard let guardSearchBarText = searchBar.text else { return }
         guard let searchBarText = guardSearchBarText.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return }
         
+        clearSearchResults()
+        
         let url = "https://api.transport.nsw.gov.au/v1/tp/stop_finder?TfNSWSF=true&outputFormat=rapidJSON&type_sf=any&name_sf=" + searchBarText + "&coordOutputFormat=EPSG%3A4326&anyMaxSizeHitList=10&version=10.2.2.48"
         
         var stopFinderRequest = URLRequest(url: URL(string: url)!)
@@ -162,7 +165,63 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
         URLSession.shared.dataTask(with: stopFinderRequest){(data: Data?,response: URLResponse?, error: Error?) -> Void in
             do {
                 let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
-                print(resultJson!)
+                guard let locations = resultJson?["locations"] as? [[String: Any]] else { sem.signal(); return }
+                
+                var coordinateToCenterTo: CLLocationCoordinate2D?
+                var quality = 0
+                
+                for i in 0...9 {
+                    if i >= locations.count {
+                        break
+                    }
+                    
+                    guard let coordinates = locations[i]["coord"] as? NSArray else { break }
+                    guard let latCoord = coordinates[0] as? Double else { break }
+                    guard let longCoord = coordinates[1] as? Double else { break }
+                    var name = locations[i]["disassembledName"] as? String
+                    var type = locations[i]["type"] as? String
+                    var matchQuality = locations[i]["matchQuality"] as? Int
+                    type = self.capitalizeFirstLetter(string: type)
+                    if matchQuality == nil {
+                        matchQuality = 0
+                    }
+                    
+                    if coordinateToCenterTo == nil || matchQuality! > quality {
+                        coordinateToCenterTo = CLLocationCoordinate2DMake(latCoord, longCoord)
+                        quality = matchQuality!
+                    }
+                        
+                    if type == "Poi" {
+                        type = "Point of interest"
+                    }
+                    
+                    if name == nil {
+                        name = locations[i]["name"] as? String
+                    }
+                    
+                    if let pulley = self.parent as? PulleyViewController {
+                        let contentDrawer = pulley.primaryContentViewController as? UINavigationController
+                        let vc = contentDrawer?.viewControllers[0] as? ViewController
+                        
+                        guard let annotation = vc?.createAnnotation(latitude: latCoord, longitude: longCoord, title: name!, subtitle: type!) else { break }
+                        
+                        DispatchQueue.main.async {
+                            vc?.mapView.addAnnotation(annotation)
+                        }
+                        
+                        vc?.appendSearchResult(annotation: annotation)
+                    }
+                }
+                
+                if let pulley = self.parent as? PulleyViewController {
+                    let contentDrawer = pulley.primaryContentViewController as? UINavigationController
+                    let vc = contentDrawer?.viewControllers[0] as? ViewController
+                    
+                    if let coordinateToCenterTo = coordinateToCenterTo {
+                        guard let adjustedRegion = vc?.mapView.regionThatFits(MKCoordinateRegionMakeWithDistance(coordinateToCenterTo, 2500, 2500)) else { sem.signal(); return }
+                        vc?.mapView.setRegion(adjustedRegion, animated: true)
+                    }
+                }
                 
                 sem.signal()
             } catch {
@@ -223,8 +282,26 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
         }
     }
     
-    private func capitalizeFirstLetter(string: String) -> String {
-        return string.prefix(1).uppercased() + string.dropFirst()
+    private func capitalizeFirstLetter(string: String?) -> String {
+        if let string = string {
+            return string.prefix(1).uppercased() + string.dropFirst()
+        }
+        return ""
+    }
+    
+    func clearSearchResults() {
+        if let pulley = self.parent as? PulleyViewController {
+            let contentDrawer = pulley.primaryContentViewController as? UINavigationController
+            let vc = contentDrawer?.viewControllers[0] as? ViewController
+
+            if let searchResults = vc?.searchResults {
+                for annotation in searchResults {
+                    vc?.mapView.removeAnnotation(annotation)
+                }
+            }
+            
+            vc?.searchResults.removeAll()
+        }
     }
     
     override func didReceiveMemoryWarning() {
