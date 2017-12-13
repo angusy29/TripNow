@@ -3,6 +3,7 @@
 Uses TFNSW Trip Planner API to find bus stops and train station platforms within some specified radius. 
 
 Queries TFNSW endpoint /coord to obtain stops around some coordinate, and /departure_mon to obtain detailed attributes of a particular stop.
+Searches made in the search bar use /stop_finder endpoint
 
 ## Features
 * Drag user annotation
@@ -40,7 +41,7 @@ EHHorizontalSelectionView for horizontal list of buses at a stop.
 Currently only supports iOS 11 due to the use of MKMarkerAnnotationView
 
 ## To do
-* Search a region DONE
-* Long press to set position of user's search coordinate
-* Find out a sequence of transport to take to get to a specified searched region
-* Fix StopInfoViewController to update waiting time
+[x] Search a region
+[ ] Long press to set position of user's search coordinate
+[ ] Find out a sequence of transport to take to get to a specified searched region
+[ ] Fix StopInfoViewController to update waiting time
