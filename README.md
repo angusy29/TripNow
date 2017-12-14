@@ -38,7 +38,10 @@ Pulley for iOS 10 Maps style pull up modal.
 EHHorizontalSelectionView for horizontal list of buses at a stop.
 
 ## Supported devices
-Currently only supports iOS 11 due to the use of MKMarkerAnnotationView
+Only tested on iOS 11
+
+## Known bugs to fix
+* Find stops, which returns a positive number of stops, and then if we try to find stops where there are no stops existing this will cause an index out of range error in DrawerContentViewController
 
 ## To do
 [x] Search a region
