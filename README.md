@@ -43,7 +43,7 @@ Currently only supports iOS 11 due to the use of MKMarkerAnnotationView
 ## To do
 [x] Search a region
 
-[ ] Long press to set position of user's search coordinate
+[x] Long press to set position of user's search coordinate
 
 [ ] Find out a sequence of transport to take to get to a specified searched region
 

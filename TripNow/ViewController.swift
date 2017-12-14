@@ -10,7 +10,7 @@ import MapKit
 import UIKit
 import Pulley
 
-class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
+class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate, UIGestureRecognizerDelegate {
     // UI elements
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var refresh: UIButton!
@@ -47,17 +47,21 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         // Do any additional setup after loading the view, typically from a nib.
         
         
-        /*let gestureRecog = UITapGestureRecognizer(target: self, action: #selector(ViewController.handleTap(gestureRecog:)))
+        let gestureRecog = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.handleLongPress(gestureRecog:)))
         gestureRecog.delegate = self
-        mapView.addGestureRecognizer(gestureRecog)*/
+        mapView.addGestureRecognizer(gestureRecog)
     }
     
-    /*func handleTap(gestureRecog: UILongPressGestureRecognizer) {
+    @objc func handleLongPress(gestureRecog: UILongPressGestureRecognizer) {
         let location = gestureRecog.location(in: mapView)
-        let coordinate = mapView.convert(location, to: mapView)
+        let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
         
-        print(coordinate)
-    }*/
+        // print(coordinate)
+        userAnnotation?.coordinate = coordinate
+        guard let radiusOverlay = radiusOverlay else { return }
+        mapView.remove(radiusOverlay)
+        createRadiusOverlay()
+    }
     
     /*
      * Removes the navigation bar when this view appears
