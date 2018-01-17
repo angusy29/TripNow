@@ -327,7 +327,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             do {
                 let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
                 guard let locations = resultJson?["locations"] as? [[String: Any]] else { sem.signal(); return }
-                
+                print(resultJson)
                 if locations.count == 0 {
                     sem.signal()
                     return

@@ -89,7 +89,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         URLSession.shared.dataTask(with: departureRequest){(data: Data?, response: URLResponse?, error: Error?) -> Void in
             do {
                 let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
-                // print(resultJson!)
+                print(resultJson!)
                 
                 let stopEvents = resultJson?["stopEvents"] as? [[String: Any]]
                 
