@@ -23,11 +23,18 @@ class StopEvent {
     var departureTimeEstimated: Date?
     var occupancy: String?
     
-    init(busNumber: String, departureTimePlanned: Date, departureTimeEstimated: Date?, occupancy: String?) {
+    // these are used for finding the shape_id
+    var inboundOrOutbound: String?  // R (inbound) or H (outbound)
+    var instance: String?       // i have no idea what this is
+    
+    init(busNumber: String, departureTimePlanned: Date, departureTimeEstimated: Date?, occupancy: String?,
+         inboundOrOutbound: String, instance: String) {
         self.busNumber = busNumber
         self.departureTimePlanned = departureTimePlanned
         self.departureTimeEstimated = departureTimeEstimated
         self.occupancy = occupancy
+        self.inboundOrOutbound = inboundOrOutbound
+        self.instance = instance
     }
     
     public func getBusNumber() -> String {

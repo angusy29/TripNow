@@ -10,6 +10,9 @@ import MapKit
 import UIKit
 import EHHorizontalSelectionView
 
+// might need to use stops.txt
+// with GTFS realtime trip update to plot routes
+// or just use shapes.txt once i figure how it works
 class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHorizontalSelectionViewProtocol, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var destinationLabel: UILabel!
@@ -114,6 +117,18 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                         let originName = origin?["name"] as? String
                         let destinationName = destination?["name"] as? String
                         
+                        var shapeSuffix = transportation?["id"] as? String
+                        var inboundOrOutbound = ""      // either R (inbound) or H (outbound)
+                        var instance = ""
+                        if shapeSuffix != nil {
+                            shapeSuffix = shapeSuffix?.components(separatedBy: .whitespaces)[1]
+                            let tokens = shapeSuffix?.components(separatedBy: ":")
+                            if tokens != nil {
+                                inboundOrOutbound = tokens![1]
+                                instance = tokens![2]
+                            }
+                        }
+                        
                         // initialize selected bus if nil
                         if (self.selectedBus == nil) {
                             self.selectedBus = busNumber
@@ -126,7 +141,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                         print(description!)
                         print(departureTimePlanned!)*/
                         
-                        let newStopEvent = StopEvent(busNumber: busNumber!, departureTimePlanned: departureTimePlanned!, departureTimeEstimated: departureTimeEstimated, occupancy: occupancy)
+                        let newStopEvent = StopEvent(busNumber: busNumber!, departureTimePlanned: departureTimePlanned!, departureTimeEstimated: departureTimeEstimated, occupancy: occupancy, inboundOrOutbound: inboundOrOutbound, instance: instance)
                         
                         // if the busId isn't in the map yet, we need to create a new array for it in the dictionary
                         if (self.busIdToStopEvent[busNumber!] == nil) {
