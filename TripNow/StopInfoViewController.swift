@@ -59,9 +59,13 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     func getDepartureRequest() {
         let date = Date()
         let dateformatter = DateFormatter()
+        print(dateformatter.timeZone)
+        dateformatter.timeZone = TimeZone(secondsFromGMT: 60 * 60 * 11)
+        print(dateformatter.timeZone)
         dateformatter.dateFormat = "yyyyMMdd"
         let timeformatter = DateFormatter()
         timeformatter.dateFormat = "HHmm"
+        timeformatter.timeZone = TimeZone(secondsFromGMT: 60 * 60 * 11)
         let todayDate = dateformatter.string(from: date)    // in format yyyyMMdd
         let currentTime = timeformatter.string(from: date)  // in format hhmm
         currTime = date
@@ -237,7 +241,11 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
             cell.timeTopLabel?.text = String(describing: (sydneyTimeFormatter.string(from: (table?[row].getDepartureTimeEstimated())!)))
             cell.timeBottomLabel?.text = String(describing: (sydneyTimeFormatter.string(from: (table?[row].getDepartureTimePlanned())!))) + " " + isEarly + " " + lateTimeStr
             
-            if (table?[row].getOccupancy() == "MANY_SEATS") {
+            if (table?[row].getOccupancy() == nil) {
+                cell.busCapImg1?.image = UIImage(named: "customer-40-grey")
+                cell.busCapImg2?.image = UIImage(named: "customer-40-grey")
+                cell.busCapImg3?.image = UIImage(named: "customer-40-grey")
+            } else if (table?[row].getOccupancy() == "MANY_SEATS") {
                 cell.busCapImg1?.image = UIImage(named: "customer-40-green")
                 cell.busCapImg2?.image = UIImage(named: "customer-40-grey")
                 cell.busCapImg3?.image = UIImage(named: "customer-40-grey")

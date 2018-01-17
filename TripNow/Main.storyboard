@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="1F3-FL-qrw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="1F3-FL-qrw">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -323,15 +323,15 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DAX-Wf-NXp">
-                                                <rect key="frame" x="305" y="54" width="50" height="38"/>
+                                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DAX-Wf-NXp">
+                                                <rect key="frame" x="289" y="54" width="66" height="38"/>
                                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="50" id="jHz-9L-faR"/>
+                                                    <constraint firstAttribute="width" constant="65" id="jHz-9L-faR"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <state key="normal" title="Go"/>
+                                                <state key="normal" title="GO"/>
                                                 <connections>
                                                     <action selector="goButtonOnClick:" destination="lQ1-AC-Uyz" eventType="touchDown" id="qQe-yT-SBd"/>
                                                 </connections>
@@ -376,15 +376,15 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gHC-wm-VnY" userLabel="Stop Parent">
-                                                            <rect key="frame" x="15.000000000000004" y="45" width="37.333333333333343" height="18"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bCI-rI-OBK" userLabel="Stop Type">
+                                                            <rect key="frame" x="322" y="45" width="37.333333333333314" height="18"/>
                                                             <color key="tintColor" red="0.66422420739999999" green="0.66424006219999998" blue="0.66423153879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bCI-rI-OBK" userLabel="Stop Type">
-                                                            <rect key="frame" x="322" y="45" width="37.333333333333314" height="18"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gHC-wm-VnY" userLabel="Stop Parent">
+                                                            <rect key="frame" x="15.000000000000004" y="45" width="37.333333333333343" height="18"/>
                                                             <color key="tintColor" red="0.66422420739999999" green="0.66424006219999998" blue="0.66423153879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <nil key="textColor"/>
@@ -393,7 +393,7 @@
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstItem="bCI-rI-OBK" firstAttribute="top" secondItem="zwg-LZ-hhX" secondAttribute="topMargin" constant="34" id="5Xo-kS-ZfL"/>
-                                                        <constraint firstItem="gHC-wm-VnY" firstAttribute="leading" secondItem="zwg-LZ-hhX" secondAttribute="leadingMargin" id="Y6s-dV-Aph"/>
+                                                        <constraint firstItem="gHC-wm-VnY" firstAttribute="leading" secondItem="zwg-LZ-hhX" secondAttribute="leading" constant="15" id="9pd-gg-X5s"/>
                                                         <constraint firstItem="bCI-rI-OBK" firstAttribute="trailing" secondItem="zwg-LZ-hhX" secondAttribute="trailingMargin" id="kHQ-cw-gRQ"/>
                                                         <constraint firstItem="gHC-wm-VnY" firstAttribute="top" secondItem="wc8-qY-P1I" secondAttribute="bottom" constant="5" id="sic-Q9-jjB"/>
                                                         <constraint firstItem="wc8-qY-P1I" firstAttribute="leading" secondItem="zwg-LZ-hhX" secondAttribute="leading" constant="15" id="svj-AO-5BD"/>
