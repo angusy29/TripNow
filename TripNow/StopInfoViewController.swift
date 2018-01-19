@@ -50,11 +50,22 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         
         view.addSubview(selectionList)
         self.mapView.delegate = self
+        self.selectionList.delegate = self
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
         
         // should really set the region to the bus closest to our current stop
         let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees((self.stopObj?.latitude)!), longitude: CLLocationDegrees((self.stopObj?.longitude)!))
-        let adjustedRegion = self.mapView.regionThatFits(MKCoordinateRegionMakeWithDistance(coordinate, 1500, 1500))
+        let adjustedRegion = self.mapView.regionThatFits(MKCoordinateRegionMakeWithDistance(coordinate, 2000, 2000))
         self.mapView.setRegion(adjustedRegion, animated: false)
+        
+        // set an annotation for the bus stop we selected
+        let annotation = MKPointAnnotation()
+        annotation.title = stopObj?.getName()
+        annotation.coordinate = coordinate
+        DispatchQueue.main.async() {
+            self.mapView.addAnnotation(annotation)
+        }
         
         getDepartureRequest()
         getRealtimeVehiclePosition() // needs to be called after departure request, because selectedBus is nil until then
@@ -71,12 +82,26 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
      */
     @objc func getRealtimeVehiclePosition() {
         print("CALL")
-        self.mapView.removeAnnotations(self.mapView.annotations)
+        self.removeAnnotationsExceptStop()
 
         let url = "https://api.transport.nsw.gov.au/v1/gtfs/vehiclepos/buses"
         var request = URLRequest(url: URL(string: url)!)
         request.addValue("text/plain", forHTTPHeaderField: "Accept")
         request.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
+        
+        let listOfStopEvents = self.busIdToStopEvent[self.selectedBus]
+        var stopEvent: StopEvent? = nil
+        if listOfStopEvents != nil {
+            // find the first stop event which has real time data
+            // so we can render the bus
+            for i in 0...((listOfStopEvents?.count)! - 1) {
+                if listOfStopEvents?[i].realtimeTripId != nil {
+                    print("FOUND")
+                    stopEvent = (listOfStopEvents?[i])!
+                    break
+                }
+            }
+        }
         
         let sem = DispatchSemaphore(value: 0)
 
@@ -88,21 +113,17 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                 for entity in decodedData.entity {
                     let trip = entity.vehicle.trip
                     let position = entity.vehicle.position
-                    let listOfStopEvents = self.busIdToStopEvent[self.selectedBus]
-                    if listOfStopEvents != nil {
-                        let firstStopEvent = listOfStopEvents![0]
-                        if firstStopEvent.operatorId == nil {
-                            continue
-                        }
-                        guard let operatorId = firstStopEvent.operatorId else { continue }
-                        if trip.routeID == operatorId + "_" + self.selectedBus {
-                            // add to the bus location to map
-                            let annotation = MKPointAnnotation()
-                            annotation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(position.latitude), longitude: CLLocationDegrees(position.longitude))
-                            
-                            DispatchQueue.main.async() {
-                                self.mapView.addAnnotation(annotation)
-                            }
+
+                    guard let operatorId = stopEvent?.operatorId else { continue }
+                    guard let realtimeTripId = stopEvent?.realtimeTripId else { continue }
+
+                    if trip.routeID == operatorId + "_" + self.selectedBus && trip.tripID == realtimeTripId {
+                        // add to the bus location to map
+                        let annotation = MKPointAnnotation()
+                        annotation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(position.latitude), longitude: CLLocationDegrees(position.longitude))
+                        annotation.title = self.selectedBus
+                        DispatchQueue.main.async() {
+                            self.mapView.addAnnotation(annotation)
                         }
                     }
                 }
@@ -124,11 +145,12 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
      * Will easily exceed API rate limit
      */
     func getDepartureRequest() {
+        self.busIdToStopEvent.removeAll()
+        self.busIdToTripDesc.removeAll()
+        
         let date = Date()
         let dateformatter = DateFormatter()
-        print(dateformatter.timeZone)
         dateformatter.timeZone = TimeZone(secondsFromGMT: 60 * 60 * 11)
-        print(dateformatter.timeZone)
         dateformatter.dateFormat = "yyyyMMdd"
         let timeformatter = DateFormatter()
         timeformatter.dateFormat = "HHmm"
@@ -136,10 +158,6 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         let todayDate = dateformatter.string(from: date)    // in format yyyyMMdd
         let currentTime = timeformatter.string(from: date)  // in format hhmm
         currTime = date
-        
-        /*print("TODAY")
-        print(todayDate)
-        print(currentTime)*/
         
         guard let id = stopObj?.getID() else { return }
         
@@ -198,12 +216,6 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                             }
                         }
                         
-                        // initialize selected bus if nil
-                        if (self.selectedBus == nil) {
-                            self.selectedBus = busNumber
-                            
-                        }
-                        
                         /*print(busNumber!)
                         print(originName!)
                         print(destinationName!)
@@ -236,12 +248,13 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         
         sem.wait()
         
-        if (self.selectedBus != nil) {
-            selectionList.delegate = self
-            self.tableView.delegate = self
-            self.tableView.dataSource = self
+        // initialize selected bus if nil
+        if (self.selectedBus == nil) {
+            self.selectedBus = self.stopObj?.getBuses()[0]
             self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[self.selectedBus]?.destination)!
         }
+        
+        self.tableView.reloadData()
     }
     
     override func didReceiveMemoryWarning() {
@@ -361,9 +374,26 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
      * This makes the pointAnnotations render with the rightCalloutAccessory
      */
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let annotation = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "busAnnotation")
-        annotation.pinTintColor = UIColor.red
-        return annotation
-        
+        let annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "busAnnotation")
+        if annotation.coordinate.latitude == stopObj?.latitude && annotation.coordinate.longitude == stopObj?.longitude {
+            // this is the bus stop
+            annotationView.pinTintColor = UIColor.green
+        } else {
+            // these are the buses
+            annotationView.pinTintColor = UIColor.red
+        }
+        annotationView.canShowCallout = true
+        return annotationView
+    }
+    
+    /*
+     * Removes all annotations from mapView except for the stopObj
+     */
+    func removeAnnotationsExceptStop() {
+        for annotation in self.mapView.annotations {
+            if annotation.coordinate.latitude != stopObj?.latitude && annotation.coordinate.longitude != stopObj?.longitude {
+                self.mapView.removeAnnotation(annotation)
+            }
+        }
     }
 }
