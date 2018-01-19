@@ -28,9 +28,10 @@ class StopEvent {
     var instance: String?       // i have no idea what this is
     
     var realtimeTripId: String?
+    var operatorId: String?
     
     init(busNumber: String, departureTimePlanned: Date, departureTimeEstimated: Date?, occupancy: String?,
-         inboundOrOutbound: String, instance: String, realtimeTripId: String?) {
+         inboundOrOutbound: String, instance: String, realtimeTripId: String?, operatorId: String?) {
         self.busNumber = busNumber
         self.departureTimePlanned = departureTimePlanned
         self.departureTimeEstimated = departureTimeEstimated
@@ -38,6 +39,7 @@ class StopEvent {
         self.inboundOrOutbound = inboundOrOutbound
         self.instance = instance
         self.realtimeTripId = realtimeTripId
+        self.operatorId = operatorId
     }
     
     public func getBusNumber() -> String {
