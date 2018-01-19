@@ -7,24 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D9B618CC649CFBFB509A3CA /* Pods_TripNow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE6BF5CCEBF011D33A899759 /* Pods_TripNow.framework */; };
+		8A23B2722011968400D241E7 /* tfnsw.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A23B2712011968400D241E7 /* tfnsw.pb.swift */; };
+		8A23B274201196CD00D241E7 /* tfnsw.proto in Resources */ = {isa = PBXBuildFile; fileRef = 8A23B273201196CD00D241E7 /* tfnsw.proto */; };
 		8A2EDE411FC55D1E00935B05 /* EHHorizontalSelectionView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A2EDE401FC55D1E00935B05 /* EHHorizontalSelectionView.framework */; };
 		8A2EDE431FC57BCA00935B05 /* StopEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2EDE421FC57BCA00935B05 /* StopEvent.swift */; };
 		8A3F3ABE1FC42BD100118874 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3F3ABD1FC42BD100118874 /* User.swift */; };
 		8A40C66B1FC4EFA50089D491 /* StopInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A40C66A1FC4EFA50089D491 /* StopInfoViewController.swift */; };
 		8A40C66D1FC4F1CB0089D491 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A40C66C1FC4F1CB0089D491 /* Main.storyboard */; };
 		8A716BDE1FC3EA5C00727A66 /* Stop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A716BDD1FC3EA5C00727A66 /* Stop.swift */; };
+		8A9B54D41FC8FC9100B0D271 /* DrawerTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9B54D31FC8FC9100B0D271 /* DrawerTableCell.swift */; };
 		8AC91CEA1FC6417F001064F2 /* TripDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC91CE91FC6417F001064F2 /* TripDescriptor.swift */; };
 		8AC91CEC1FC64664001064F2 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC91CEB1FC64664001064F2 /* CustomTableViewCell.swift */; };
+		8AC9BDAF1FC7F40300522669 /* DrawerContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC9BDAE1FC7F40300522669 /* DrawerContentViewController.swift */; };
 		8AF218201F1C3B290008E0A0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF2181F1F1C3B290008E0A0 /* AppDelegate.swift */; };
 		8AF218221F1C3B290008E0A0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF218211F1C3B290008E0A0 /* ViewController.swift */; };
 		8AF218271F1C3B2A0008E0A0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AF218261F1C3B2A0008E0A0 /* Assets.xcassets */; };
 		8AF2182A1F1C3B2A0008E0A0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AF218281F1C3B2A0008E0A0 /* LaunchScreen.storyboard */; };
-		C412170188B53B1112197CAD /* Pods_TripNow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75908D900C64C7CA7B0219DE /* Pods_TripNow.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		062CC3EBF39E7E7065AB064C /* Pods-TripNow.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TripNow.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TripNow/Pods-TripNow.debug.xcconfig"; sourceTree = "<group>"; };
-		75908D900C64C7CA7B0219DE /* Pods_TripNow.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TripNow.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A23B2712011968400D241E7 /* tfnsw.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tfnsw.pb.swift; sourceTree = "<group>"; };
+		8A23B273201196CD00D241E7 /* tfnsw.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tfnsw.proto; sourceTree = "<group>"; };
 		8A2EDE401FC55D1E00935B05 /* EHHorizontalSelectionView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EHHorizontalSelectionView.framework; path = "../../../Library/Developer/Xcode/DerivedData/TripNow-bizzapqvtzwsbqdxcrqfoahmmxwf/Build/Products/Debug-iphonesimulator/EHHorizontalSelectionView/EHHorizontalSelectionView.framework"; sourceTree = "<group>"; };
 		8A2EDE421FC57BCA00935B05 /* StopEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StopEvent.swift; sourceTree = "<group>"; };
 		8A3F3ABD1FC42BD100118874 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -33,8 +37,10 @@
 		8A483BAF1FC537700018C213 /* HTHorizontalSelectionList.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HTHorizontalSelectionList.framework; path = "Pods/../build/Debug-iphoneos/HTHorizontalSelectionList/HTHorizontalSelectionList.framework"; sourceTree = "<group>"; };
 		8A6ABAAA1FC531E600D3B83D /* EHHorizontalSelectionView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EHHorizontalSelectionView.framework; path = "Pods/../build/Debug-iphoneos/EHHorizontalSelectionView/EHHorizontalSelectionView.framework"; sourceTree = "<group>"; };
 		8A716BDD1FC3EA5C00727A66 /* Stop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stop.swift; sourceTree = "<group>"; };
+		8A9B54D31FC8FC9100B0D271 /* DrawerTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerTableCell.swift; sourceTree = "<group>"; };
 		8AC91CE91FC6417F001064F2 /* TripDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDescriptor.swift; sourceTree = "<group>"; };
 		8AC91CEB1FC64664001064F2 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
+		8AC9BDAE1FC7F40300522669 /* DrawerContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerContentViewController.swift; sourceTree = "<group>"; };
 		8AE583281FC52C3E0037CEE3 /* SJSegmentedScrollView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SJSegmentedScrollView.framework; path = "../../../Library/Developer/Xcode/DerivedData/TripNow-bizzapqvtzwsbqdxcrqfoahmmxwf/Build/Products/Debug-iphonesimulator/SJSegmentedScrollView/SJSegmentedScrollView.framework"; sourceTree = "<group>"; };
 		8AF2181C1F1C3B290008E0A0 /* TripNow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TripNow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AF2181F1F1C3B290008E0A0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -42,7 +48,9 @@
 		8AF218261F1C3B2A0008E0A0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8AF218291F1C3B2A0008E0A0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8AF2182B1F1C3B2A0008E0A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9CE155B926BE80F8DD6134F0 /* Pods-TripNow.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TripNow.release.xcconfig"; path = "Pods/Target Support Files/Pods-TripNow/Pods-TripNow.release.xcconfig"; sourceTree = "<group>"; };
+		AE6BF5CCEBF011D33A899759 /* Pods_TripNow.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TripNow.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E3AD8B0AEBB5804E02C8CB6F /* Pods-TripNow.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TripNow.release.xcconfig"; path = "Pods/Target Support Files/Pods-TripNow/Pods-TripNow.release.xcconfig"; sourceTree = "<group>"; };
+		EDD01FBEB83C85C589A63D56 /* Pods-TripNow.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TripNow.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TripNow/Pods-TripNow.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +59,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A2EDE411FC55D1E00935B05 /* EHHorizontalSelectionView.framework in Frameworks */,
-				C412170188B53B1112197CAD /* Pods_TripNow.framework in Frameworks */,
+				7D9B618CC649CFBFB509A3CA /* Pods_TripNow.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,18 +73,9 @@
 				8A483BAF1FC537700018C213 /* HTHorizontalSelectionList.framework */,
 				8A6ABAAA1FC531E600D3B83D /* EHHorizontalSelectionView.framework */,
 				8AE583281FC52C3E0037CEE3 /* SJSegmentedScrollView.framework */,
-				75908D900C64C7CA7B0219DE /* Pods_TripNow.framework */,
+				AE6BF5CCEBF011D33A899759 /* Pods_TripNow.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		682108156F5952E0974DABAF /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				062CC3EBF39E7E7065AB064C /* Pods-TripNow.debug.xcconfig */,
-				9CE155B926BE80F8DD6134F0 /* Pods-TripNow.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		8AF218131F1C3B290008E0A0 = {
@@ -85,7 +84,7 @@
 				8AF2181E1F1C3B290008E0A0 /* TripNow */,
 				8AF2181D1F1C3B290008E0A0 /* Products */,
 				1BE9359BA4EAB519D55155D2 /* Frameworks */,
-				682108156F5952E0974DABAF /* Pods */,
+				9E111B72E253C4DDA7401034 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -112,8 +111,21 @@
 				8A2EDE421FC57BCA00935B05 /* StopEvent.swift */,
 				8AC91CE91FC6417F001064F2 /* TripDescriptor.swift */,
 				8AC91CEB1FC64664001064F2 /* CustomTableViewCell.swift */,
+				8AC9BDAE1FC7F40300522669 /* DrawerContentViewController.swift */,
+				8A9B54D31FC8FC9100B0D271 /* DrawerTableCell.swift */,
+				8A23B2712011968400D241E7 /* tfnsw.pb.swift */,
+				8A23B273201196CD00D241E7 /* tfnsw.proto */,
 			);
 			path = TripNow;
+			sourceTree = "<group>";
+		};
+		9E111B72E253C4DDA7401034 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EDD01FBEB83C85C589A63D56 /* Pods-TripNow.debug.xcconfig */,
+				E3AD8B0AEBB5804E02C8CB6F /* Pods-TripNow.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -123,12 +135,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8AF2182E1F1C3B2A0008E0A0 /* Build configuration list for PBXNativeTarget "TripNow" */;
 			buildPhases = (
-				884A91CC5E024CB747FFBD92 /* [CP] Check Pods Manifest.lock */,
+				ED40D68F5628761B1E3092FF /* [CP] Check Pods Manifest.lock */,
 				8AF218181F1C3B290008E0A0 /* Sources */,
 				8AF218191F1C3B290008E0A0 /* Frameworks */,
 				8AF2181A1F1C3B290008E0A0 /* Resources */,
-				6B5B8E2F58A68F3CB9C92F07 /* [CP] Embed Pods Frameworks */,
-				4E17B7ACB807A9E19FEDB017 /* [CP] Copy Pods Resources */,
+				6A6C8C3C3B142CF91EAFA567 /* [CP] Embed Pods Frameworks */,
+				0337AB8A7E95EF528D2B4AF7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -183,13 +195,14 @@
 				8A40C66D1FC4F1CB0089D491 /* Main.storyboard in Resources */,
 				8AF2182A1F1C3B2A0008E0A0 /* LaunchScreen.storyboard in Resources */,
 				8AF218271F1C3B2A0008E0A0 /* Assets.xcassets in Resources */,
+				8A23B274201196CD00D241E7 /* tfnsw.proto in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4E17B7ACB807A9E19FEDB017 /* [CP] Copy Pods Resources */ = {
+		0337AB8A7E95EF528D2B4AF7 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -204,7 +217,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TripNow/Pods-TripNow-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6B5B8E2F58A68F3CB9C92F07 /* [CP] Embed Pods Frameworks */ = {
+		6A6C8C3C3B142CF91EAFA567 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -212,17 +225,21 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-TripNow/Pods-TripNow-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/EHHorizontalSelectionView/EHHorizontalSelectionView.framework",
+				"${BUILT_PRODUCTS_DIR}/Pulley/Pulley.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftProtobuf/SwiftProtobuf.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EHHorizontalSelectionView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Pulley.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftProtobuf.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TripNow/Pods-TripNow-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		884A91CC5E024CB747FFBD92 /* [CP] Check Pods Manifest.lock */ = {
+		ED40D68F5628761B1E3092FF /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -250,11 +267,14 @@
 				8A2EDE431FC57BCA00935B05 /* StopEvent.swift in Sources */,
 				8AF218221F1C3B290008E0A0 /* ViewController.swift in Sources */,
 				8AC91CEC1FC64664001064F2 /* CustomTableViewCell.swift in Sources */,
+				8A9B54D41FC8FC9100B0D271 /* DrawerTableCell.swift in Sources */,
 				8AF218201F1C3B290008E0A0 /* AppDelegate.swift in Sources */,
 				8A3F3ABE1FC42BD100118874 /* User.swift in Sources */,
 				8A716BDE1FC3EA5C00727A66 /* Stop.swift in Sources */,
 				8AC91CEA1FC6417F001064F2 /* TripDescriptor.swift in Sources */,
 				8A40C66B1FC4EFA50089D491 /* StopInfoViewController.swift in Sources */,
+				8A23B2722011968400D241E7 /* tfnsw.pb.swift in Sources */,
+				8AC9BDAF1FC7F40300522669 /* DrawerContentViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,7 +399,7 @@
 		};
 		8AF2182F1F1C3B2A0008E0A0 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 062CC3EBF39E7E7065AB064C /* Pods-TripNow.debug.xcconfig */;
+			baseConfigurationReference = EDD01FBEB83C85C589A63D56 /* Pods-TripNow.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 4GLUXJ545N;
@@ -394,7 +414,7 @@
 		};
 		8AF218301F1C3B2A0008E0A0 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9CE155B926BE80F8DD6134F0 /* Pods-TripNow.release.xcconfig */;
+			baseConfigurationReference = E3AD8B0AEBB5804E02C8CB6F /* Pods-TripNow.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 4GLUXJ545N;

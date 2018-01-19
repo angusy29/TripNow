@@ -27,14 +27,17 @@ class StopEvent {
     var inboundOrOutbound: String?  // R (inbound) or H (outbound)
     var instance: String?       // i have no idea what this is
     
+    var realtimeTripId: String?
+    
     init(busNumber: String, departureTimePlanned: Date, departureTimeEstimated: Date?, occupancy: String?,
-         inboundOrOutbound: String, instance: String) {
+         inboundOrOutbound: String, instance: String, realtimeTripId: String?) {
         self.busNumber = busNumber
         self.departureTimePlanned = departureTimePlanned
         self.departureTimeEstimated = departureTimeEstimated
         self.occupancy = occupancy
         self.inboundOrOutbound = inboundOrOutbound
         self.instance = instance
+        self.realtimeTripId = realtimeTripId
     }
     
     public func getBusNumber() -> String {

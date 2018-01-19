@@ -9,6 +9,7 @@
 import MapKit
 import UIKit
 import EHHorizontalSelectionView
+import SwiftProtobuf
 
 // might need to use stops.txt
 // with GTFS realtime trip update to plot routes
@@ -47,8 +48,39 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         
         view.addSubview(selectionList)
         
+        getTripStopSequence()
         getDepartureRequest()
+    }
+    
+    /*
+     * Makes a GET request to https://api.transport.nsw.gov.au/v1/gtfs/vehiclepos/buses
+     * Obtains the trip sequence
+     * NOTE: Doesn't get the actual route, just gets the sequence of stops
+     */
+    func getTripStopSequence() {
+        let url = "https://api.transport.nsw.gov.au/v1/gtfs/vehiclepos/buses"
+        var request = URLRequest(url: URL(string: url)!)
+        request.addValue("text/plain", forHTTPHeaderField: "Accept")
+        request.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
         
+        let sem = DispatchSemaphore(value: 0)
+
+        URLSession.shared.dataTask(with: request){(data: Data?, response: URLResponse?, error: Error?) -> Void in
+            do {
+                print("IN")
+                print(data)
+                let vehicle = try TransitRealtime_FeedMessage(serializedData: data!)
+                print("LOL")
+                print(vehicle)
+                sem.signal()
+            } catch {
+                print("CATCH")
+            }
+        }.resume()
+        
+        print("EXIT")
+        sem.wait()
+        print("OUT")
     }
     
     /*
@@ -116,6 +148,9 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                         let destination = transportation?["destination"] as? [String: AnyObject]
                         let originName = origin?["name"] as? String
                         let destinationName = destination?["name"] as? String
+
+                        let tripProperties = stopEvents?[j]["properties"] as? [String: AnyObject]
+                        let realtimeTripId = tripProperties != nil ? tripProperties?["RealtimeTripId"] as? String : nil
                         
                         var shapeSuffix = transportation?["id"] as? String
                         var inboundOrOutbound = ""      // either R (inbound) or H (outbound)
@@ -141,7 +176,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                         print(description!)
                         print(departureTimePlanned!)*/
                         
-                        let newStopEvent = StopEvent(busNumber: busNumber!, departureTimePlanned: departureTimePlanned!, departureTimeEstimated: departureTimeEstimated, occupancy: occupancy, inboundOrOutbound: inboundOrOutbound, instance: instance)
+                        let newStopEvent = StopEvent(busNumber: busNumber!, departureTimePlanned: departureTimePlanned!, departureTimeEstimated: departureTimeEstimated, occupancy: occupancy, inboundOrOutbound: inboundOrOutbound, instance: instance, realtimeTripId: realtimeTripId)
                         
                         // if the busId isn't in the map yet, we need to create a new array for it in the dictionary
                         if (self.busIdToStopEvent[busNumber!] == nil) {

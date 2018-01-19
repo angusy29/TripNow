@@ -4,4 +4,6 @@ platform :ios, '9.0'
 target 'TripNow' do
     use_frameworks!  
     pod 'EHHorizontalSelectionView', '~> 1.3'
+    pod 'Pulley'
+    pod 'SwiftProtobuf', '~> 1.0'
 end
