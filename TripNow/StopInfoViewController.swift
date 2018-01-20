@@ -29,6 +29,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     // the bus we tapped on in the horizontal list
     var selectedBus: String!        // contains actual bus numbers eg: 400
     var currTime: Date!
+    var zoomMapInit = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +57,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         
         // should really set the region to the bus closest to our current stop
         let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees((self.stopObj?.latitude)!), longitude: CLLocationDegrees((self.stopObj?.longitude)!))
-        let adjustedRegion = self.mapView.regionThatFits(MKCoordinateRegionMakeWithDistance(coordinate, 2000, 2000))
+        let adjustedRegion = self.mapView.regionThatFits(MKCoordinateRegionMakeWithDistance(coordinate, 2500, 2500))
         self.mapView.setRegion(adjustedRegion, animated: false)
         
         // set an annotation for the bus stop we selected
@@ -134,6 +135,11 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
             }
         }.resume()
         sem.wait()
+        
+        if !zoomMapInit {
+            zoomMapInit = true
+            self.mapView.showAnnotations(self.mapView.annotations, animated: true)
+        }
     }
     
     /*
@@ -144,7 +150,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
      * this function isn't scalable at all...
      * Will easily exceed API rate limit
      */
-    func getDepartureRequest() {
+    @objc func getDepartureRequest() {
         self.busIdToStopEvent.removeAll()
         self.busIdToTripDesc.removeAll()
         
@@ -278,9 +284,10 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
      */
     func horizontalSelection(_ selectionView: EHHorizontalSelectionView, didSelectObjectAt index: UInt) {
         self.selectedBus = stopObj?.getBuses()[Int(index)]
+        self.zoomMapInit = false
         self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[self.selectedBus]?.destination)!
         self.tableView.reloadData()
-        self.mapView.removeAnnotations(self.mapView.annotations)
+        self.removeAnnotationsExceptStop()
     }
     
     /* Functions for UITableView */
