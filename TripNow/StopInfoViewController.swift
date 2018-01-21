@@ -11,9 +11,17 @@ import UIKit
 import EHHorizontalSelectionView
 import SwiftProtobuf
 
-// might need to use stops.txt
-// with GTFS realtime trip update to plot routes
-// or just use shapes.txt once i figure how it works
+// with GTFS realtime timetable to plot routes
+// figure out which endpoint i want
+// STEPS
+// eg. SMBSC009, to find out which one, I need to go into static agency.txt using operator ID
+// to index into agency.txt
+// the nth occurrence of the id gives us nth endpoint
+// call the endpoint
+// get octet stream and unzip it into multiple files
+// trips.txt -> match route_id, get shape_id
+// go into shapes.txt and get route
+// long as process.... sigh
 class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHorizontalSelectionViewProtocol, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate {
     
     @IBOutlet weak var destinationLabel: UILabel!
@@ -68,8 +76,11 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
             self.mapView.addAnnotation(annotation)
         }
         
-        getDepartureRequest()
-        getRealtimeVehiclePosition() // needs to be called after departure request, because selectedBus is nil until then
+        DispatchQueue.main.async() {
+            self.getDepartureRequest()
+            self.getRealtimeVehiclePosition() // needs to be called after departure request, because selectedBus is nil until then
+            self.selectionList.reloadData()
+        }
         
         // call this every 15 seconds?
         DispatchQueue.main.async {
