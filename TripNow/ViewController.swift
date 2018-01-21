@@ -173,8 +173,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
      */
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "StopInfoViewController") as! StopInfoViewController
-        var arr = view.annotation?.title!?.components(separatedBy: " ")
-        let stopId = (arr?[(arr?.count)! - 1])!
+        guard let arr = view.annotation?.subtitle!?.components(separatedBy: " ") else { return }
+        let stopId = arr[arr.count - 1]
 
         for stop in stopsFound {
             if stop.getID() == stopId {
@@ -194,8 +194,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
      * Callback for when an annotation custom view is clicked on
      */
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        var arr = view.annotation?.title!?.components(separatedBy: " ")
-        let stopId = (arr?[(arr?.count)! - 1])!
+        guard let arr = view.annotation?.subtitle!?.components(separatedBy: " ") else { return }
+        let stopId = (arr[arr.count - 1])
         
         for stop in stopsFound {
             if stop.getID() == stopId {
@@ -225,7 +225,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
      */
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?
     {
-        print("DROP")
         if (annotation is MKUserLocation) {
             return nil
         }
@@ -281,11 +280,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         guard let longitude = userAnnotation?.coordinate.longitude else { return }
         guard let radius = user?.getRadius() else { return }
         
-        self.getClosestStopRequest(longitude: longitude, latitude: latitude, radius: radius)
+        // self.getClosestStopRequest(longitude: longitude, latitude: latitude, radius: radius)
         // self.getDepartureRequest()
+        self.getClosestStops(longitude: longitude, latitude: latitude, radius: radius)
+
         
         for stop in stopsFound {
-            let annotation = self.createAnnotation(latitude: stop.getLatitude(), longitude: stop.getLongitude(), title: stop.getParent() + " " + stop.getID(), subtitle: stop.getName())
+            // let annotation = self.createAnnotation(latitude: stop.getLatitude(), longitude: stop.getLongitude(), title: stop.getParent() + " " + stop.getID(), subtitle: stop.getName())
+            let annotation = self.createAnnotation(latitude: stop.getLatitude(), longitude: stop.getLongitude(), title: stop.getName(), subtitle: "Stop ID: " + stop.getID())
             
             DispatchQueue.main.async {
                 self.mapView.addAnnotation(annotation)
@@ -304,6 +306,56 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                 dvc?.getTableView().reloadData()
             }
         }
+    }
+    
+    /*
+     *  Parses through stops.txt and finds the stops within specified radius
+     *  "stop_id,stop_code,stop_name,stop_lat,stop_lon,location_type,parent_station,wheelchair_boarding,platform_code"
+     */
+    func getClosestStops(longitude: Double, latitude: Double, radius: CLLocationDistance) {
+        let sem = DispatchSemaphore(value: 0)
+
+        if let path = Bundle.main.path(forResource: "stops", ofType: "txt") {
+            do {
+                let data = try String(contentsOfFile: path, encoding: .utf8)
+                let csvFile = data.components(separatedBy: .newlines)
+                
+                for i in 1...(csvFile.count - 1) {
+                    let tokens = csvFile[i].components(separatedBy: "\",\"")
+                    if tokens.count < 8 {
+                        continue
+                    }
+                    
+                    let stop_id = tokens[0].replacingOccurrences(of: "\"", with: "")
+                    let stop_name = tokens[2].replacingOccurrences(of: "\"", with: "")
+                    let stop_lat = tokens[3].replacingOccurrences(of: "\"", with: "")
+                    let stop_long = tokens[4].replacingOccurrences(of: "\"", with: "")
+                    let type = tokens[8].replacingOccurrences(of: "\"", with: "") != "" ? "Platform" : "Stop"
+                    
+                    if stop_lat == "" || stop_long == "" {
+                        continue
+                    }
+                    
+                    let str_lat = (stop_lat as NSString).doubleValue
+                    let str_long = (stop_long as NSString).doubleValue
+                    
+                    let stopCoord = CLLocation(latitude: str_lat, longitude: str_long)
+                    let myCoord = CLLocation(latitude: latitude, longitude: longitude)
+                    var distance = stopCoord.distance(from: myCoord)
+                    
+                    if distance < radius {
+                        distance = distance.rounded()
+                        let newStop = Stop(id: stop_id, name: stop_name, parent: "", latitude: str_lat, longitude: str_long, distance: distance, type: type)
+                        self.stopsFound.append(newStop)
+                    }
+                }
+                
+                sem.signal()
+            } catch {
+                print(error)
+            }
+        }
+        sem.wait()
     }
     
     /*

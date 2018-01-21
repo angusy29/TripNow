@@ -16,6 +16,7 @@
 		8A40C66B1FC4EFA50089D491 /* StopInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A40C66A1FC4EFA50089D491 /* StopInfoViewController.swift */; };
 		8A40C66D1FC4F1CB0089D491 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A40C66C1FC4F1CB0089D491 /* Main.storyboard */; };
 		8A716BDE1FC3EA5C00727A66 /* Stop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A716BDD1FC3EA5C00727A66 /* Stop.swift */; };
+		8A80410E20143A16004CC826 /* stops.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8A80410D20143A16004CC826 /* stops.txt */; };
 		8A9B54D41FC8FC9100B0D271 /* DrawerTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9B54D31FC8FC9100B0D271 /* DrawerTableCell.swift */; };
 		8AC91CEA1FC6417F001064F2 /* TripDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC91CE91FC6417F001064F2 /* TripDescriptor.swift */; };
 		8AC91CEC1FC64664001064F2 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC91CEB1FC64664001064F2 /* CustomTableViewCell.swift */; };
@@ -37,6 +38,7 @@
 		8A483BAF1FC537700018C213 /* HTHorizontalSelectionList.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HTHorizontalSelectionList.framework; path = "Pods/../build/Debug-iphoneos/HTHorizontalSelectionList/HTHorizontalSelectionList.framework"; sourceTree = "<group>"; };
 		8A6ABAAA1FC531E600D3B83D /* EHHorizontalSelectionView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EHHorizontalSelectionView.framework; path = "Pods/../build/Debug-iphoneos/EHHorizontalSelectionView/EHHorizontalSelectionView.framework"; sourceTree = "<group>"; };
 		8A716BDD1FC3EA5C00727A66 /* Stop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stop.swift; sourceTree = "<group>"; };
+		8A80410D20143A16004CC826 /* stops.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stops.txt; sourceTree = "<group>"; };
 		8A9B54D31FC8FC9100B0D271 /* DrawerTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerTableCell.swift; sourceTree = "<group>"; };
 		8AC91CE91FC6417F001064F2 /* TripDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDescriptor.swift; sourceTree = "<group>"; };
 		8AC91CEB1FC64664001064F2 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				8A9B54D31FC8FC9100B0D271 /* DrawerTableCell.swift */,
 				8A23B2712011968400D241E7 /* tfnsw.pb.swift */,
 				8A23B273201196CD00D241E7 /* tfnsw.proto */,
+				8A80410D20143A16004CC826 /* stops.txt */,
 			);
 			path = TripNow;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A40C66D1FC4F1CB0089D491 /* Main.storyboard in Resources */,
+				8A80410E20143A16004CC826 /* stops.txt in Resources */,
 				8AF2182A1F1C3B2A0008E0A0 /* LaunchScreen.storyboard in Resources */,
 				8AF218271F1C3B2A0008E0A0 /* Assets.xcassets in Resources */,
 				8A23B274201196CD00D241E7 /* tfnsw.proto in Resources */,

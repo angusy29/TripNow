@@ -69,8 +69,9 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
         }
         
         cell.stopName?.text = table[row].getName()
-        cell.stopParent?.text = (table[row].getParent()) + " " + (table[row].getID())
+        cell.stopParent?.text = (table[row].getParent()) + "Stop ID: " + (table[row].getID())
         cell.stopType?.text = String(describing: table[row].getDistance()) + "m" + " \u{00B7} " + capitalizeFirstLetter(string: table[row].getType())
+        
         cell.isUserInteractionEnabled = true
         return cell
     }
@@ -261,8 +262,7 @@ class DrawerContentViewController: UIViewController, UISearchBarDelegate, Pulley
         goButton.isHidden = false
 
         selectedStopName?.text = name
-        selectedStopParent?.text = parent + " " + id
-        
+        selectedStopParent?.text = parent + "Stop ID: " + id
         
         selectedStopType?.text = String(describing: distance) + "m" + " \u{00B7} " + capitalizeFirstLetter(string: type)
     }

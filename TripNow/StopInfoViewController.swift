@@ -27,7 +27,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     var busIdToTripDesc = [String: TripDescriptor]()
     
     // the bus we tapped on in the horizontal list
-    var selectedBus: String!        // contains actual bus numbers eg: 400
+    var selectedBus: String?        // contains actual bus numbers eg: 400
     var currTime: Date!
     var zoomMapInit = false
     
@@ -90,7 +90,9 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         request.addValue("text/plain", forHTTPHeaderField: "Accept")
         request.addValue("apikey 3VEunYsUS44g3bADCI6NnAGzLPfATBClAnmE", forHTTPHeaderField: "Authorization")
         
-        let listOfStopEvents = self.busIdToStopEvent[self.selectedBus]
+        // should probably do this inside the URLSession to prevent wasting CPU cycles if the response fails
+        guard let selectedBus = self.selectedBus else { return }
+        let listOfStopEvents = self.busIdToStopEvent[selectedBus]
         var stopEvent: StopEvent? = nil
         if listOfStopEvents != nil {
             // find the first stop event which has real time data
@@ -118,7 +120,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                     guard let operatorId = stopEvent?.operatorId else { continue }
                     guard let realtimeTripId = stopEvent?.realtimeTripId else { continue }
 
-                    if trip.routeID == operatorId + "_" + self.selectedBus && trip.tripID == realtimeTripId {
+                    if trip.routeID == operatorId + "_" + selectedBus && trip.tripID == realtimeTripId {
                         // add to the bus location to map
                         let annotation = MKPointAnnotation()
                         annotation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(position.latitude), longitude: CLLocationDegrees(position.longitude))
@@ -255,9 +257,9 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         sem.wait()
         
         // initialize selected bus if nil
-        if (self.selectedBus == nil) {
+        if (self.selectedBus == nil && (self.stopObj?.getBuses().count)! > 0) {
             self.selectedBus = self.stopObj?.getBuses()[0]
-            self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[self.selectedBus]?.destination)!
+            self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[self.selectedBus!]?.destination)!
         }
         
         self.tableView.reloadData()
@@ -284,8 +286,9 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
      */
     func horizontalSelection(_ selectionView: EHHorizontalSelectionView, didSelectObjectAt index: UInt) {
         self.selectedBus = stopObj?.getBuses()[Int(index)]
+        guard let selectedBus = self.selectedBus else { return }
         self.zoomMapInit = false
-        self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[self.selectedBus]?.destination)!
+        self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[selectedBus]?.destination)!
         self.tableView.reloadData()
         self.removeAnnotationsExceptStop()
     }
@@ -296,13 +299,15 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (self.busIdToStopEvent[self.selectedBus]?.count)!
+        guard let selectedBus = self.selectedBus else { return 0 }
+        return self.busIdToStopEvent[selectedBus]!.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let selectedBus = self.selectedBus else { return UITableViewCell() }
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
         let row = indexPath.row
-        let table = self.busIdToStopEvent[self.selectedBus]
+        let table = self.busIdToStopEvent[selectedBus]
         
         let sydneyTimeFormatter = DateFormatter()
         sydneyTimeFormatter.dateFormat = "h:mm a"
@@ -371,7 +376,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
             cell.setWaitTimeLabel(time: (table?[row].getDepartureTimePlanned())!, currentTime: self.currTime)
         }
         
-        cell.parentLabel?.text = self.busIdToTripDesc[self.selectedBus]?.getParent()
+        cell.parentLabel?.text = self.busIdToTripDesc[selectedBus]?.getParent()
         
         return cell
     }
