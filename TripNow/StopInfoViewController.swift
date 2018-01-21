@@ -125,6 +125,13 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                         let annotation = MKPointAnnotation()
                         annotation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(position.latitude), longitude: CLLocationDegrees(position.longitude))
                         annotation.title = self.selectedBus
+                        
+                        if !self.zoomMapInit {
+                            self.zoomMapInit = true
+                            let adjustedRegion = self.mapView.regionThatFits(MKCoordinateRegionMakeWithDistance(annotation.coordinate, 2500, 2500))
+                            self.mapView.setRegion(adjustedRegion, animated: false)
+                        }
+
                         DispatchQueue.main.async() {
                             self.mapView.addAnnotation(annotation)
                         }
@@ -137,11 +144,6 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
             }
         }.resume()
         sem.wait()
-        
-        if !zoomMapInit {
-            zoomMapInit = true
-            self.mapView.showAnnotations(self.mapView.annotations, animated: true)
-        }
     }
     
     /*
