@@ -84,7 +84,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         
         // call this every 15 seconds?
         DispatchQueue.main.async {
-            Timer.scheduledTimer(timeInterval: 15.0, target: self, selector: #selector(self.getRealtimeVehiclePosition), userInfo: nil, repeats: true)
+            Timer.scheduledTimer(timeInterval: 20.0, target: self, selector: #selector(self.getRealtimeVehiclePosition), userInfo: nil, repeats: true)
         }
     }
     
@@ -110,7 +110,6 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
             // so we can render the bus
             for i in 0...((listOfStopEvents?.count)! - 1) {
                 if listOfStopEvents?[i].realtimeTripId != nil {
-                    print("FOUND")
                     stopEvent = (listOfStopEvents?[i])!
                     break
                 }
@@ -121,30 +120,34 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
 
         URLSession.shared.dataTask(with: request){(data: Data?, response: URLResponse?, error: Error?) -> Void in
             do {
-                print("Decoding.....")
-                let decodedData = try TransitRealtime_FeedMessage(serializedData: data!)
-                print("Decoded")
-                for entity in decodedData.entity {
-                    let trip = entity.vehicle.trip
-                    let position = entity.vehicle.position
-
-                    guard let operatorId = stopEvent?.operatorId else { continue }
-                    guard let realtimeTripId = stopEvent?.realtimeTripId else { continue }
-
-                    if trip.routeID == operatorId + "_" + selectedBus && trip.tripID == realtimeTripId {
-                        // add to the bus location to map
-                        let annotation = MKPointAnnotation()
-                        annotation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(position.latitude), longitude: CLLocationDegrees(position.longitude))
-                        annotation.title = self.selectedBus
-                        
-                        if !self.zoomMapInit {
-                            self.zoomMapInit = true
-                            let adjustedRegion = self.mapView.regionThatFits(MKCoordinateRegionMakeWithDistance(annotation.coordinate, 2500, 2500))
-                            self.mapView.setRegion(adjustedRegion, animated: false)
-                        }
-
-                        DispatchQueue.main.async() {
-                            self.mapView.addAnnotation(annotation)
+                if let httpResponse = response as? HTTPURLResponse {
+                    if httpResponse.statusCode == 200 {
+                        print("Decoding.....")
+                        let decodedData = try TransitRealtime_FeedMessage(serializedData: data!)
+                        print("Decoded")
+                        for entity in decodedData.entity {
+                            let trip = entity.vehicle.trip
+                            let position = entity.vehicle.position
+                            
+                            guard let operatorId = stopEvent?.operatorId else { continue }
+                            guard let realtimeTripId = stopEvent?.realtimeTripId else { continue }
+                            
+                            if trip.routeID == operatorId + "_" + selectedBus && trip.tripID == realtimeTripId {
+                                // add to the bus location to map
+                                let annotation = MKPointAnnotation()
+                                annotation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(position.latitude), longitude: CLLocationDegrees(position.longitude))
+                                annotation.title = self.selectedBus
+                                
+                                DispatchQueue.main.async() {
+                                    if !self.zoomMapInit {
+                                        self.zoomMapInit = true
+                                        let adjustedRegion = self.mapView.regionThatFits(MKCoordinateRegionMakeWithDistance(annotation.coordinate, 2500, 2500))
+                                        self.mapView.setRegion(adjustedRegion, animated: false)
+                                    }
+                                    self.mapView.addAnnotation(annotation)
+                                }
+                                break
+                            }
                         }
                     }
                 }

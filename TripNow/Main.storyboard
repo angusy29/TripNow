@@ -183,8 +183,8 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No serving lines found" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nvw-q6-2Cw">
-                                <rect key="frame" x="102" y="45" width="171" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nvw-q6-2Cw">
+                                <rect key="frame" x="150" y="45" width="75" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -326,9 +326,8 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Find stops and it will appear here!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dI9-sL-Ed1" userLabel="HelpLabel">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Find stops and it will appear here!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dI9-sL-Ed1" userLabel="HelpLabel">
                                                 <rect key="frame" x="35" y="36" width="305" height="24"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -351,12 +350,14 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="105" id="1hI-ly-kzv"/>
                                             <constraint firstItem="8WY-6C-Gcr" firstAttribute="top" secondItem="JrL-OM-uTP" secondAttribute="bottom" constant="6" id="5OX-xn-HLF"/>
+                                            <constraint firstItem="dI9-sL-Ed1" firstAttribute="centerX" secondItem="IcI-lZ-1xl" secondAttribute="centerX" id="8Jg-LS-dKH"/>
                                             <constraint firstItem="5JX-7c-TOO" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" id="8am-IQ-b2X"/>
                                             <constraint firstItem="AAy-pc-d32" firstAttribute="top" secondItem="IcI-lZ-1xl" secondAttribute="top" constant="20" id="EDB-Gk-YwD"/>
                                             <constraint firstItem="5JX-7c-TOO" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" id="Nui-IE-ZCT"/>
                                             <constraint firstItem="5JX-7c-TOO" firstAttribute="top" secondItem="8WY-6C-Gcr" secondAttribute="bottom" constant="13" id="Ube-tB-Ko0"/>
                                             <constraint firstAttribute="trailing" secondItem="5JX-7c-TOO" secondAttribute="trailing" id="Ufm-MG-u4w"/>
                                             <constraint firstItem="5JX-7c-TOO" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" id="VgM-X7-8dm"/>
+                                            <constraint firstItem="dI9-sL-Ed1" firstAttribute="top" secondItem="IcI-lZ-1xl" secondAttribute="top" constant="36" id="X7z-hG-eoU"/>
                                             <constraint firstItem="5JX-7c-TOO" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" id="Ydb-zO-rWY"/>
                                             <constraint firstItem="JrL-OM-uTP" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" constant="15" id="b0p-GE-p9I"/>
                                             <constraint firstItem="AAy-pc-d32" firstAttribute="leading" secondItem="IcI-lZ-1xl" secondAttribute="leading" constant="15" id="bVB-kl-UbQ"/>

@@ -377,41 +377,46 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         // get the closest stops
         URLSession.shared.dataTask(with: closestStopsRequest){(data: Data?,response: URLResponse?, error: Error?) -> Void in
             do {
-                let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
-                guard let locations = resultJson?["locations"] as? [[String: Any]] else { sem.signal(); return }
-                print(resultJson)
-                if locations.count == 0 {
-                    sem.signal()
-                    return
-                }
-                
-                for i in 0...(locations.count - 1) {
-                    if (i >= locations.count) {
-                        break
+                if let httpResponse = response as? HTTPURLResponse {
+                    if httpResponse.statusCode == 200 {
+                        let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
+                        guard let locations = resultJson?["locations"] as? [[String: Any]] else { sem.signal(); return }
+                        // print(resultJson)
+                        if locations.count == 0 {
+                            sem.signal()
+                            return
+                        }
+                        
+                        for i in 0...(locations.count - 1) {
+                            if (i >= locations.count) {
+                                break
+                            }
+                            
+                            // these guards don't actually do anything, if it doesn't exist, it won't be nil because
+                            // if the key doesn't exist in the JSON it's just []
+                            guard let name = locations[i]["name"] as? String else { break }
+                            guard let parent = locations[i]["parent"] as? [String: AnyObject] else { break }
+                            guard let parentName = parent["parent"]?["name"] as? String else { break }
+                            guard let type = parent["type"] as? String else { break }
+                            guard let properties = locations[i]["properties"] as? [String: AnyObject] else { break }
+                            guard let stopId = properties["STOPPOINT_GLOBAL_ID"] as? String else { return }
+                            guard let coordinates = locations[i]["coord"] as? NSArray else { break }
+                            guard let latCoord = coordinates[0] as? Double else { break }
+                            guard let longCoord = coordinates[1] as? Double else { break }
+                            guard let distance = properties["distance"] as? Double else { break }
+                            
+                            // if the station we get exceeds user radius, we exit
+                            if (distance > radius) {
+                                break
+                            }
+                            
+                            let newStop = Stop(id: stopId, name: name, parent: parentName, latitude: latCoord, longitude: longCoord, distance: distance, type: type)
+                            self.stopsFound.append(newStop)
+                        }
+                    } else {
+                        print("Error")
                     }
-                    
-                    // these guards don't actually do anything, if it doesn't exist, it won't be nil because
-                    // if the key doesn't exist in the JSON it's just []
-                    guard let name = locations[i]["name"] as? String else { break }
-                    guard let parent = locations[i]["parent"] as? [String: AnyObject] else { break }
-                    guard let parentName = parent["parent"]?["name"] as? String else { break }
-                    guard let type = parent["type"] as? String else { break }
-                    guard let properties = locations[i]["properties"] as? [String: AnyObject] else { break }
-                    guard let stopId = properties["STOPPOINT_GLOBAL_ID"] as? String else { return }
-                    guard let coordinates = locations[i]["coord"] as? NSArray else { break }
-                    guard let latCoord = coordinates[0] as? Double else { break }
-                    guard let longCoord = coordinates[1] as? Double else { break }
-                    guard let distance = properties["distance"] as? Double else { break }
-                    
-                    // if the station we get exceeds user radius, we exit
-                    if (distance > radius) {
-                        break
-                    }
-                    
-                    let newStop = Stop(id: stopId, name: name, parent: parentName, latitude: latCoord, longitude: longCoord, distance: distance, type: type)
-                    self.stopsFound.append(newStop)
                 }
-                
                 sem.signal()
             } catch {
                 print("Error -> \(error)")
