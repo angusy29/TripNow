@@ -30,7 +30,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     @IBOutlet weak var mapView: MKMapView!
     
     var stopObj: Stop?
-    var selectionList: EHHorizontalSelectionView!
+    weak var selectionList: EHHorizontalSelectionView!
     var busIdToStopEvent = [String: [StopEvent]]()
     var busIdToTripDesc = [String: TripDescriptor]()
     
@@ -38,10 +38,12 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     var selectedBus: String?        // contains actual bus numbers eg: 400
     var currTime: Date!
     var zoomMapInit = false
+    var updateDepartureRequestTimer: Timer?
+    var updateVehiclePositionTimer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        //self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         self.navigationItem.title = stopObj?.getName()
         
         self.navigationController?.navigationBar.isTranslucent = false
@@ -82,9 +84,26 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
             self.selectionList.reloadData()
         }
         
-        // call this every 15 seconds?
+        setUpdateInterval()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.updateDepartureRequestTimer?.invalidate()
+        self.updateVehiclePositionTimer?.invalidate()
+    }
+    
+    /*
+     * Calls getDepartureRequest and getRealtimeVehiclePosition at 30 second intervals
+     */
+    func setUpdateInterval() {
         DispatchQueue.main.async {
-            Timer.scheduledTimer(timeInterval: 20.0, target: self, selector: #selector(self.getRealtimeVehiclePosition), userInfo: nil, repeats: true)
+            self.updateDepartureRequestTimer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.getDepartureRequest), userInfo: nil, repeats: true)
+        }
+        
+        let when = DispatchTime.now() + 1 // change to desired number of seconds
+        DispatchQueue.main.asyncAfter(deadline: when) {
+            self.updateVehiclePositionTimer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.getRealtimeVehiclePosition), userInfo: nil, repeats: true)
         }
     }
     
@@ -109,8 +128,9 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
             // find the first stop event which has real time data
             // so we can render the bus
             for i in 0...((listOfStopEvents?.count)! - 1) {
-                if listOfStopEvents?[i].realtimeTripId != nil {
+                if listOfStopEvents?[i].isRealTime != nil {
                     stopEvent = (listOfStopEvents?[i])!
+                    print("Found: " + String(describing: i))
                     break
                 }
             }
@@ -228,25 +248,13 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                         let transportOperator = transportation?["operator"] as? [String: AnyObject]
                         let operatorId = transportOperator != nil ? transportOperator?["id"] as? String : nil
                         
-                        var shapeSuffix = transportation?["id"] as? String
-                        var inboundOrOutbound = ""      // either R (inbound) or H (outbound)
-                        var instance = ""
-                        if shapeSuffix != nil {
-                            shapeSuffix = shapeSuffix?.components(separatedBy: .whitespaces)[1]
-                            let tokens = shapeSuffix?.components(separatedBy: ":")
-                            if tokens != nil {
-                                inboundOrOutbound = tokens![1]
-                                instance = tokens![2]
-                            }
-                        }
-                        
                         /*print(busNumber!)
                         print(originName!)
                         print(destinationName!)
                         print(description!)
                         print(departureTimePlanned!)*/
                         
-                        let newStopEvent = StopEvent(busNumber: busNumber!, departureTimePlanned: departureTimePlanned!, departureTimeEstimated: departureTimeEstimated, occupancy: occupancy, inboundOrOutbound: inboundOrOutbound, instance: instance, realtimeTripId: realtimeTripId, operatorId: operatorId)
+                        let newStopEvent = StopEvent(busNumber: busNumber!, departureTimePlanned: departureTimePlanned!, departureTimeEstimated: departureTimeEstimated, occupancy: occupancy, realtimeTripId: realtimeTripId, operatorId: operatorId, isRealTime: isRealTime)
                         
                         // if the busId isn't in the map yet, we need to create a new array for it in the dictionary
                         if (self.busIdToStopEvent[busNumber!] == nil) {
