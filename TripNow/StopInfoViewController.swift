@@ -149,9 +149,14 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         guard let events = busIdToStopEvent[selectedBus] else { return }
         guard let inboundOrOutbound = events[0].inboundOrOutbound else { return }
         guard let tripDesc = busIdToTripDesc[selectedBus] else { return }
+        guard let operatorID = events[0].operatorId else { return }
+        guard let realtimeTripID = events[0].realtimeTripId else { return }
         var allCoordinates = [CLLocationCoordinate2D]()
 
-        let url = "https://obscure-beach-92046.herokuapp.com/route/" + selectedBus + ":" + inboundOrOutbound + ":" + tripDesc.destination.replacingOccurrences(of: " ", with: "_")
+        // let url = "https://obscure-beach-92046.herokuapp.com/route/" + selectedBus + ":" + inboundOrOutbound + ":" + tripDesc.destination.replacingOccurrences(of: " ", with: "_")
+        
+        let url = "https://obscure-beach-92046.herokuapp.com/route_realtime/" + operatorID + "_" + selectedBus + ":" + realtimeTripID
+        print(url)
         
         if let url = URL(string: url) {
             let request = URLRequest(url: url)
