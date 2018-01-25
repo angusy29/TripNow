@@ -143,8 +143,9 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         guard let selectedBus = self.selectedBus else { return }
         guard let events = busIdToStopEvent[selectedBus] else { return }
         guard let inboundOrOutbound = events[0].inboundOrOutbound else { return }
+        guard let tripDesc = busIdToTripDesc[selectedBus] else { return }
         
-        let url = "http://127.0.0.1:5000/route/" + selectedBus + ":" + inboundOrOutbound
+        let url = "http://127.0.0.1:5000/route/" + selectedBus + ":" + inboundOrOutbound + ":" + tripDesc.destination.replacingOccurrences(of: " ", with: "_")
         let request = URLRequest(url: URL(string: url)!)
         var allCoordinates = [CLLocationCoordinate2D]()
 
