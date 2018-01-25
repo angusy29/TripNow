@@ -30,6 +30,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var isFetchingDataLabel: UILabel!
     
     var stopObj: Stop?
     weak var selectionList: EHHorizontalSelectionView!
@@ -126,6 +127,10 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
     }
     
     func getRoute() {
+        DispatchQueue.main.async {
+            self.isFetchingDataLabel.isHidden = false
+        }
+        
         // parse through agency.txt
         // get endpoint to call
         // call endpoint
@@ -144,40 +149,44 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         guard let events = busIdToStopEvent[selectedBus] else { return }
         guard let inboundOrOutbound = events[0].inboundOrOutbound else { return }
         guard let tripDesc = busIdToTripDesc[selectedBus] else { return }
-        
-        let url = "http://127.0.0.1:5000/route/" + selectedBus + ":" + inboundOrOutbound + ":" + tripDesc.destination.replacingOccurrences(of: " ", with: "_")
-        let request = URLRequest(url: URL(string: url)!)
         var allCoordinates = [CLLocationCoordinate2D]()
 
-        let sem = DispatchSemaphore(value: 0)
+        let url = "https://obscure-beach-92046.herokuapp.com/route/" + selectedBus + ":" + inboundOrOutbound + ":" + tripDesc.destination.replacingOccurrences(of: " ", with: "_")
         
-        URLSession.shared.dataTask(with: request){(data: Data?, response: URLResponse?, error: Error?) -> Void in
-            do {
-                if let httpResponse = response as? HTTPURLResponse {
-                    if httpResponse.statusCode == 200 {
-                        let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [Any]
-                        let coordinates = resultJson as! [Dictionary<String, String>]
-                        
-                        for coordinate in coordinates {
-                            let lat = Double(coordinate["latitude"]!)
-                            let long = Double(coordinate["longitude"]!)
-                            let location = CLLocationCoordinate2DMake(lat!, long!)
-                            allCoordinates.append(location)
+        if let url = URL(string: url) {
+            let request = URLRequest(url: url)
+
+            let sem = DispatchSemaphore(value: 0)
+            
+            URLSession.shared.dataTask(with: request){(data: Data?, response: URLResponse?, error: Error?) -> Void in
+                do {
+                    if let httpResponse = response as? HTTPURLResponse {
+                        if httpResponse.statusCode == 200 {
+                            let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [Any]
+                            let coordinates = resultJson as! [Dictionary<String, String>]
+                            
+                            for coordinate in coordinates {
+                                let lat = Double(coordinate["latitude"]!)
+                                let long = Double(coordinate["longitude"]!)
+                                let location = CLLocationCoordinate2DMake(lat!, long!)
+                                allCoordinates.append(location)
+                            }
+                        } else {
+                            print("Fail")
                         }
-                    } else {
-                        print("Fail")
                     }
+                    sem.signal()
+                } catch {
+                    sem.signal()
                 }
-                sem.signal()
-            } catch {
-                sem.signal()
-            }
-        }.resume()
-        sem.wait()
+            }.resume()
+            sem.wait()
+        }
         
         DispatchQueue.main.async {
             let polyline = MKPolyline(coordinates: &allCoordinates, count: allCoordinates.count)
             self.mapView.add(polyline)
+            self.isFetchingDataLabel.isHidden = true
         }
     }
     

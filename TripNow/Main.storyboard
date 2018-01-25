@@ -200,13 +200,22 @@
                                     <constraint firstAttribute="height" constant="296" id="jIz-nJ-q4z"/>
                                 </constraints>
                             </mapView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fetching data..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ry6-D0-jsy">
+                                <rect key="frame" x="10" y="86" width="355" height="13.666666666666671"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="3wo-7r-aLa" secondAttribute="trailing" id="3LD-SL-478"/>
+                            <constraint firstItem="ry6-D0-jsy" firstAttribute="top" secondItem="Nvw-q6-2Cw" secondAttribute="bottom" constant="20" id="8Qy-Hh-pRm"/>
                             <constraint firstItem="3wo-7r-aLa" firstAttribute="top" secondItem="6N6-Az-AiK" secondAttribute="bottom" constant="8" symbolic="YES" id="9nX-LH-4xS"/>
+                            <constraint firstAttribute="trailing" secondItem="ry6-D0-jsy" secondAttribute="trailing" constant="10" id="CEh-sq-bQU"/>
                             <constraint firstItem="Nvw-q6-2Cw" firstAttribute="top" secondItem="9eG-aF-6VO" secondAttribute="top" constant="45" id="GVO-ye-AZa"/>
                             <constraint firstItem="3wo-7r-aLa" firstAttribute="leading" secondItem="9eG-aF-6VO" secondAttribute="leading" id="Pck-2H-1Jv"/>
+                            <constraint firstItem="ry6-D0-jsy" firstAttribute="leading" secondItem="9eG-aF-6VO" secondAttribute="leading" constant="10" id="TeM-wT-myM"/>
                             <constraint firstItem="6N6-Az-AiK" firstAttribute="top" secondItem="Nvw-q6-2Cw" secondAttribute="bottom" constant="10" id="X8G-ZV-gXS"/>
                             <constraint firstItem="Nvw-q6-2Cw" firstAttribute="centerX" secondItem="9eG-aF-6VO" secondAttribute="centerX" id="Xeq-AM-MyF"/>
                             <constraint firstItem="6N6-Az-AiK" firstAttribute="leading" secondItem="9eG-aF-6VO" secondAttribute="leading" id="nHW-I6-zpd"/>
@@ -216,6 +225,7 @@
                     </view>
                     <connections>
                         <outlet property="destinationLabel" destination="Nvw-q6-2Cw" id="vVN-JT-CFi"/>
+                        <outlet property="isFetchingDataLabel" destination="ry6-D0-jsy" id="168-tL-dh3"/>
                         <outlet property="mapView" destination="6N6-Az-AiK" id="9RT-Vl-oeA"/>
                         <outlet property="tableView" destination="3wo-7r-aLa" id="N8n-NZ-vet"/>
                     </connections>
