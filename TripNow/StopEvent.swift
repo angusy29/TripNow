@@ -24,14 +24,14 @@ class StopEvent {
     var occupancy: String?
     
     // these are used for finding the shape_id
-    // var inboundOrOutbound: String?  // R (inbound) or H (outbound)
-    // var instance: String?       // i have no idea what this is
+    var inboundOrOutbound: String?  // R (inbound) or H (outbound)
+    var instance: String?       // i have no idea what this is
     
     var realtimeTripId: String?
     var operatorId: String?
     var isRealTime: Bool?
     
-    init(busNumber: String, departureTimePlanned: Date, departureTimeEstimated: Date?, occupancy: String?, realtimeTripId: String?, operatorId: String?, isRealTime: Bool?) {
+    init(busNumber: String, departureTimePlanned: Date, departureTimeEstimated: Date?, occupancy: String?, realtimeTripId: String?, operatorId: String?, isRealTime: Bool?, inboundOrOutbound: String?, instance: String?) {
         self.busNumber = busNumber
         self.departureTimePlanned = departureTimePlanned
         self.departureTimeEstimated = departureTimeEstimated
@@ -39,6 +39,8 @@ class StopEvent {
         self.realtimeTripId = realtimeTripId
         self.operatorId = operatorId
         self.isRealTime = isRealTime
+        self.inboundOrOutbound = inboundOrOutbound
+        self.instance = instance
     }
     
     public func getBusNumber() -> String {

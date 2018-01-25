@@ -22,6 +22,8 @@ import SwiftProtobuf
 // trips.txt -> match route_id, get shape_id
 // go into shapes.txt and get route
 // long as process.... sigh
+// more proper solution:
+// use realtimeTripID, this is the tripID go to trips and get shapeID
 class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHorizontalSelectionViewProtocol, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate {
     
     @IBOutlet weak var destinationLabel: UILabel!
@@ -81,6 +83,7 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         DispatchQueue.main.async() {
             self.getDepartureRequest()
             self.getRealtimeVehiclePosition() // needs to be called after departure request, because selectedBus is nil until then
+            self.getRoute()
             self.selectionList.reloadData()
         }
         
@@ -107,6 +110,50 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         }
     }
     
+    func getRoute() {
+        // parse through agency.txt
+        // get endpoint to call
+        // call endpoint
+        // get zip
+        // unzip
+        // parse through trip for realtimeID
+        // get shapeID
+        // find the coordinates
+        
+        // last solution
+        // routes search for -370-
+        // trips find :R or :H
+        // get shape id
+        // go into shapes.txt
+        guard let selectedBus = self.selectedBus else { return }
+        guard let events = busIdToStopEvent[selectedBus] else { return }
+        guard let inboundOrOutbound = events[0].inboundOrOutbound else { return }
+        
+        let url = "http://127.0.0.1:5000/route/" + selectedBus + ":" + inboundOrOutbound
+        let request = URLRequest(url: URL(string: url)!)
+        
+        let sem = DispatchSemaphore(value: 0)
+        
+        URLSession.shared.dataTask(with: request){(data: Data?, response: URLResponse?, error: Error?) -> Void in
+            do {
+                if let httpResponse = response as? HTTPURLResponse {
+                    if httpResponse.statusCode == 200 {
+                        let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [Any]
+                        let coordinates = resultJson![0] as! Dictionary<String, String>
+                        print(coordinates["longitude"])
+                        print(coordinates["latitude"])
+                    } else {
+                        print("Fail")
+                    }
+                }
+                sem.signal()
+            } catch {
+                sem.signal()
+            }
+        }.resume()
+        sem.wait()
+    }
+    
     /*
      * Makes a GET request to https://api.transport.nsw.gov.au/v1/gtfs/vehiclepos/buses
      * Obtains real time vehicle position
@@ -130,7 +177,6 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
             for i in 0...((listOfStopEvents?.count)! - 1) {
                 if listOfStopEvents?[i].isRealTime != nil {
                     stopEvent = (listOfStopEvents?[i])!
-                    print("Found: " + String(describing: i))
                     break
                 }
             }
@@ -254,7 +300,19 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                         print(description!)
                         print(departureTimePlanned!)*/
                         
-                        let newStopEvent = StopEvent(busNumber: busNumber!, departureTimePlanned: departureTimePlanned!, departureTimeEstimated: departureTimeEstimated, occupancy: occupancy, realtimeTripId: realtimeTripId, operatorId: operatorId, isRealTime: isRealTime)
+                        var shapeSuffix = transportation?["id"] as? String
+                        var inboundOrOutbound = ""      // either R (inbound) or H (outbound)
+                        var instance = ""
+                        if shapeSuffix != nil {
+                            shapeSuffix = shapeSuffix?.components(separatedBy: .whitespaces)[1]
+                            let tokens = shapeSuffix?.components(separatedBy: ":")
+                            if tokens != nil {
+                                inboundOrOutbound = tokens![1]
+                                instance = tokens![2]
+                            }
+                        }
+                        
+                        let newStopEvent = StopEvent(busNumber: busNumber!, departureTimePlanned: departureTimePlanned!, departureTimeEstimated: departureTimeEstimated, occupancy: occupancy, realtimeTripId: realtimeTripId, operatorId: operatorId, isRealTime: isRealTime, inboundOrOutbound: inboundOrOutbound, instance: instance)
                         
                         // if the busId isn't in the map yet, we need to create a new array for it in the dictionary
                         if (self.busIdToStopEvent[busNumber!] == nil) {
