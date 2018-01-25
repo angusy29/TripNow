@@ -80,11 +80,22 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
             self.mapView.addAnnotation(annotation)
         }
         
-        DispatchQueue.main.async() {
+        DispatchQueue.global().async {
+            // do stuff in background concurrent thread
             self.getDepartureRequest()
-            self.getRealtimeVehiclePosition() // needs to be called after departure request, because selectedBus is nil until then
-            self.getRoute()
-            self.selectionList.reloadData()
+
+            DispatchQueue.main.async() {
+                // update UI
+                self.selectionList.reloadData()
+            }
+
+            DispatchQueue.global().async() {
+                self.getRealtimeVehiclePosition() // needs to be called after departure request, because selectedBus is nil until then
+            }
+            
+            DispatchQueue.global().async() {
+                self.getRoute()
+            }
         }
         
         setUpdateInterval()
@@ -94,6 +105,10 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         super.viewDidDisappear(animated)
         self.updateDepartureRequestTimer?.invalidate()
         self.updateVehiclePositionTimer?.invalidate()
+        
+        // clean up mapview
+        self.mapView.removeAnnotations(self.mapView.annotations)
+        self.mapView.removeOverlays(self.mapView.overlays)
     }
     
     /*
@@ -131,7 +146,8 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         
         let url = "http://127.0.0.1:5000/route/" + selectedBus + ":" + inboundOrOutbound
         let request = URLRequest(url: URL(string: url)!)
-        
+        var allCoordinates = [CLLocationCoordinate2D]()
+
         let sem = DispatchSemaphore(value: 0)
         
         URLSession.shared.dataTask(with: request){(data: Data?, response: URLResponse?, error: Error?) -> Void in
@@ -139,9 +155,14 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
                 if let httpResponse = response as? HTTPURLResponse {
                     if httpResponse.statusCode == 200 {
                         let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [Any]
-                        let coordinates = resultJson![0] as! Dictionary<String, String>
-                        print(coordinates["longitude"])
-                        print(coordinates["latitude"])
+                        let coordinates = resultJson as! [Dictionary<String, String>]
+                        
+                        for coordinate in coordinates {
+                            let lat = Double(coordinate["latitude"]!)
+                            let long = Double(coordinate["longitude"]!)
+                            let location = CLLocationCoordinate2DMake(lat!, long!)
+                            allCoordinates.append(location)
+                        }
                     } else {
                         print("Fail")
                     }
@@ -152,6 +173,11 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
             }
         }.resume()
         sem.wait()
+        
+        DispatchQueue.main.async {
+            let polyline = MKPolyline(coordinates: &allCoordinates, count: allCoordinates.count)
+            self.mapView.add(polyline)
+        }
     }
     
     /*
@@ -341,10 +367,19 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         // initialize selected bus if nil
         if (self.selectedBus == nil && (self.stopObj?.getBuses().count)! > 0) {
             self.selectedBus = self.stopObj?.getBuses()[0]
-            self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[self.selectedBus!]?.destination)!
+            
+            DispatchQueue.main.async {
+                self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[self.selectedBus!]?.destination)!
+            }
+        } else if (self.selectedBus == nil) {
+            DispatchQueue.main.async {
+                self.destinationLabel?.text = "No serving lines"
+            }
         }
         
-        self.tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -372,7 +407,12 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         self.zoomMapInit = false
         self.destinationLabel?.text = "Destination: " + (self.busIdToTripDesc[selectedBus]?.destination)!
         self.tableView.reloadData()
+        self.mapView.removeOverlays(self.mapView.overlays)
         self.removeAnnotationsExceptStop()
+        
+        DispatchQueue.global().async {
+            self.getRoute()
+        }
     }
     
     /* Functions for UITableView */
@@ -478,6 +518,17 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         }
         annotationView.canShowCallout = true
         return annotationView
+    }
+    
+    /*
+     * Polyline mapview
+     */
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let polylineRenderer = MKPolylineRenderer(overlay: overlay)
+        polylineRenderer.strokeColor = UIColor.blue
+        polylineRenderer.alpha = 0.7
+        polylineRenderer.lineWidth = 4
+        return polylineRenderer
     }
     
     /*
