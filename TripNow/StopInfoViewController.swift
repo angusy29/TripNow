@@ -68,6 +68,10 @@ class StopInfoViewController: UIViewController, UINavigationBarDelegate, EHHoriz
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
+        // init isFetchingDataLabel
+        self.isFetchingDataLabel.layer.cornerRadius = 8
+        self.isFetchingDataLabel.layer.masksToBounds = true
+        
         // should really set the region to the bus closest to our current stop
         let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees((self.stopObj?.latitude)!), longitude: CLLocationDegrees((self.stopObj?.longitude)!))
         let adjustedRegion = self.mapView.regionThatFits(MKCoordinateRegionMakeWithDistance(coordinate, 2500, 2500))

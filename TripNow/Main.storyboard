@@ -200,8 +200,13 @@
                                     <constraint firstAttribute="height" constant="296" id="jIz-nJ-q4z"/>
                                 </constraints>
                             </mapView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fetching data..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ry6-D0-jsy">
-                                <rect key="frame" x="10" y="86" width="355" height="13.666666666666671"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fetching route..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ry6-D0-jsy">
+                                <rect key="frame" x="10" y="86" width="150" height="20"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="UzY-ce-H7c"/>
+                                    <constraint firstAttribute="width" constant="150" id="yNq-CH-JIP"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -212,7 +217,6 @@
                             <constraint firstAttribute="trailing" secondItem="3wo-7r-aLa" secondAttribute="trailing" id="3LD-SL-478"/>
                             <constraint firstItem="ry6-D0-jsy" firstAttribute="top" secondItem="Nvw-q6-2Cw" secondAttribute="bottom" constant="20" id="8Qy-Hh-pRm"/>
                             <constraint firstItem="3wo-7r-aLa" firstAttribute="top" secondItem="6N6-Az-AiK" secondAttribute="bottom" constant="8" symbolic="YES" id="9nX-LH-4xS"/>
-                            <constraint firstAttribute="trailing" secondItem="ry6-D0-jsy" secondAttribute="trailing" constant="10" id="CEh-sq-bQU"/>
                             <constraint firstItem="Nvw-q6-2Cw" firstAttribute="top" secondItem="9eG-aF-6VO" secondAttribute="top" constant="45" id="GVO-ye-AZa"/>
                             <constraint firstItem="3wo-7r-aLa" firstAttribute="leading" secondItem="9eG-aF-6VO" secondAttribute="leading" id="Pck-2H-1Jv"/>
                             <constraint firstItem="ry6-D0-jsy" firstAttribute="leading" secondItem="9eG-aF-6VO" secondAttribute="leading" constant="10" id="TeM-wT-myM"/>
