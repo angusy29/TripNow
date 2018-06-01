@@ -26,10 +26,10 @@ And also real-time data:
 
 ## Screenshots
 <p align="center">
-  <img src="Screenshots/radius.png" width="50%"/>
-  <img src="Screenshots/pullup.png" width="50%"/>
-  <img src="Screenshots/open.png" width="50%"/>
-  <img src="Screenshots/stop.png" width="50%"/>
+  <img src="Screenshots/radius.png" width="30%"/>
+  <img src="Screenshots/pullup.png" width="30%"/>
+  <img src="Screenshots/open.png" width="30%"/>
+  <img src="Screenshots/stop.png" width="30%"/>
 </p>
 
 ## Libraries
